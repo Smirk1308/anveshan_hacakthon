@@ -220,31 +220,60 @@ Rule: if `age_group` is `child`, add `paediatrics` to preferred (and `picu` if s
 
 Request:
 ```json
-{ "text": "my friend drank acid, he is 19 and conscious", "lat": 12.2958, "lng": 76.6394, "location_source": "gps | manual" }
+{ "text": "my friend drank acid, he is 19 and conscious", "lat": 12.2958, "lng": 76.6394, "location_source": "manual", "language": "auto" }
 ```
+
+`language` is optional and accepts `auto`, `en`, `hi`, or `kn`.
 
 Response:
 ```json
 {
   "emergency": { "type": "...", "severity": "...", "age_group": "...", "red_flags": [], "summary": "...", "confidence": 0.0, "input_language": "en" },
   "recommendation": {
-    "hospital": { "id": "...", "name": "...", "phone": "...", "address": "...", "lat": 0, "lng": 0, "verified": true, "last_verified": "..." },
+    "id": "...",
+    "name": "...",
+    "phone": null,
+    "address": "...",
+    "lat": 12.3,
+    "lng": 76.6,
+    "type": "government",
+    "capabilities": [],
+    "departments": [],
+    "services": [],
+    "diagnostics": [],
+    "source": "...",
+    "source_urls": [],
+    "source_kind": "public",
+    "verified": false,
+    "last_verified": null,
+    "research_checked_on": "2026-10-29",
+    "location_verified": false,
+    "location_source_url": null,
     "distance_km": 0.0,
     "eta_min_approx": 0,
-    "reasons": ["24x7 emergency", "ICU", "poison treatment unit", "4.2 km away"],
+    "reasons": [],
     "matched_required": [],
     "matched_preferred": [],
     "missing_preferred": [],
-    "directions_url": "https://www.google.com/maps/dir/?api=1&origin=LAT,LNG&destination=LAT,LNG&travelmode=driving",
-    "call_url": "tel:+91..."
+    "directions_url": null,
+    "call_url": null
   },
-  "alternatives": [ { "...same shape as recommendation..." } ],
+  "alternatives": [ { "...same flat HospitalResult shape..." } ],
   "pre_alert_text": "Patient: young male (about 19). Situation: swallowed acid, conscious, in pain. Arriving by private vehicle in about 15 min. Please be ready.",
   "emergency_numbers": { "ambulance": "108", "unified": "112" },
   "warnings": [],
+  "ui_copy": {
+    "response_language": "en",
+    "emergency_banner": "This sounds life-threatening. Call 108 now.",
+    "disclaimer": "This service does not diagnose or give medical advice.",
+    "capabilities_note": "Unlisted capabilities are unknown, not unavailable.",
+    "actions_unavailable": "Calls and directions are withheld until verified."
+  },
   "meta": { "classifier": "keyword | llm | fallback", "provider": "gemini | groq | ollama | none", "latency_ms": 0, "cached": false }
 }
 ```
+
+Hospital fields are top-level properties of `recommendation` and each alternative; there is no nested `hospital` property. `directions_url` and `call_url` are nullable and are withheld by the backend until the required hospital and location details are verified. See [`docs/API_CONTRACT.md`](docs/API_CONTRACT.md) for the shared field definitions and contract-test command.
 
 ### Other routes
 - `GET /api/health` returns `{ "status": "ok", "hospitals_loaded": n, "verified_count": n }`.

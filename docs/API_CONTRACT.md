@@ -1,0 +1,91 @@
+# SahayAI triage API contract
+
+This is the shared `POST /api/triage` contract for `codex/backend` and `codex/sahayai-frontend`. It follows the backend Pydantic response models in `backend/schemas.py` and is validated by the frontend Zod schema in `src/features/patient/lib/contracts.ts`.
+
+## Request
+
+The request contains `text` (1–500 characters), `lat`, `lng`, and `location_source` (`gps` or `manual`). `language` is optional and accepts `auto`, `en`, `hi`, or `kn`; the backend defaults it to `auto`.
+
+```json
+{
+  "text": "My father has chest pain and sweating.",
+  "lat": 12.2958,
+  "lng": 76.6394,
+  "location_source": "manual",
+  "language": "en"
+}
+```
+
+## Response shape
+
+`recommendation` is either `null` or a flat hospital-result object. Each entry in `alternatives` has the same flat shape. Hospital fields such as `id`, `name`, `phone`, `address`, `verified`, and `location_verified` are direct properties of the result. There is no `hospital` wrapper object.
+
+```json
+{
+  "emergency": {
+    "type": "cardiac",
+    "severity": "critical",
+    "age_group": "adult",
+    "red_flags": ["chest_pain"],
+    "summary": "Possible cardiac emergency reported.",
+    "confidence": 0.91,
+    "input_language": "en"
+  },
+  "recommendation": {
+    "id": "hospital-id",
+    "name": "Hospital name",
+    "phone": null,
+    "address": "Mysuru, Karnataka",
+    "lat": 12.302,
+    "lng": 76.645,
+    "type": "government",
+    "capabilities": ["emergency_24x7", "cardiology"],
+    "departments": ["cardiology"],
+    "services": [],
+    "diagnostics": [],
+    "source": "Public information",
+    "source_urls": [],
+    "source_kind": "public",
+    "verified": false,
+    "last_verified": null,
+    "research_checked_on": "2026-10-29",
+    "location_verified": false,
+    "location_source_url": null,
+    "distance_km": 2.4,
+    "eta_min_approx": 7,
+    "reasons": ["cardiology", "2.4 km away"],
+    "matched_required": ["emergency_24x7"],
+    "matched_preferred": ["cardiology"],
+    "missing_preferred": [],
+    "directions_url": null,
+    "call_url": null
+  },
+  "alternatives": [],
+  "pre_alert_text": "EMERGENCY PRE-ALERT…",
+  "emergency_numbers": { "ambulance": "108", "unified": "112" },
+  "warnings": [],
+  "ui_copy": {
+    "response_language": "en",
+    "emergency_banner": "This sounds life-threatening. Call 108 now.",
+    "disclaimer": "This service does not diagnose or give medical advice.",
+    "capabilities_note": "Unlisted capabilities are unknown, not unavailable.",
+    "actions_unavailable": "Calls and directions are withheld until verified."
+  },
+  "meta": {
+    "classifier": "keyword",
+    "provider": "none",
+    "latency_ms": 12,
+    "cached": false
+  }
+}
+```
+
+Hospital result fields are `id`, `name`, nullable `phone` and `address`, `lat`, `lng`, `type`, `capabilities`, `departments`, `services`, `diagnostics`, nullable `source`, `source_urls`, nullable `source_kind`, `verified`, nullable `last_verified`, nullable `research_checked_on`, `location_verified`, nullable `location_source_url`, `distance_km`, `eta_min_approx`, `reasons`, `matched_required`, `matched_preferred`, `missing_preferred`, nullable `directions_url`, and nullable `call_url`.
+
+The backend serializes unavailable action URLs as `null`. The frontend also tolerates omitted action URL properties and treats both cases as unavailable. It must use the URLs provided by the backend: navigation is enabled only when `verified` and `location_verified` are true and `directions_url` is present; hospital calling is enabled only when `verified` is true and `call_url` is present. Neither client should synthesize Maps or telephone URLs.
+
+Hospital records from public sources remain unverified until confirmed by the hospital. `research_checked_on` is not a hospital verification date. Missing capability tags mean unknown, not unavailable.
+
+## Contract verification
+
+Run `npm run test:contract` on the frontend branch. The test passes a serialized flat backend response through the same `requestTriage` adapter used by the UI, verifies it is returned with `demo: false`, and renders the hospital card to check that backend data is shown. It also checks nullable and omitted action URLs.
