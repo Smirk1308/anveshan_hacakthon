@@ -155,12 +155,24 @@ test("serialized backend response reaches the UI adapter as live data, not demo"
     React.createElement(HospitalCard, {
       match: result.data.recommendation,
       copy: getUiCopy("en"),
+      locationAvailable: true,
     }),
   );
   assert.match(cardHtml, /Backend Contract Fixture Hospital/);
   assert.match(cardHtml, /Public-source research/);
   assert.match(cardHtml, /Call unavailable/);
-  assert.match(cardHtml, /Directions unavailable/);
+  assert.match(cardHtml, /google\\.com\\/maps\\/dir\\//);
+  assert.match(cardHtml, /origin=12\\.300000%2C76\\.640000/);
+  assert.match(cardHtml, /destination=12\\.302000%2C76\\.645000/);
+
+  const disabledCardHtml = renderToStaticMarkup(
+    React.createElement(HospitalCard, {
+      match: result.data.recommendation,
+      copy: getUiCopy("en"),
+      locationAvailable: false,
+    }),
+  );
+  assert.match(disabledCardHtml, /Directions unavailable/);
   assert.doesNotMatch(cardHtml, /Synthetic demo/);
 });
 
@@ -174,6 +186,28 @@ test("flat backend records may omit unavailable action URLs", () => {
   const parsed = TriageResponseSchema.parse(payload);
   assert.equal(parsed.recommendation.call_url, undefined);
   assert.equal(parsed.alternatives[0].directions_url, undefined);
+});
+
+test("demo fallback provides a coordinate-pinned directions URL", async () => {
+  const previousApiUrl = process.env.NEXT_PUBLIC_TRIAGE_API_URL;
+  delete process.env.NEXT_PUBLIC_TRIAGE_API_URL;
+  try {
+    const result = await requestTriage(
+      "My friend may have swallowed poison.",
+      { lat: 12.3, lng: 76.64, source: "manual", label: "Mysuru" },
+      "en",
+    );
+    assert.equal(result.demo, true);
+    const directions = new URL(result.data.recommendation.directions_url);
+    assert.equal(directions.origin, "https://www.google.com");
+    assert.equal(directions.pathname, "/maps/dir/");
+    assert.equal(directions.searchParams.get("api"), "1");
+    assert.equal(directions.searchParams.get("origin"), "12.300000,76.640000");
+    assert.equal(directions.searchParams.get("destination"), "12.300800,76.641200");
+  } finally {
+    if (previousApiUrl === undefined) delete process.env.NEXT_PUBLIC_TRIAGE_API_URL;
+    else process.env.NEXT_PUBLIC_TRIAGE_API_URL = previousApiUrl;
+  }
 });
 
 test.after(() => {

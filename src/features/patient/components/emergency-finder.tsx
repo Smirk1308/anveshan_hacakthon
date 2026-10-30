@@ -209,6 +209,7 @@ export default function EmergencyFinder() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         if (manualLocationChosen.current) return;
+        setResponse(null);
         setLocation({
           lat: position.coords.latitude,
           lng: position.coords.longitude,
@@ -256,6 +257,7 @@ export default function EmergencyFinder() {
   function selectArea(areaId: string) {
     const area = areas.find((item) => item.id === areaId) ?? areas[0];
     manualLocationChosen.current = true;
+    setResponse(null);
     setLocation({
       lat: area.lat,
       lng: area.lng,
@@ -567,6 +569,7 @@ export default function EmergencyFinder() {
                       copy={copy}
                       uiActionsUnavailable={backendCopy?.actions_unavailable}
                       primary
+                      locationAvailable={locationStatus !== "not-shared"}
                     />
                     {response.alternatives.length > 0 && (
                       <>
@@ -583,6 +586,7 @@ export default function EmergencyFinder() {
                               uiActionsUnavailable={
                                 backendCopy?.actions_unavailable
                               }
+                              locationAvailable={locationStatus !== "not-shared"}
                             />
                           ))}
                         </div>
@@ -634,11 +638,13 @@ export function HospitalCard({
   copy,
   uiActionsUnavailable,
   primary = false,
+  locationAvailable = false,
 }: {
   match: HospitalMatch;
   copy: ReturnType<typeof getUiCopy>;
   uiActionsUnavailable?: string;
   primary?: boolean;
+  locationAvailable?: boolean;
 }) {
   const hospital = match;
   const synthetic =
@@ -648,8 +654,9 @@ export function HospitalCard({
       ? match.call_url
       : undefined;
   const canNavigate =
-    hospital.verified &&
-    hospital.location_verified &&
+    locationAvailable &&
+    Number.isFinite(hospital.lat) &&
+    Number.isFinite(hospital.lng) &&
     Boolean(match.directions_url);
   return (
     <article className={"hospital-card" + (primary ? "" : " backup")}>

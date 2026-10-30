@@ -12,6 +12,15 @@ import { requestBackendTriage } from "./triage-client";
 
 const sampleHospitals = samples as HospitalRecord[];
 
+function demoDirectionsUrl(origin: Location, hospital: HospitalRecord) {
+  const url = new URL("https://www.google.com/maps/dir/");
+  url.searchParams.set("api", "1");
+  url.searchParams.set("origin", `${origin.lat.toFixed(6)},${origin.lng.toFixed(6)}`);
+  url.searchParams.set("destination", `${hospital.lat.toFixed(6)},${hospital.lng.toFixed(6)}`);
+  url.searchParams.set("travelmode", "driving");
+  return url.toString();
+}
+
 const emergencyProfiles = [
   {
     type: "poisoning_ingestion",
@@ -139,6 +148,7 @@ function makeDemoResponse(
     );
     return {
       ...hospital,
+      directions_url: demoDirectionsUrl(location, hospital),
       distance_km: Number(distance.toFixed(1)),
       eta_min_approx: Math.max(1, Math.round((distance / 25) * 60)),
       reasons: [
