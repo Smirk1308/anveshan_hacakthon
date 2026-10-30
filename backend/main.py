@@ -174,7 +174,27 @@ async def get_ambulance_directory() -> dict[str, object]:
                 if contact.get("verification") != "historical_unverified"
                 and not str(contact.get("number_type", "")).startswith("historical_")
             ]
-            providers.append({**provider, "public_contacts": current_contacts})
+            providers.append({
+                "provider_id": provider.get("provider_id"),
+                "name": provider.get("name"),
+                "provider_type": provider.get("provider_type"),
+                "record_status": provider.get("record_status"),
+                "public_contacts": current_contacts,
+                "address_or_service_location": provider.get("address_or_service_location"),
+                "public_listing_notes": provider.get("public_listing_notes"),
+                "evidence_label": provider.get("evidence_label"),
+                "source_ids": provider.get("source_ids", []),
+            })
+        networks = [
+            {
+                "network_id": network.get("network_id"),
+                "name": network.get("name"),
+                "public_contacts": network.get("public_contacts", []),
+                "operating_model_note": network.get("operating_model_note"),
+                "source_ids": network.get("source_ids", []),
+            }
+            for network in directory.get("networks_or_aggregators", [])
+        ]
         return {
             "dataset_name": directory.get("dataset_name"),
             "generated_on": directory.get("generated_on"),
@@ -183,7 +203,7 @@ async def get_ambulance_directory() -> dict[str, object]:
             "summary": directory.get("summary", {}),
             "important_caveats": directory.get("important_caveats", []),
             "providers": providers,
-            "networks_or_aggregators": directory.get("networks_or_aggregators", []),
+            "networks_or_aggregators": networks,
             "sources": directory.get("sources", []),
         }
     except Exception as exc:
