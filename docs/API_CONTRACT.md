@@ -34,7 +34,7 @@ The request contains `text` (1–500 characters), `lat`, `lng`, and `location_so
   "recommendation": {
     "id": "hospital-id",
     "name": "Hospital name",
-    "phone": null,
+    "phone": "",
     "address": "Mysuru, Karnataka",
     "lat": 12.302,
     "lng": 76.645,
@@ -47,7 +47,7 @@ The request contains `text` (1–500 characters), `lat`, `lng`, and `location_so
     "source_urls": [],
     "source_kind": "public",
     "verified": false,
-    "last_verified": null,
+    "last_verified": "",
     "research_checked_on": "2026-10-29",
     "location_verified": false,
     "location_source_url": null,
@@ -80,7 +80,7 @@ The request contains `text` (1–500 characters), `lat`, `lng`, and `location_so
 }
 ```
 
-Hospital result fields are `id`, `name`, nullable `phone` and `address`, `lat`, `lng`, `type`, `capabilities`, `departments`, `services`, `diagnostics`, nullable `source`, `source_urls`, nullable `source_kind`, `verified`, nullable `last_verified`, nullable `research_checked_on`, `location_verified`, nullable `location_source_url`, `distance_km`, `eta_min_approx`, `reasons`, `matched_required`, `matched_preferred`, `missing_preferred`, nullable `directions_url`, and nullable `call_url`.
+Hospital result fields are `id`, `name`, `phone`, `address`, `lat`, `lng`, `type`, `capabilities`, `departments`, `services`, `diagnostics`, nullable `source`, `source_urls`, nullable `source_kind`, `verified`, `last_verified`, nullable `research_checked_on`, `location_verified`, nullable `location_source_url`, `distance_km`, `eta_min_approx`, `reasons`, `matched_required`, `matched_preferred`, `missing_preferred`, nullable `directions_url`, and nullable `call_url`. The current backend emits `""` for unknown `phone`, `address`, and `last_verified` display values; nullable research/source fields remain `null` when unknown.
 
 The backend serializes unavailable action URLs as `null`. The frontend also tolerates omitted action URL properties and treats both cases as unavailable. It must use the URLs provided by the backend: navigation is enabled only when `verified` and `location_verified` are true and `directions_url` is present; hospital calling is enabled only when `verified` is true and `call_url` is present. Neither client should synthesize Maps or telephone URLs.
 

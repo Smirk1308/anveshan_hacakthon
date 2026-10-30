@@ -11,7 +11,7 @@
   "recommendation": {
     "id": "contract-fixture-001",
     "name": "Backend Contract Fixture Hospital",
-    "phone": null,
+    "phone": "",
     "address": "Mysuru, Karnataka",
     "lat": 12.302,
     "lng": 76.645,
@@ -24,7 +24,7 @@
     "source_urls": ["https://example.org/hospital-source"],
     "source_kind": "public",
     "verified": false,
-    "last_verified": null,
+    "last_verified": "",
     "research_checked_on": "2026-10-29",
     "location_verified": false,
     "location_source_url": null,
@@ -41,8 +41,8 @@
     {
       "id": "contract-fixture-002",
       "name": "Backend Alternative Hospital One",
-      "phone": null,
-      "address": "Mysuru, Karnataka",
+      "phone": "",
+      "address": "",
       "lat": 12.31,
       "lng": 76.65,
       "type": "private",
@@ -54,7 +54,7 @@
       "source_urls": [],
       "source_kind": "public",
       "verified": false,
-      "last_verified": null,
+      "last_verified": "",
       "research_checked_on": "2026-10-28",
       "location_verified": false,
       "location_source_url": null,
@@ -70,7 +70,7 @@
     {
       "id": "contract-fixture-003",
       "name": "Backend Alternative Hospital Two",
-      "phone": null,
+      "phone": "",
       "address": "Mysuru, Karnataka",
       "lat": 12.29,
       "lng": 76.63,
@@ -83,7 +83,7 @@
       "source_urls": [],
       "source_kind": "public",
       "verified": false,
-      "last_verified": null,
+      "last_verified": "",
       "research_checked_on": "2026-10-27",
       "location_verified": false,
       "location_source_url": null,
@@ -98,7 +98,10 @@
     }
   ],
   "pre_alert_text": "EMERGENCY PRE-ALERT\nSituation: Possible cardiac emergency reported.\nDetails are user-reported and unverified.",
-  "emergency_numbers": { "ambulance": "108", "unified": "112" },
+  "emergency_numbers": {
+    "ambulance": "108",
+    "unified": "112"
+  },
   "warnings": ["Public-source records have not been hospital-verified."],
   "ui_copy": {
     "response_language": "en",
