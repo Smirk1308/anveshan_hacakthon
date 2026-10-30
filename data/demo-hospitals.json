@@ -31,7 +31,7 @@
     "capabilities": [
       "emergency_24x7",
       "icu",
-      "anti_venom",
+      "snake_bite_management",
       "ventilator",
       "neurology"
     ],

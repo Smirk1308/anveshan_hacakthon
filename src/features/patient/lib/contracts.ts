@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+export const LanguageSchema = z.enum(["auto", "en", "hi", "kn"]);
+export type Language = z.infer<typeof LanguageSchema>;
+export type ResponseLanguage = Exclude<Language, "auto">;
+
 export const LocationSchema = z.object({
   lat: z.number().min(-90).max(90),
   lng: z.number().min(-180).max(180),
@@ -10,13 +14,25 @@ export const LocationSchema = z.object({
 const HospitalSchema = z.object({
   id: z.string(),
   name: z.string(),
-  phone: z.string().default(""),
-  address: z.string(),
+  phone: z.string().nullable().optional(),
+  address: z.string().nullable().optional(),
   lat: z.number(),
   lng: z.number(),
-  verified: z.boolean(),
-  last_verified: z.string().default(""),
+  type: z.string().optional(),
   capabilities: z.array(z.string()).default([]),
+  departments: z.array(z.string()).default([]),
+  services: z.array(z.string()).default([]),
+  diagnostics: z.array(z.string()).default([]),
+  source: z.string().nullable().optional(),
+  source_urls: z.array(z.string()).default([]),
+  source_kind: z.string().nullable().optional(),
+  verified: z.boolean(),
+  verified_by: z.string().nullable().optional(),
+  last_verified: z.string().nullable().optional(),
+  research_checked_on: z.string().nullable().optional(),
+  location_verified: z.boolean().default(false),
+  location_source_url: z.string().nullable().optional(),
+  notes: z.string().optional(),
 });
 
 const MatchSchema = z.object({
@@ -27,8 +43,16 @@ const MatchSchema = z.object({
   matched_required: z.array(z.string()).default([]),
   matched_preferred: z.array(z.string()).default([]),
   missing_preferred: z.array(z.string()).default([]),
-  directions_url: z.string().optional(),
-  call_url: z.string().optional(),
+  directions_url: z.string().nullable().optional(),
+  call_url: z.string().nullable().optional(),
+});
+
+const UiCopySchema = z.object({
+  response_language: z.enum(["en", "hi", "kn"]),
+  emergency_banner: z.string(),
+  disclaimer: z.string(),
+  capabilities_note: z.string(),
+  actions_unavailable: z.string(),
 });
 
 export const TriageResponseSchema = z.object({
@@ -46,6 +70,7 @@ export const TriageResponseSchema = z.object({
   pre_alert_text: z.string(),
   emergency_numbers: z.object({ ambulance: z.string(), unified: z.string() }),
   warnings: z.array(z.string()),
+  ui_copy: UiCopySchema,
   meta: z.object({
     classifier: z.enum(["keyword", "llm", "fallback"]),
     provider: z.enum(["gemini", "groq", "ollama", "none"]),
@@ -63,4 +88,5 @@ export const TriageRequestSchema = z.object({
   lat: z.number().min(-90).max(90),
   lng: z.number().min(-180).max(180),
   location_source: z.enum(["gps", "manual"]),
+  language: LanguageSchema.default("auto"),
 });

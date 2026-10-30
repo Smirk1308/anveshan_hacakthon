@@ -2,16 +2,16 @@
 
 SahayAI helps a bystander find a nearby hospital that may match an emergency's care requirements. **Call 108 first in an emergency.** The app does not diagnose or provide treatment advice.
 
-This workspace currently contains the patient-facing Next.js frontend. The backend is a separate FastAPI service per `PROJECT_BRIEF.md`. When the API is not configured or cannot be reached, the frontend uses synthetic sample records clearly marked as unverified; call and navigation actions stay disabled for those records.
+This workspace currently contains the patient-facing Next.js frontend. The backend is a separate FastAPI service per `PROJECT_BRIEF.md`. When the API is not configured or cannot be reached, the frontend uses synthetic sample records clearly marked as unverified; call and navigation actions stay disabled for those records. Backend public-source records are also presented as unverified until the hospital confirms the details.
 
 ## Run on Windows
 
-Requirements: Node.js 24 LTS or newer supported Node.js 20.9+ release, npm, and PowerShell. No database or Python installation is needed to run the frontend demo.
+Requirements: Node.js 20.9 or newer, npm, and PowerShell. No database or Python installation is needed to run the frontend demo.
 
 ```powershell
 cd "C:\Users\Akash\Documents\ChatGPT\Anvaya Hackathon"
 npm ci
-Copy-Item .env.example .env.local
+Copy-Item .env.frontend.example .env.local
 npm run dev
 ```
 
@@ -25,7 +25,7 @@ Set `NEXT_PUBLIC_TRIAGE_API_URL` in `.env.local` to the backend origin, then res
 NEXT_PUBLIC_TRIAGE_API_URL=http://localhost:8000
 ```
 
-The backend must expose `POST /api/triage` with the request and response contract in `PROJECT_BRIEF.md`, and allow `http://localhost:3000` through CORS. The frontend validates the response with Zod. If the service is unreachable or returns an invalid response, the page falls back to synthetic demo data and displays a warning.
+The backend must expose `POST /api/triage` with the request and response contract in `PROJECT_BRIEF.md`, and allow `http://localhost:3000` through CORS. The frontend validates responses with Zod and sends the chosen language. If the service is unreachable or returns an invalid response, the page falls back to synthetic demo data and displays a warning.
 
 Never place Gemini, Groq, or other private API keys in a `NEXT_PUBLIC_*` variable or in frontend code. Those keys belong only in the FastAPI service's server-side environment.
 
@@ -47,12 +47,12 @@ src/
   app/                         Next.js App Router entry and global styles
   features/patient/             Patient-facing emergency finder
     components/                 Responsive UI components
-    lib/                        API adapter and Zod contracts
-data/hospitals.json             Synthetic unverified UI fixtures
+    lib/                        API adapter, Zod contracts, and UI translations
+data/demo-hospitals.json        Synthetic unverified UI fixtures
 ```
 
-The hospital fixtures are not real facilities. Replace them only with records that teammates have verified by hand. Keep `verified: false` for fixtures; the frontend intentionally disables calls, maps and pre-alert actions for unverified records. Do not present sample availability as live.
+The hospital fixtures are not real facilities. Replace them only with records that teammates have verified by hand. Keep `verified: false` for fixtures; the frontend intentionally disables calls, directions, and pre-alert actions for unverified records. Do not present sample availability as live.
 
 ## Location and privacy
 
-Browser geolocation works on `localhost` or HTTPS. The UI requests one foreground location fix, offers a manual approximate-area picker, and does not save the query or location in browser storage. A configured backend receives the query and coordinates for the current triage request; backend retention must follow the project brief. Phone links are `tel:` links and may require a phone-capable device.
+Browser geolocation works on `localhost` or HTTPS. The UI requests one foreground location fix, offers a manual approximate-area picker, and does not save the query or location in browser storage. A configured backend receives the emergency text and coordinates for the current triage request. If the backend has a hosted language model configured, emergency text may also be sent to that model provider for classification. Confirm retention and provider settings against the backend environment before using real patient information. The frontend stores neither values in browser storage. Phone calls and navigation appear only when the backend explicitly provides the corresponding URL and marks the hospital or its location verified.

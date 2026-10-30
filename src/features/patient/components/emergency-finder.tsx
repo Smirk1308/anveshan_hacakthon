@@ -2,7 +2,13 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { requestTriage } from "../lib/api";
-import { HospitalMatch, Location, TriageResponse } from "../lib/contracts";
+import { getUiCopy } from "../lib/ui-copy";
+import {
+  HospitalMatch,
+  Language,
+  Location,
+  TriageResponse,
+} from "../lib/contracts";
 
 const mysuruCenter = { lat: 12.2958, lng: 76.6394 };
 const areas = [
@@ -113,21 +119,6 @@ function Icon({ name, className = "" }: { name: string; className?: string }) {
   );
 }
 
-function safeMapsUrl(match: HospitalMatch, location: Location) {
-  if (match.directions_url) return match.directions_url;
-  const origin = encodeURIComponent(location.lat + "," + location.lng);
-  const destination = encodeURIComponent(
-    match.hospital.lat + "," + match.hospital.lng,
-  );
-  return (
-    "https://www.google.com/maps/dir/?api=1&origin=" +
-    origin +
-    "&destination=" +
-    destination +
-    "&travelmode=driving"
-  );
-}
-
 export default function EmergencyFinder() {
   const [query, setQuery] = useState("");
   const [location, setLocation] = useState<Location>({
@@ -135,14 +126,15 @@ export default function EmergencyFinder() {
     source: "manual",
     label: "Mysuru city centre · approximate",
   });
-  const [locationStatus, setLocationStatus] = useState(
-    "Location not shared · choose an approximate area",
-  );
+  const [locationStatus, setLocationStatus] = useState<
+    "current" | "not-shared" | "approx"
+  >("not-shared");
   const [response, setResponse] = useState<TriageResponse | null>(null);
   const [isDemo, setIsDemo] = useState(!process.env.NEXT_PUBLIC_TRIAGE_API_URL);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
+  const [language, setLanguage] = useState<Language>("auto");
   const manualLocationChosen = useRef(false);
 
   useEffect(() => {
@@ -156,11 +148,10 @@ export default function EmergencyFinder() {
           source: "gps",
           label: "Current location · coordinates hidden",
         });
-        setLocationStatus("Using your current location");
+        setLocationStatus("current");
       },
       () => {
-        if (!manualLocationChosen.current)
-          setLocationStatus("Location not shared · choose an approximate area");
+        if (!manualLocationChosen.current) setLocationStatus("not-shared");
       },
       { enableHighAccuracy: false, timeout: 6000, maximumAge: 300000 },
     );
@@ -181,7 +172,7 @@ export default function EmergencyFinder() {
     }
     setLoading(true);
     try {
-      const result = await requestTriage(query, location);
+      const result = await requestTriage(query, location, language);
       setResponse(result.data);
       setIsDemo(result.demo);
     } catch {
@@ -202,7 +193,7 @@ export default function EmergencyFinder() {
       source: "manual",
       label: area.label,
     });
-    setLocationStatus("Approximate area selected");
+    setLocationStatus("approx");
   }
 
   async function copyPreAlert() {
@@ -219,7 +210,20 @@ export default function EmergencyFinder() {
   }
 
   const recommendation = response?.recommendation ?? null;
-  const showDemoNotice = isDemo || demoModeConfigured;
+  const copy = getUiCopy(
+    response?.ui_copy.response_language ??
+      (language === "auto" ? "en" : language),
+  );
+  const backendCopy = response?.ui_copy;
+  const showDataNotice = isDemo || demoModeConfigured || Boolean(response);
+  const hasSyntheticResults = Boolean(
+    response &&
+    [response.recommendation, ...response.alternatives].some(
+      (item) =>
+        item?.hospital.type === "sample" ||
+        item?.hospital.id.startsWith("sample_"),
+    ),
+  );
 
   return (
     <div className="app-shell">
@@ -229,19 +233,19 @@ export default function EmergencyFinder() {
             <div className="brand-mark">S</div>
             <div>
               <div className="brand-name">SahayAI</div>
-              <div className="brand-caption">Emergency hospital finder</div>
+              <div className="brand-caption">{copy.brandCaption}</div>
             </div>
           </div>
           <nav className="hotline-actions" aria-label="Emergency phone numbers">
             <a className="hotline-link primary" href="tel:108">
               <Icon name="phone" />
-              <span>Call 108</span>
-              <span className="hotline-number">Ambulance</span>
+              <span>{copy.call108}</span>
+              <span className="hotline-number">{copy.ambulance}</span>
             </a>
             <a className="hotline-link" href="tel:112">
               <Icon name="phone" />
-              <span>Call 112</span>
-              <span className="hotline-number">Emergency</span>
+              <span>{copy.call112}</span>
+              <span className="hotline-number">{copy.emergency}</span>
             </a>
           </nav>
         </div>
@@ -251,26 +255,46 @@ export default function EmergencyFinder() {
         <section className="hero">
           <div>
             <div className="eyebrow">
-              <span className="eyebrow-dot" /> Mysuru emergency support
+              <span className="eyebrow-dot" /> {copy.heroEyebrow}
             </div>
             <h1>
-              Right hospital.
+              {copy.heroFirst}
               <br />
-              <span>First time.</span>
+              <span>{copy.heroSecond}</span>
             </h1>
-            <p className="hero-copy">
-              Describe what happened. SahayAI helps find a nearby hospital by
-              the care it may provide—not distance alone.
-            </p>
+            <p className="hero-copy">{copy.heroCopy}</p>
           </div>
-          <div className="prototype-badge">24-hour hackathon prototype</div>
+          <div className="hero-tools">
+            <label className="language-control">
+              <span>{copy.languageLabel}</span>
+              <select
+                value={language}
+                onChange={(event) => {
+                  setLanguage(event.target.value as Language);
+                  setResponse(null);
+                }}
+                aria-label={copy.languageLabel}
+              >
+                <option value="auto">{copy.languageAuto}</option>
+                <option value="en">{copy.languageEnglish}</option>
+                <option value="hi">{copy.languageHindi}</option>
+                <option value="kn">{copy.languageKannada}</option>
+              </select>
+            </label>
+            <div className="prototype-badge">{copy.prototypeBadge}</div>
+          </div>
         </section>
 
-        {showDemoNotice && (
+        {showDataNotice && (
           <div className="notice" role="status">
-            <strong>Demo mode:</strong> Hospital records are synthetic examples
-            and are not verified. Do not call or navigate to these sample
-            hospitals. For a real emergency, call 108 or 112.
+            <strong>
+              {hasSyntheticResults || !response
+                ? copy.demoMode
+                : copy.publicDataLabel}
+            </strong>{" "}
+            {hasSyntheticResults || !response
+              ? copy.syntheticNotice
+              : copy.publicDataNotice}
           </div>
         )}
 
@@ -278,10 +302,10 @@ export default function EmergencyFinder() {
           <div className="emergency-banner" role="alert">
             <Icon name="alert" className="alert-icon" />
             <div>
-              <strong>This sounds life-threatening. Call 108 now.</strong>
-              <p>
-                Do not wait for a hospital match. Call emergency services first.
-              </p>
+              <strong>
+                {backendCopy?.emergency_banner ?? copy.emergencyBannerFallback}
+              </strong>
+              <p>{copy.emergencyBannerSupport}</p>
             </div>
           </div>
         )}
@@ -293,28 +317,30 @@ export default function EmergencyFinder() {
           >
             <div className="panel-heading">
               <div>
-                <h2 id="situation-heading">What happened?</h2>
-                <p>Share only what is needed to find a suitable hospital.</p>
+                <h2 id="situation-heading">{copy.formTitle}</h2>
+                <p>{copy.formPrompt}</p>
               </div>
               <span className="step-mark">01 / 02</span>
             </div>
 
             <form onSubmit={submit}>
               <label className="field-label" htmlFor="area-select">
-                Your location{" "}
-                <span className="field-help">Used for this search only</span>
+                {copy.locationLabel}{" "}
+                <span className="field-help">{copy.locationHelp}</span>
               </label>
               <div className="location-row">
                 <div className="location-status">
                   <Icon name="pin" />
                   <span className="location-text">
-                    {locationStatus === "Using your current location"
-                      ? location.label
-                      : locationStatus}
+                    {locationStatus === "current"
+                      ? copy.locationCurrent
+                      : locationStatus === "approx"
+                        ? copy.locationStatusApprox
+                        : copy.locationStatusNotShared}
                   </span>
                 </div>
                 <label className="sr-only" htmlFor="area-select">
-                  Choose approximate Mysuru area
+                  {copy.chooseArea}
                 </label>
                 <select
                   id="area-select"
@@ -329,7 +355,7 @@ export default function EmergencyFinder() {
                   aria-label="Choose approximate Mysuru area"
                 >
                   <option value="" disabled>
-                    Choose area
+                    {copy.chooseArea}
                   </option>
                   {areas.map((area) => (
                     <option key={area.id} value={area.id}>
@@ -339,15 +365,12 @@ export default function EmergencyFinder() {
                 </select>
               </div>
               {location.source === "manual" && (
-                <p className="location-note">
-                  Approximate demo area; results may be inaccurate. Location is
-                  not saved.
-                </p>
+                <p className="location-note">{copy.approxLocation}</p>
               )}
 
               <label className="field-label" htmlFor="situation-input">
-                Describe the emergency{" "}
-                <span className="field-help">English · हिन्दी · ಕನ್ನಡ</span>
+                {copy.describeEmergency}{" "}
+                <span className="field-help">{copy.languageHint}</span>
               </label>
               <textarea
                 id="situation-input"
@@ -355,16 +378,16 @@ export default function EmergencyFinder() {
                 value={query}
                 onChange={(event) => setQuery(event.target.value.slice(0, 500))}
                 maxLength={500}
-                placeholder="For example: My friend may have swallowed poison. He is conscious."
+                placeholder={copy.placeholder}
                 aria-describedby="input-hint"
               />
               <div className="input-meta">
-                <span id="input-hint">No diagnosis or treatment advice</span>
+                <span id="input-hint">{copy.noAdvice}</span>
                 <span>{query.length}/500</span>
               </div>
 
               <div className="examples">
-                <p className="example-label">Try a demo example</p>
+                <p className="example-label">{copy.examplesTitle}</p>
                 <div className="chip-row">
                   {examples.map((example) => (
                     <button
@@ -396,17 +419,16 @@ export default function EmergencyFinder() {
                         borderTopColor: "#06201e",
                       }}
                     />{" "}
-                    Finding a suitable hospital…
+                    {copy.submitting}
                   </>
                 ) : (
                   <>
-                    <Icon name="spark" /> Find the right hospital
+                    <Icon name="spark" /> {copy.submit}
                   </>
                 )}
               </button>
               <p className="privacy-note">
-                <Icon name="shield" /> Your situation and location are not saved
-                by this screen.
+                <Icon name="shield" /> {copy.privacy}
               </p>
               {error && (
                 <p className="error-text" role="alert">
@@ -427,35 +449,36 @@ export default function EmergencyFinder() {
                   <Icon name="spark" />
                 </div>
                 <div>
-                  <h2 id="results-heading">Hospital match</h2>
+                  <h2 id="results-heading">{copy.resultsTitle}</h2>
                   <p>
                     {response
-                      ? "Based on reported capabilities and distance"
-                      : "A clear recommendation, with backups"}
+                      ? copy.resultsSubtitle
+                      : copy.resultsEmptySubtitle}
                   </p>
                 </div>
               </div>
               <span className="result-mode">
-                {response ? (isDemo ? "Demo" : "Matched") : "Ready"}
+                {response
+                  ? isDemo
+                    ? copy.statusDemo
+                    : copy.statusMatched
+                  : copy.statusReady}
               </span>
             </div>
 
             {loading ? (
               <div className="loading-state">
                 <div className="spinner" />
-                <strong>Finding a suitable hospital…</strong>
-                <p>Call 108 remains available above.</p>
+                <strong>{copy.loadingTitle}</strong>
+                <p>{copy.loadingHelp}</p>
               </div>
             ) : !response ? (
               <div className="empty-state">
                 <div className="empty-art">
                   <Icon name="route" />
                 </div>
-                <h3>One clear next step</h3>
-                <p>
-                  Tell us what happened to see a capability-matched hospital and
-                  two alternatives.
-                </p>
+                <h3>{copy.emptyTitle}</h3>
+                <p>{copy.emptyPrompt}</p>
               </div>
             ) : (
               <div className="results-content">
@@ -467,12 +490,12 @@ export default function EmergencyFinder() {
                 {recommendation ? (
                   <>
                     <div className="recommend-label">
-                      <Icon name="check" /> Most suitable based on capability
-                      and distance
+                      <Icon name="check" /> {copy.recommendLabel}
                     </div>
                     <HospitalCard
                       match={recommendation}
-                      location={location}
+                      copy={copy}
+                      uiActionsUnavailable={backendCopy?.actions_unavailable}
                       primary
                       onCopy={copyPreAlert}
                       copied={copied}
@@ -480,95 +503,98 @@ export default function EmergencyFinder() {
                     {response.alternatives.length > 0 && (
                       <>
                         <div className="backup-heading">
-                          <span>Two backups</span>
-                          <span>Call ahead when possible</span>
+                          <span>{copy.backups}</span>
+                          <span>{copy.callAhead}</span>
                         </div>
                         <div className="backup-list">
                           {response.alternatives.slice(0, 2).map((match) => (
                             <HospitalCard
                               key={match.hospital.id}
                               match={match}
-                              location={location}
+                              copy={copy}
+                              uiActionsUnavailable={
+                                backendCopy?.actions_unavailable
+                              }
                             />
                           ))}
                         </div>
                       </>
                     )}
-                    <p className="followup-note">
-                      If an ambulance is delayed or the patient is getting
-                      worse, go to emergency care now. Do not wait for this
-                      screen.
-                    </p>
+                    <p className="followup-note">{copy.followup}</p>
                   </>
                 ) : (
                   <div className="empty-state">
                     <div className="empty-art">
                       <Icon name="alert" />
                     </div>
-                    <h3>No hospital result</h3>
-                    <p>
-                      Call 108 now. You can try again or choose an approximate
-                      area.
-                    </p>
+                    <h3>{copy.noResultTitle}</h3>
+                    <p>{copy.noResultHelp}</p>
                   </div>
                 )}
                 <div className="disclaimer">
-                  SahayAI helps you choose a suitable hospital. It does not
-                  diagnose or give medical advice.{" "}
-                  {isDemo
-                    ? "Sample records are synthetic and unverified."
-                    : "Hospital information may change; call the hospital if you can."}{" "}
-                  In an emergency, call 108.
+                  {backendCopy?.disclaimer ??
+                    (isDemo ? copy.demoDisclaimer : copy.liveDisclaimer)}{" "}
+                  {backendCopy?.capabilities_note}
                 </div>
               </div>
             )}
           </section>
         </div>
       </main>
-      <footer className="footer">
-        SahayAI assists your decision; it does not replace 108, paramedics, or
-        doctors.
-      </footer>
+      <footer className="footer">{copy.footer}</footer>
     </div>
   );
 }
 
 function HospitalCard({
   match,
-  location,
+  copy,
+  uiActionsUnavailable,
   primary = false,
   onCopy,
   copied = false,
 }: {
   match: HospitalMatch;
-  location: Location;
+  copy: ReturnType<typeof getUiCopy>;
+  uiActionsUnavailable?: string;
   primary?: boolean;
   onCopy?: () => void;
   copied?: boolean;
 }) {
   const hospital = match.hospital;
+  const synthetic =
+    hospital.type === "sample" || hospital.id.startsWith("sample_");
   const callHref =
-    hospital.verified && hospital.phone
-      ? match.call_url || "tel:" + hospital.phone
+    hospital.verified && hospital.phone && match.call_url
+      ? match.call_url
       : undefined;
-  const canNavigate = hospital.verified;
+  const canNavigate =
+    hospital.verified &&
+    hospital.location_verified &&
+    Boolean(match.directions_url);
   return (
     <article className={"hospital-card" + (primary ? "" : " backup")}>
       <div className="hospital-topline">
         <div>
           <h3 className="hospital-name">{hospital.name}</h3>
-          <p className="hospital-address">{hospital.address}</p>
+          <p className="hospital-address">
+            {hospital.address || copy.addressUnavailable}
+          </p>
         </div>
-        {!hospital.verified && (
-          <span className="sample-badge">Sample · unverified</span>
-        )}
+        <span className="sample-badge">
+          {synthetic
+            ? copy.badgeSynthetic
+            : hospital.verified
+              ? copy.badgeVerified
+              : copy.badgePublic}
+        </span>
       </div>
       <div className="hospital-metrics">
         <span className="metric">
-          <Icon name="pin" /> {match.distance_km.toFixed(1)} km
+          <Icon name="pin" /> {copy.distance}: {match.distance_km.toFixed(1)} km
         </span>
         <span className="metric">
-          <Icon name="clock" /> approx. {match.eta_min_approx} min
+          <Icon name="clock" /> {copy.eta}: {match.eta_min_approx} min
         </span>
       </div>
       <div className="reason-list">
@@ -578,59 +604,84 @@ function HospitalCard({
           </span>
         ))}
       </div>
-      <p className="verified-line">
-        Last verified:{" "}
-        <strong>{hospital.last_verified || "Not verified"}</strong>
-      </p>
+      <div className="provenance">
+        <p className="verified-line">
+          {hospital.verified ? copy.verifiedAt : copy.notVerified}:{" "}
+          <strong>{hospital.last_verified || "—"}</strong>
+        </p>
+        {hospital.research_checked_on && (
+          <p className="verified-line">
+            {copy.researchedAt}: <strong>{hospital.research_checked_on}</strong>
+          </p>
+        )}
+        <p className="verified-line">
+          {hospital.location_verified
+            ? copy.locationVerified
+            : copy.locationNotVerified}
+        </p>
+        {hospital.source_urls.length > 0 ? (
+          <p className="source-links">
+            {hospital.source_urls.map((url, index) => (
+              <a key={url} href={url} target="_blank" rel="noreferrer">
+                {copy.sourceLink} {index + 1}
+              </a>
+            ))}
+          </p>
+        ) : hospital.source ? (
+          <p className="verified-line">{hospital.source}</p>
+        ) : (
+          <p className="verified-line">{copy.sourceUnavailable}</p>
+        )}
+      </div>
       <div className="action-row">
         {callHref ? (
           <a className="action-button" href={callHref}>
-            <Icon name="phone" /> Call hospital
+            <Icon name="phone" /> {copy.callHospital}
           </a>
         ) : (
           <span
             className="action-button disabled"
             aria-disabled="true"
-            title="This sample has no verified phone number"
+            title={uiActionsUnavailable ?? copy.callUnavailable}
           >
-            <Icon name="phone" /> Call unavailable
+            <Icon name="phone" /> {copy.callUnavailable}
           </span>
         )}
         {canNavigate ? (
           <a
             className="action-button"
-            href={safeMapsUrl(match, location)}
+            href={match.directions_url!}
             target="_blank"
             rel="noreferrer"
           >
-            <Icon name="route" /> Navigate
+            <Icon name="route" /> {copy.navigate}
           </a>
         ) : (
           <span
             className="action-button disabled"
             aria-disabled="true"
-            title="Sample locations cannot be used for navigation"
+            title={uiActionsUnavailable ?? copy.navigateUnavailable}
           >
-            <Icon name="route" /> Navigate unavailable
+            <Icon name="route" /> {copy.navigateUnavailable}
           </span>
         )}
         {primary &&
-          (hospital.verified ? (
+          (hospital.verified && !synthetic ? (
             <button
               className="action-button copy"
               type="button"
               onClick={onCopy}
             >
               <Icon name="copy" />{" "}
-              {copied ? "Pre-alert copied" : "Copy pre-alert"}
+              {copied ? copy.copiedPrealert : copy.copyPrealert}
             </button>
           ) : (
             <span
               className="action-button copy disabled"
               aria-disabled="true"
-              title="Pre-alert sending is disabled for sample hospitals"
+              title={uiActionsUnavailable ?? copy.prealertUnavailable}
             >
-              <Icon name="copy" /> Pre-alert unavailable for sample
+              <Icon name="copy" /> {copy.prealertUnavailable}
             </span>
           ))}
       </div>

@@ -1,11 +1,13 @@
-import samples from "../../../../data/hospitals.json";
+import samples from "../../../../data/demo-hospitals.json";
 import {
   HospitalMatch,
+  Language,
   Location,
   TriageRequestSchema,
   TriageResponse,
   TriageResponseSchema,
 } from "./contracts";
+import { getUiCopy } from "./ui-copy";
 
 const sampleHospitals = samples as HospitalMatch["hospital"][];
 const API_URL = process.env.NEXT_PUBLIC_TRIAGE_API_URL?.replace(/\/$/, "");
@@ -24,6 +26,7 @@ const capabilityLabels: Record<string, string> = {
   cardiology: "Cardiology",
   cardiac_cath_lab: "Cardiac cath lab",
   ventilator: "Ventilator",
+  snake_bite_management: "Snake-bite management",
   paediatrics: "Paediatrics",
   picu: "PICU",
 };
@@ -41,7 +44,7 @@ const emergencyProfiles = [
     type: "snake_bite",
     patterns: [/snake|सांप|saap|ಹಾವು|ಹಾವು ಕಚ್ಚ/],
     severity: "critical" as const,
-    preferred: ["anti_venom", "ventilator"],
+    preferred: ["snake_bite_management", "icu", "ventilator"],
   },
   {
     type: "burns",
@@ -92,6 +95,7 @@ function haversineKm(origin: Location, hospital: HospitalMatch["hospital"]) {
 function makeDemoResponse(
   text: string,
   location: Location,
+  language: Language,
   warning?: string,
 ): TriageResponse {
   const normalized = text.toLocaleLowerCase();
@@ -167,6 +171,13 @@ function makeDemoResponse(
       : "Possible " + profileType.replaceAll("_", " ") + " incident reported.";
   const caution =
     "Synthetic demo record only. Do not call or navigate to this sample.";
+  const detectedLanguage = /[\u0900-\u097F]/.test(text)
+    ? "hi"
+    : /[\u0C80-\u0CFF]/.test(text)
+      ? "kn"
+      : "en";
+  const responseLanguage = language === "auto" ? detectedLanguage : language;
+  const copy = getUiCopy(responseLanguage);
   return {
     emergency: {
       type: profileType,
@@ -175,11 +186,7 @@ function makeDemoResponse(
       red_flags: redFlags,
       summary,
       confidence: profile ? 0.5 : 0,
-      input_language: /[\u0900-\u097F]/.test(text)
-        ? "hi"
-        : /[\u0C80-\u0CFF]/.test(text)
-          ? "kn"
-          : "en",
+      input_language: detectedLanguage,
     },
     recommendation: matches[0] ?? null,
     alternatives: matches.slice(1),
@@ -187,6 +194,13 @@ function makeDemoResponse(
       "EMERGENCY PRE-ALERT (demo only)\n" + summary + "\n" + caution,
     emergency_numbers: { ambulance: "108", unified: "112" },
     warnings: [caution, ...(warning ? [warning] : [])],
+    ui_copy: {
+      response_language: responseLanguage,
+      emergency_banner: copy.emergencyBannerFallback,
+      disclaimer: copy.demoDisclaimer,
+      capabilities_note: copy.publicDataNotice,
+      actions_unavailable: copy.navigateUnavailable,
+    },
     meta: {
       classifier: "fallback",
       provider: "none",
@@ -199,15 +213,20 @@ function makeDemoResponse(
 export async function requestTriage(
   text: string,
   location: Location,
+  language: Language = "auto",
 ): Promise<{ data: TriageResponse; demo: boolean }> {
   const request = TriageRequestSchema.parse({
     text,
     lat: location.lat,
     lng: location.lng,
     location_source: location.source,
+    language,
   });
   if (!API_URL)
-    return { data: makeDemoResponse(request.text, location), demo: true };
+    return {
+      data: makeDemoResponse(request.text, location, language),
+      demo: true,
+    };
 
   try {
     const response = await fetch(API_URL + "/api/triage", {
@@ -228,6 +247,7 @@ export async function requestTriage(
       data: makeDemoResponse(
         request.text,
         location,
+        language,
         "The matching service could not be reached. Showing synthetic demo records.",
       ),
       demo: true,
