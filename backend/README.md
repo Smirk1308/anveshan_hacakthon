@@ -40,6 +40,10 @@ Routes:
 
 The keyword path is always tried first. If it cannot classify the input, one structured model request is made only when exactly one `LLM_PROVIDER` is configured and `LLM_ALLOW_USER_TEXT_SHARING=true`. The model receives the emergency description, not the user's coordinates. Otherwise, the backend uses the safe `general_unclear` fallback. A provider error, timeout, or invalid response also falls back; it does not try another provider in the same request. Raw emergency text and coordinates are not written to backend logs or persisted to disk/database by this API. The bounded in-memory classification cache stores a per-process HMAC of normalized text rather than the text itself; cached classifications expire after 30 minutes and at most 256 entries are retained. No model is allowed to generate diagnosis, treatment, medicine, or first-aid advice.
 
+## Classifier evaluation
+
+Run the rule-based evaluation cases with `py -m unittest discover -s tests -v`. Category severity follows the project brief; detected red flags remain separate and trigger the urgent UI banner. In particular, severe bleeding and pediatric emergencies with fits stay `serious`, while a standalone seizure is `critical`. Hindi acid-ingestion examples are included in both Roman Hindi and Devanagari.
+
 ## Abuse controls and integration contract
 
 - `POST /api/triage` is limited per client IP using an in-memory sliding window. Defaults are 30 requests per 60 seconds; override with `TRIAGE_RATE_LIMIT_REQUESTS` and `TRIAGE_RATE_LIMIT_WINDOW_SECONDS`.
