@@ -43,7 +43,11 @@ def _get_model():
         for device in devices:
             compute_type = "int8_float16" if device == "cuda" else "int8"
             try:
-                _model = WhisperModel(MODEL_NAME, device=device, compute_type=compute_type)
+                candidate = WhisperModel(MODEL_NAME, device=device, compute_type=compute_type)
+                if device == "cuda":
+                    import numpy as np
+                    candidate.detect_language(np.zeros(16000, dtype=np.float32))
+                _model = candidate
                 logger.info("Local speech recognition ready: model=%s device=%s", MODEL_NAME, device)
                 return _model
             except Exception as exc:

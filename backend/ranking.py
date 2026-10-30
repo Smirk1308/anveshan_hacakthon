@@ -130,7 +130,7 @@ def _build_result(
             if hospital.lat is not None and hospital.lng is not None
             else None
         ),
-        call_url=f"tel:{dial_string}" if hospital.verified and dial_string else None,
+        call_url=f"tel:{dial_string}" if dial_string else None,
     )
     return result, score
 

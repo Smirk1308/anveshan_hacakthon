@@ -247,11 +247,7 @@ export default function EmergencyFinder() {
     copy.exampleChestPain,
     copy.exampleBreathing,
   ];
-  const prealertCanCopy = Boolean(
-    response?.recommendation?.verified &&
-    response.recommendation.type !== "sample" &&
-    !response.recommendation.id.startsWith("sample_"),
-  );
+  const prealertCanCopy = Boolean(response?.pre_alert_text);
 
   useEffect(() => {
     return () => {
@@ -474,13 +470,26 @@ export default function EmergencyFinder() {
   }
 
   async function copyPreAlert() {
-    if (!response?.recommendation?.verified) return;
+    if (!response?.pre_alert_text) return;
     try {
       await navigator.clipboard.writeText(response.pre_alert_text);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2200);
     } catch {
-      setError(copy.clipboardError);
+      try {
+        const textarea = document.createElement("textarea");
+        textarea.value = response.pre_alert_text;
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 2200);
+      } catch {
+        setError(copy.clipboardError);
+      }
     }
   }
 
@@ -551,7 +560,6 @@ export default function EmergencyFinder() {
                 <option value="kn">{copy.languageKannada}</option>
               </select>
             </label>
-            <div className="prototype-badge">{copy.prototypeBadge}</div>
           </div>
         </section>
 
@@ -906,7 +914,7 @@ export default function EmergencyFinder() {
                     <p>{copy.noResultHelp}</p>
                   </div>
                 )}
-                <details className="prealert-panel">
+                <details className="prealert-panel" open>
                   <summary>{copy.prealertPreview}</summary>
                   <pre>
                     {response.pre_alert_text || copy.prealertUnavailable}
@@ -964,10 +972,14 @@ export function HospitalCard({
   const hospital = match;
   const synthetic =
     hospital.type === "sample" || hospital.id.startsWith("sample_");
+  const rawPhone =
+    hospital.phone ||
+    (match.call_url ? match.call_url.replace("tel:", "") : undefined);
   const callHref =
-    hospital.verified && hospital.phone && match.call_url
-      ? match.call_url
-      : undefined;
+    match.call_url ||
+    (rawPhone && rawPhone.trim().length > 0
+      ? `tel:${rawPhone.replace(/[^\d+]/g, "")}`
+      : undefined);
   const canNavigate =
     locationAvailable &&
     Number.isFinite(hospital.lat) &&

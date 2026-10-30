@@ -247,10 +247,9 @@ function makeDemoResponse(
         address: hospital.address ?? "",
         last_verified: hospital.last_verified ?? "",
         directions_url: demoDirectionsUrl(location, hospital),
-        call_url:
-          hospital.verified && hospital.phone
-            ? `tel:${hospital.phone.replace(/[^\d+]/g, "")}`
-            : null,
+        call_url: hospital.phone
+          ? `tel:${hospital.phone.replace(/[^\d+]/g, "")}`
+          : null,
         distance_km: Number(distance.toFixed(1)),
         eta_min_approx: Math.max(1, Math.round((distance / 25) * 60)),
         reasons,
