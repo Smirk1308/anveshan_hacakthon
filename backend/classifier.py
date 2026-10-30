@@ -15,7 +15,7 @@ from backend.schemas import Classification, EmergencyType, Language, Severity
 # Commonly used English, Devanagari/Roman Hindi, and Kannada/Roman Kannada phrases.
 # Expand this lexicon with phrases the Mysuru team can review; it does not replace local-language review.
 KEYWORDS: dict[EmergencyType, tuple[str, ...]] = {
-    EmergencyType.POISONING_INGESTION: ("poison", "poisoning", "acid", "swallowed", "drank acid", "phenyl", "overdose", "vish", "visha", "zeher", "ज़हर", "जहर", "एसिड", "अम्ल", "ವಿಷ", "ಆಸಿಡ್", "ಕುಡಿದ", "ನುಂಗಿದ"),
+    EmergencyType.POISONING_INGESTION: ("poison", "poisoning", "acid", "swallowed", "drank acid", "acid piya", "acid pee liya", "phenyl", "overdose", "vish", "visha", "zeher", "tezaab", "tezab", "ज़हर", "जहर", "तेज़ाब", "तेजाब", "तेज़ाब पी लिया", "तेजाब पी लिया", "एसिड", "अम्ल", "ವಿಷ", "ಆಸಿಡ್", "ಕುಡಿದ", "ನುಂಗಿದ"),
     EmergencyType.BURNS: ("burn", "burned", "burnt", "hot oil", "fire", "जल गया", "जल गई", "जलना", "jal gaya", "jal gayi", "suttu", "ಸುಟ್ಟ", "ಸುಟ್ಟಿದೆ", "ಬಿಸಿ ಎಣ್ಣೆ"),
     EmergencyType.SNAKE_BITE: ("snake bite", "snake bit", "snakebite", "सांप ने काटा", "साँप", "saap", "saap ne kata", "saanp ne kaata", "havu", "havu kachide", "ಹಾವು ಕಚ್ಚಿತು", "ಹಾವು ಕಚ್ಚಿದೆ", "ಸರ್ಪದ ಕಡಿತ"),
     EmergencyType.CARDIAC: ("chest pain", "heart attack", "heart pain", "chest tight", "seene mein dard", "seene me dard", "dil ka daura", "छाती में दर्द", "सीने में दर्द", "दिल का दौरा", "ಎದೆ ನೋವು", "ಹೃದಯಾಘಾತ", "ಎದೆ ಬಿಗಿತ"),
@@ -104,7 +104,7 @@ SEVERITY = {
     EmergencyType.OBSTETRIC: Severity.SERIOUS,
     EmergencyType.PEDIATRIC_EMERGENCY: Severity.SERIOUS,
     EmergencyType.BREATHING_DIFFICULTY: Severity.CRITICAL,
-    EmergencyType.SEIZURE: Severity.SERIOUS,
+    EmergencyType.SEIZURE: Severity.CRITICAL,
     EmergencyType.ALLERGIC_REACTION: Severity.SERIOUS,
     EmergencyType.ELECTRIC_SHOCK_DROWNING: Severity.SERIOUS,
     EmergencyType.MINOR_INJURY_FRACTURE: Severity.MODERATE,
@@ -154,7 +154,7 @@ def detect_language(text: str) -> str:
     if kannada:
         return "kn"
     lowered = text.casefold()
-    hindi_roman = sum(word in lowered for word in ("hai", "ko", "mein", "mere", "saap", "zeher", "dard", "behosh", "jal gaya", "saans"))
+    hindi_roman = sum(word in lowered for word in ("hai", "ko", "mein", "mere", "saap", "zeher", "tezaab", "tezab", "dard", "behosh", "jal gaya", "saans"))
     kannada_roman = sum(word in lowered for word in ("ide", "illa", "nanna", "avanu", "avalu", "suttu", "havu", "novu", "kacchide"))
     if hindi_roman and kannada_roman:
         return "mixed"
@@ -206,9 +206,10 @@ def _keyword_classification(text: str, input_language: str, response_language: s
         return None
     emergency_type = matched[0][0]
     flags = [flag for flag, phrases in RED_FLAGS.items() if any(_normalize(p) in normalized for p in phrases)]
+    # Red flags drive the urgent UI banner independently of the category severity.
+    # This preserves the brief's expected seriousness for severe bleeding and
+    # pediatric emergencies while a standalone seizure remains critical.
     severity = SEVERITY[emergency_type]
-    if flags:
-        severity = Severity.CRITICAL
     language = response_language if response_language in LABELS else "en"
     return Classification(
         type=emergency_type,
@@ -269,8 +270,6 @@ async def classify(text: str, requested_language: Language) -> tuple[Classificat
                 classifier = "llm"
                 keyword_flags = [flag for flag, phrases in RED_FLAGS.items() if any(_normalize(p) in _normalize(text) for p in phrases)]
                 result.red_flags = list(dict.fromkeys(result.red_flags + keyword_flags))
-                if result.red_flags:
-                    result.severity = Severity.CRITICAL
             except Exception as exc:
                 # Do not log raw user text or provider response.
                 import logging
@@ -280,8 +279,6 @@ async def classify(text: str, requested_language: Language) -> tuple[Classificat
 
     if result.type == EmergencyType.GENERAL_UNCLEAR and classifier != "llm":
         classifier = "fallback"
-    if result.red_flags:
-        result.severity = Severity.CRITICAL
     if len(_cache) >= _CACHE_LIMIT:
         _cache.popitem(last=False)
     _cache[cache_key] = (now, result.model_copy(deep=True), classifier, provider)
