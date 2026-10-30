@@ -149,7 +149,11 @@ test("serialized backend response reaches the UI adapter as live data, not demo"
   );
   assert.equal("hospital" in result.data.recommendation, false);
   assert.equal(result.data.recommendation.call_url, null);
-  assert.equal(result.data.recommendation.directions_url, null);
+  assert.ok(
+    result.data.recommendation.directions_url.startsWith(
+      "https://www.google.com/maps/dir/",
+    ),
+  );
 
   const cardHtml = renderToStaticMarkup(
     React.createElement(HospitalCard, {
@@ -161,9 +165,9 @@ test("serialized backend response reaches the UI adapter as live data, not demo"
   assert.match(cardHtml, /Backend Contract Fixture Hospital/);
   assert.match(cardHtml, /Public-source research/);
   assert.match(cardHtml, /Call unavailable/);
-  assert.match(cardHtml, /google\\.com\\/maps\\/dir\\//);
-  assert.match(cardHtml, /origin=12\\.300000%2C76\\.640000/);
-  assert.match(cardHtml, /destination=12\\.302000%2C76\\.645000/);
+  assert.ok(cardHtml.includes("https://www.google.com/maps/dir/?api=1"));
+  assert.ok(cardHtml.includes("origin=12.300000%2C76.640000"));
+  assert.ok(cardHtml.includes("destination=12.302000%2C76.645000"));
 
   const disabledCardHtml = renderToStaticMarkup(
     React.createElement(HospitalCard, {
