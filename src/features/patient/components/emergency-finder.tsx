@@ -865,9 +865,9 @@ export default function EmergencyFinder() {
                       uiActionsUnavailable={backendCopy?.actions_unavailable}
                       primary
                       locationAvailable={locationStatus !== "not-shared"}
-                              emergency={response.emergency}
-                              location={locationStatus === "current" ? location : null}
-                              language={language}
+                      emergency={response.emergency}
+                      location={locationStatus === "current" ? location : null}
+                      language={language}
                     />
                     {response.alternatives.length > 0 && (
                       <>
@@ -932,7 +932,7 @@ export default function EmergencyFinder() {
             )}
           </section>
         </div>
-      <PrivateAmbulanceDirectory language={language} />
+        <PrivateAmbulanceDirectory language={language} />
       </main>
       <NearbyHelp
         location={locationStatus === "current" ? location : null}
@@ -949,17 +949,17 @@ export function HospitalCard({
   copy,
   uiActionsUnavailable,
   emergency,
-  location,
-  language,
+  location = null,
+  language = "en",
   primary = false,
   locationAvailable = false,
 }: {
   match: HospitalMatch;
   copy: ReturnType<typeof getUiCopy>;
   uiActionsUnavailable?: string;
-  emergency: TriageResponse["emergency"];
-  location: Location | null;
-  language: Language;
+  emergency?: TriageResponse["emergency"];
+  location?: Location | null;
+  language?: Language;
   primary?: boolean;
   locationAvailable?: boolean;
 }) {
@@ -1075,13 +1075,19 @@ export function HospitalCard({
           </span>
         )}
       </div>
-      <AmbulanceRequest
-        key={hospital.id}
-        hospital={{ name: hospital.name, phone: hospital.phone, services: hospital.services }}
-        emergency={emergency}
-        location={location}
-        language={language}
-      />
+      {emergency && (
+        <AmbulanceRequest
+          key={hospital.id}
+          hospital={{
+            name: hospital.name,
+            phone: hospital.phone,
+            services: hospital.services,
+          }}
+          emergency={emergency}
+          location={location}
+          language={language}
+        />
+      )}
     </article>
   );
 }

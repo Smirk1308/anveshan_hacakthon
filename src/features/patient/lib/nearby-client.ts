@@ -149,8 +149,8 @@ export async function updateHelperAvailability(
 export async function stopHelperAvailability(
   helperToken: string,
   options?: NearbyRequestOptions,
-): Promise<{ status: string }> {
-  return await requestJson<{ status: string }>(
+): Promise<{ stopped?: boolean; status?: string }> {
+  return await requestJson<{ stopped?: boolean; status?: string }>(
     "/api/nearby/helpers/stop",
     "POST",
     {},

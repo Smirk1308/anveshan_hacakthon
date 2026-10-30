@@ -61,7 +61,12 @@ const componentOutputDir = path.join(
   "components",
 );
 fs.mkdirSync(componentOutputDir, { recursive: true });
-for (const compName of ["nearby-help.tsx", "emergency-finder.tsx"]) {
+for (const compName of [
+  "ambulance-request.tsx",
+  "private-ambulance-directory.tsx",
+  "nearby-help.tsx",
+  "emergency-finder.tsx",
+]) {
   const componentSource = fs.readFileSync(
     path.join(
       projectRoot,
@@ -592,6 +597,80 @@ test("configured backend triage failure throws and does not fabricate demo resul
         return true;
       },
     );
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
+test("ambulance directory and hospital ambulance SMS contract", async () => {
+  const originalFetch = global.fetch;
+  global.fetch = async (url) => {
+    if (url.includes("/api/ambulances")) {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          generated_on: "2026-10-31",
+          geography: "Mysuru",
+          summary: { local_provider_candidates: 1 },
+          providers: [
+            {
+              provider_id: "amb_1",
+              name: "Mysuru Ambulance Service",
+              provider_type: "private_provider",
+              record_status: "public_listing",
+              public_contacts: [
+                {
+                  number: "+919876543210",
+                  source_id: "src_1",
+                  number_type: "mobile",
+                },
+              ],
+              address_or_service_location: "Mysuru",
+              source_ids: ["src_1"],
+            },
+          ],
+          networks_or_aggregators: [],
+          sources: [
+            {
+              source_id: "src_1",
+              title: "Public Directory",
+              url: "https://example.com",
+            },
+          ],
+        }),
+      };
+    }
+    throw new Error(`Unexpected url: ${url}`);
+  };
+
+  try {
+    const { default: PrivateAmbulanceDirectory } = require(
+      path.join(componentOutputDir, "private-ambulance-directory.js"),
+    );
+    const html = renderToStaticMarkup(
+      React.createElement(PrivateAmbulanceDirectory, { language: "en" }),
+    );
+    assert.match(html, /Private ambulance options/);
+    assert.match(html, /Loading public directory…/);
+
+    const { default: AmbulanceRequest } = require(
+      path.join(componentOutputDir, "ambulance-request.js"),
+    );
+    const ambulanceHtml = renderToStaticMarkup(
+      React.createElement(AmbulanceRequest, {
+        hospital: {
+          name: "Test Hospital",
+          phone: "+919876543210",
+          services: ["24x7 Ambulance Service"],
+        },
+        emergency: backendResponse.emergency,
+        location: { lat: 12.3, lng: 76.64, source: "gps", label: "Mysuru" },
+        language: "en",
+      }),
+    );
+    assert.match(ambulanceHtml, /Request an ambulance from this hospital/);
+    assert.match(ambulanceHtml, /\+919876543210/);
   } finally {
     global.fetch = originalFetch;
   }

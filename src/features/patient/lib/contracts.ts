@@ -79,12 +79,18 @@ export const TriageResponseSchema = z.object({
   emergency_numbers: z.object({ ambulance: z.string(), unified: z.string() }),
   warnings: z.array(z.string()),
   ui_copy: UiCopySchema,
-  meta: z.object({
-    classifier: z.enum(["keyword", "llm", "fallback"]),
-    provider: z.enum(["gemini", "groq", "ollama", "none"]),
-    latency_ms: z.number().nonnegative(),
-    cached: z.boolean(),
-  }),
+  meta: z
+    .object({
+      classifier: z.enum(["keyword", "llm", "fallback"]),
+      provider: z.enum(["gemini", "groq", "ollama", "none"]),
+      latency_ms: z.number().nonnegative(),
+      cached: z.boolean(),
+      location_source: z.string().optional(),
+      response_language: z.string().optional(),
+      unverified_result_count: z.number().optional(),
+      hospitals_without_coordinates: z.number().optional(),
+    })
+    .passthrough(),
 });
 
 export type Location = z.infer<typeof LocationSchema>;
@@ -93,7 +99,7 @@ export type HospitalRecord = z.infer<typeof HospitalSchema>;
 export type HospitalMatch = z.infer<typeof HospitalMatchSchema>;
 
 export const TriageRequestSchema = z.object({
-  text: z.string().trim().min(2).max(500),
+  text: z.string().trim().min(1).max(500),
   lat: z.number().min(-90).max(90),
   lng: z.number().min(-180).max(180),
   location_source: z.enum(["gps", "manual"]),
