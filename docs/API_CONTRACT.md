@@ -18,11 +18,11 @@ The request contains `text` (1–500 characters), `lat`, `lng`, and `location_so
 
 ## Optional voice transcription
 
-Voice input is an audio-to-text step only. It does not produce a separate triage response.
+Voice input is an audio-to-text step; the normal triage response remains text.
 
-Request: `POST /api/voice/transcribe?language=auto|en|hi|kn`. Send the recording as the raw request body with its audio `Content-Type` (for example, `audio/webm`); do not send multipart form data. The clip is limited to 20 seconds and 10 MiB by default.
+Send a raw recording to `POST /api/voice/transcribe?language=auto|en|hi|kn` with an audio `Content-Type` such as `audio/webm`. Do not use multipart form data. Clips are limited to 20 seconds and 10 MiB by default.
 
-Success response:
+The response is:
 
 ```json
 {
@@ -32,7 +32,7 @@ Success response:
 }
 ```
 
-The frontend should show the transcript for review and editing, then submit the confirmed text to the existing `POST /api/triage` route with the user's location and selected language. Empty or unrecognized audio returns 422. Missing or unavailable local speech recognition returns 503 so the UI can offer typing. Unsupported media types return 415; oversized clips return 413. Audio is processed in memory and is not saved or logged. No browser API key is required.
+Show the transcript in the emergency-description field for review and editing. Only after the user confirms it, send the text to the existing `POST /api/triage` route with the user's selected location and language. Do not call speech recognition providers directly from the browser or store the raw audio. Handle 413 (too large), 415 (unsupported media type), 422 (empty/unrecognized or unsupported-language audio), and 503 (transcription unavailable) by offering retry or typed input. No API key is required for the local transcription endpoint.
 
 ## Response shape
 
@@ -104,7 +104,35 @@ The backend serializes unavailable action URLs as `null`. The frontend also tole
 
 Hospital records from public sources remain unverified until confirmed by the hospital. `research_checked_on` is not a hospital verification date. Missing capability tags mean unknown, not unavailable.
 
+## Nearby community-help alerts
+
+Nearby help is an opt-in community feature, not emergency dispatch. The browser must be served over HTTPS (localhost is allowed during development), and each helper must explicitly enable notifications and location. The feature is available only when VAPID push keys are configured by the backend.
+
+The requester explicitly agrees before sharing live GPS and an emergency category. Free-text triage, name, phone, and exact coordinates are never included in a push payload. A push notification is generic. The helper must open the app, share a fresh location, and accept while within 500 m. Only then does the API return the requester's exact pin and a Google Maps walking route. Requests expire after 10 minutes; helper availability expires after 15 minutes and location must be refreshed within 3 minutes. Push delivery is best effort, so keep 108/112 visible.
+
+Routes:
+
+- `GET /api/nearby/config` returns feature availability, the VAPID public key, 500 m radius, and TTL values.
+- `POST /api/nearby/helpers/register` stores a browser PushSubscription and returns an opaque helper bearer token.
+- `POST /api/nearby/helpers/availability` accepts `{ "lat": number, "lng": number }` with `Authorization: Bearer <helper_token>` and starts/renews 15-minute availability.
+- `POST /api/nearby/helpers/stop` clears the helper's location and availability.
+- `POST /api/nearby/requests` accepts `{ "lat": number, "lng": number, "category": EmergencyType, "consent": true }` and returns `request_id`, a requester bearer token, expiry, and `alerts_queued` (candidate push attempts queued for background delivery, not confirmed receipt). The database stores no free-text description.
+- `GET /api/nearby/requests/{request_id}` with the requester bearer token returns status only; after claim it confirms acceptance without exposing helper identity.
+- `POST /api/nearby/requests/{request_id}/claim` accepts a helper's fresh `lat/lng`; a single atomic claim succeeds only for an available helper within 500 m. The response then includes the exact requester pin and route.
+- `POST /api/nearby/requests/{request_id}/cancel` with the requester bearer token closes an open request.
+
+The current hackathon storage is local SQLite at `.data/nearby.sqlite3` (ignored by Git). It is suitable for one backend process; multiple replicas need shared Postgres storage and a distributed rate limiter. Browser push subscriptions and opaque bearer tokens are sensitive credentials. Configure HTTPS, keep the VAPID private key server-side, and rotate the database and push credentials if exposed. iOS web push requires the site to be installed to the Home Screen on supported iOS versions; notification permission must follow a user action.
+
+Set `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` (private PEM file path accessible to the backend), and `VAPID_SUBJECT=mailto:...` on the backend. Generate the key pair with `vapid --gen` and obtain the browser key with `vapid --applicationServerKey`. Never commit the private key.
+
+## Ambulance options
+
+`GET /api/ambulances` returns the public-source Mysuru directory from `data/mysuru_ambulance_providers.json`: local provider candidates and booking networks. Historical-only leads and contacts marked historical are omitted. Contacts have not all been call-tested; this list does not show live availability, response times, vehicle/crew capabilities, or prices. The list is incomplete; use each card's source links and call to confirm details. The UI must not label a listing as available or confirmed.
+
+Hospital ambulance requests appear only for hospital records whose public `services` mention an ambulance. The requester must have a current GPS location and explicitly consent before seeing the generated message and SMS action. The message preview includes only emergency category, age group, pickup coordinates/map, selected destination, and optional callback number; it does not include the raw triage text. The action opens the device's SMS composer for the user to review and send. SahayAI does not transmit or persist the SMS. A direct automated SMS integration would require a separately approved provider and should not be added without hospital contact authorization.
+
+Private ambulance options use `tel:` links to public listings. They are separate from hospital recommendation and do not guarantee a dispatch, cost, or transfer. Keep 108/112 visible for urgent emergencies.
+
 ## Contract verification
 
 Run `npm run test:contract` on the frontend branch. The test passes a serialized flat backend response through the same `requestTriage` adapter used by the UI, verifies it is returned with `demo: false`, and renders the hospital card to check that backend data is shown. It also checks nullable and omitted action URLs.
-
