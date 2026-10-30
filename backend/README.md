@@ -12,7 +12,7 @@ uvicorn backend.main:app --reload
 ```
 
 The API is available at `http://localhost:8000`; OpenAPI docs are at `/docs`.
-Copy `.env.example` to `.env` and set provider values only if the team wants LLM classification. With `LLM_PROVIDER=none`, multilingual keyword matching and the safe fallback still run without a key.
+Copy `.env.example` to `.env`. Multilingual keyword matching and the safe fallback work without a provider. LLM classification is disabled by default; to enable it, select one provider and set `LLM_ALLOW_USER_TEXT_SHARING=true` after the team has chosen to send emergency text to that provider.
 
 ## Frontend language contract
 
@@ -38,7 +38,14 @@ Routes:
 
 ## Provider behavior
 
-The keyword path is always tried first. If it cannot classify the input and exactly one `LLM_PROVIDER` is configured, the backend makes one structured classification request. A provider error, timeout, or invalid response falls back to `general_unclear`; it does not try another provider in the same request. No model is allowed to generate diagnosis, treatment, medicine, or first-aid advice.
+The keyword path is always tried first. If it cannot classify the input, one structured model request is made only when exactly one `LLM_PROVIDER` is configured and `LLM_ALLOW_USER_TEXT_SHARING=true`. The model receives the emergency description, not the user's coordinates. Otherwise, the backend uses the safe `general_unclear` fallback. A provider error, timeout, or invalid response also falls back; it does not try another provider in the same request. Raw emergency text and coordinates are not written to backend logs or persisted by this API. No model is allowed to generate diagnosis, treatment, medicine, or first-aid advice.
+
+## Abuse controls and integration contract
+
+- `POST /api/triage` is limited per client IP using an in-memory sliding window. Defaults are 30 requests per 60 seconds; override with `TRIAGE_RATE_LIMIT_REQUESTS` and `TRIAGE_RATE_LIMIT_WINDOW_SECONDS`.
+- This limiter is per process and is a basic hackathon safeguard, not a production distributed rate limiter. Behind a reverse proxy, the socket peer may be the proxy; configure a trusted shared rate-limiting layer before public deployment. The endpoint remains unauthenticated so emergency use is not blocked by account creation.
+- Triage responses omit nullable action URLs and normalize missing phone, address, and `last_verified` display values to empty strings to match the frontend's current Zod contract. Call URLs still require hospital verification; directions still require both hospital and location verification.
+- The backend returns translated `ui_copy` for `en`, `hi`, or `kn`. The frontend must render it and add a language selector if users need to choose a language explicitly.
 
 ## Data status
 
