@@ -13,7 +13,7 @@ const COPY = {
 } as const;
 
 type Config = { enabled: boolean; vapid_public_key: string | null };
-type CreatedRequest = { request_id: string; requester_token: string; alerts_sent: number; expires_at: number };
+type CreatedRequest = { request_id: string; requester_token: string; alerts_queued: number; expires_at: number };
 
 function decodeKey(key: string): Uint8Array {
   const padded = key + "=".repeat((4 - (key.length % 4)) % 4);
@@ -136,7 +136,7 @@ export default function NearbyHelp({ location, category, language }: { location:
     setBusy(true); setError("");
     try {
       const created = await api<CreatedRequest>("/requests", undefined, { lat: location.lat, lng: location.lng, category: categoryTag(category), consent: true });
-      setRequest(created); setRequestStatus("open"); setAlertMessage(created.alerts_sent > 0 ? copy.sent : copy.noHelpers);
+      setRequest(created); setRequestStatus("open"); setAlertMessage(created.alerts_queued > 0 ? copy.sent : copy.noHelpers);
       localStorage.setItem(REQUEST_KEY, JSON.stringify(created));
     } catch (cause) { setError(cause instanceof Error ? cause.message : copy.failure); }
     finally { setBusy(false); }
@@ -184,6 +184,7 @@ export default function NearbyHelp({ location, category, language }: { location:
         <label style={{ display: "flex", gap: 9, alignItems: "flex-start", margin: "10px 0", color: "#526b70", fontSize: 12, lineHeight: 1.5 }}>
           <input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} />{copy.consent}
         </label>
+        {!location && <p className="verified-line">{copy.location}</p>}
         <p className="verified-line">{copy.exact}</p>
         <button className="submit-button" type="button" onClick={sendRequest} disabled={busy || !config.enabled || !consent || !location || location.source !== "gps"}>
           {busy ? copy.busy : copy.send}

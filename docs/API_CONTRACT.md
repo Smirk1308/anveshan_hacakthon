@@ -116,7 +116,7 @@ Routes:
 - `POST /api/nearby/helpers/register` stores a browser PushSubscription and returns an opaque helper bearer token.
 - `POST /api/nearby/helpers/availability` accepts `{ "lat": number, "lng": number }` with `Authorization: Bearer <helper_token>` and starts/renews 15-minute availability.
 - `POST /api/nearby/helpers/stop` clears the helper's location and availability.
-- `POST /api/nearby/requests` accepts `{ "lat": number, "lng": number, "category": EmergencyType, "consent": true }` and returns `request_id`, a requester bearer token, expiry, and successful push count. The database stores no free-text description.
+- `POST /api/nearby/requests` accepts `{ "lat": number, "lng": number, "category": EmergencyType, "consent": true }` and returns `request_id`, a requester bearer token, expiry, and `alerts_queued` (candidate push attempts queued for background delivery, not confirmed receipt). The database stores no free-text description.
 - `GET /api/nearby/requests/{request_id}` with the requester bearer token returns status only; after claim it confirms acceptance without exposing helper identity.
 - `POST /api/nearby/requests/{request_id}/claim` accepts a helper's fresh `lat/lng`; a single atomic claim succeeds only for an available helper within 500 m. The response then includes the exact requester pin and route.
 - `POST /api/nearby/requests/{request_id}/cancel` with the requester bearer token closes an open request.
