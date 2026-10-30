@@ -113,7 +113,8 @@ async def limit_triage_requests(request: Request, call_next):
         window_seconds = VOICE_RATE_LIMIT_WINDOW_SECONDS if is_voice else RATE_LIMIT_WINDOW_SECONDS
         # Use the socket peer, not an untrusted forwarded header. Configure a
         # trusted proxy/rate-limit service for deployments behind a load balancer.
-        client_key = f"{request.client.host if request.client else 'unknown'}:{request.url.path}"
+        path_bucket = "/api/nearby" if request.url.path.startswith("/api/nearby/") else request.url.path
+        client_key = f"{request.client.host if request.client else 'unknown'}:{path_bucket}"
         now = time.monotonic()
         cutoff = now - window_seconds
         with _rate_limit_lock:
