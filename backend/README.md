@@ -36,6 +36,15 @@ Routes:
 - `GET /api/hospitals`: loaded records for frontend/demo inspection.
 - `POST /api/triage`: language-aware classification, capability-first ranking, and pre-alert.
 
+## Shared response shape
+
+`POST /api/triage` returns `recommendation` as `null` or a flat `HospitalResult`;
+each item in `alternatives` is also a flat `HospitalResult`. Hospital fields
+are not nested under a `hospital` property. Keep the shared field definitions
+and frontend contract-test instructions in
+[`docs/API_CONTRACT.md`](../docs/API_CONTRACT.md). The frontend branch carries
+the same document, and its serialized-response test validates this schema.
+
 ## Provider behavior
 
 The keyword path is always tried first. If it cannot classify the input, one structured model request is made only when exactly one `LLM_PROVIDER` is configured and `LLM_ALLOW_USER_TEXT_SHARING=true`. The model receives the emergency description, not the user's coordinates. Otherwise, the backend uses the safe `general_unclear` fallback. A provider error, timeout, or invalid response also falls back; it does not try another provider in the same request. Raw emergency text and coordinates are not written to backend logs or persisted to disk/database by this API. The bounded in-memory classification cache stores a per-process HMAC of normalized text rather than the text itself; cached classifications expire after 30 minutes and at most 256 entries are retained. No model is allowed to generate diagnosis, treatment, medicine, or first-aid advice.
