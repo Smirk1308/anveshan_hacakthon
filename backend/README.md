@@ -38,7 +38,7 @@ Routes:
 
 ## Provider behavior
 
-The keyword path is always tried first. If it cannot classify the input, one structured model request is made only when exactly one `LLM_PROVIDER` is configured and `LLM_ALLOW_USER_TEXT_SHARING=true`. The model receives the emergency description, not the user's coordinates. Otherwise, the backend uses the safe `general_unclear` fallback. A provider error, timeout, or invalid response also falls back; it does not try another provider in the same request. Raw emergency text and coordinates are not written to backend logs or persisted by this API. No model is allowed to generate diagnosis, treatment, medicine, or first-aid advice.
+The keyword path is always tried first. If it cannot classify the input, one structured model request is made only when exactly one `LLM_PROVIDER` is configured and `LLM_ALLOW_USER_TEXT_SHARING=true`. The model receives the emergency description, not the user's coordinates. Otherwise, the backend uses the safe `general_unclear` fallback. A provider error, timeout, or invalid response also falls back; it does not try another provider in the same request. Raw emergency text and coordinates are not written to backend logs or persisted to disk/database by this API. The bounded in-memory classification cache stores a per-process HMAC of normalized text rather than the text itself; cached classifications expire after 30 minutes and at most 256 entries are retained. No model is allowed to generate diagnosis, treatment, medicine, or first-aid advice.
 
 ## Abuse controls and integration contract
 
