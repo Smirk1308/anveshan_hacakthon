@@ -93,13 +93,13 @@ app = FastAPI(
     lifespan=lifespan,
 )
 app.include_router(nearby_router)
-frontend_origin = os.getenv("FRONTEND_ORIGIN", "http://localhost:3000").strip()
+frontend_origin = os.getenv("FRONTEND_ORIGIN", "http://localhost:3000,http://127.0.0.1:3000").strip()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[origin.strip() for origin in frontend_origin.split(",") if origin.strip()],
     allow_credentials=False,
-    allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type", "Authorization"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["*"],
 )
 
 
