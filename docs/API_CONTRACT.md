@@ -123,7 +123,7 @@ Routes:
 
 The current hackathon storage is local SQLite at `.data/nearby.sqlite3` (ignored by Git). It is suitable for one backend process; multiple replicas need shared Postgres storage and a distributed rate limiter. Browser push subscriptions and opaque bearer tokens are sensitive credentials. Configure HTTPS, keep the VAPID private key server-side, and rotate the database and push credentials if exposed. iOS web push requires the site to be installed to the Home Screen on supported iOS versions; notification permission must follow a user action.
 
-Set `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` (PEM path or PEM text), and `VAPID_SUBJECT=mailto:...` on the backend. Generate the key pair with `vapid --gen` and obtain the browser key with `vapid --applicationServerKey`. Never commit the private key.
+Set `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` (private PEM file path accessible to the backend), and `VAPID_SUBJECT=mailto:...` on the backend. Generate the key pair with `vapid --gen` and obtain the browser key with `vapid --applicationServerKey`. Never commit the private key.
 
 ## Contract verification
 
