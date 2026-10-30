@@ -142,8 +142,9 @@ class EmergencyResult(BaseModel):
 class HospitalResult(BaseModel):
     id: str
     name: str
-    phone: str | None
-    address: str | None
+    # Frontend Zod contract expects display strings. Convert unknown values to "".
+    phone: str
+    address: str
     lat: float
     lng: float
     type: str
@@ -155,7 +156,7 @@ class HospitalResult(BaseModel):
     source_urls: list[str]
     source_kind: str | None
     verified: bool
-    last_verified: str | None
+    last_verified: str
     research_checked_on: str | None
     location_verified: bool
     location_source_url: str | None
