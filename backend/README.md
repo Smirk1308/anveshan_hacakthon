@@ -79,3 +79,14 @@ The hospital records and emergency taxonomy are from the [`codex/data-gathering`
 - `ONLY_VERIFIED=true` currently excludes all 23 records. Use `false` only for the clearly labeled hackathon demo; do not present the research list as hospital-verified or current availability.
 
 The data source notes and schema are in `data/DATASET_README.md`, `data/hospital_record_schema.json`, and `data/capability_registry.json`. Confirm each branch, address, contact, service, and location with the hospital before changing `verified` or `location_verified` to `true`.
+
+
+## Nearby community help
+
+This opt-in feature alerts registered helpers whose recently refreshed GPS is within 500 metres. The requester must explicitly consent to share GPS and an emergency category; free-text triage is never included. Push messages are generic. A helper must be available, refresh their location, and accept within range before receiving the exact request pin and a Google Maps walking link. Requests expire in 10 minutes; helper availability expires in 15 minutes. Push delivery is best effort and does not replace calling 108 or 112.
+
+The backend uses SQLite at `.data/nearby.sqlite3` by default. It is suitable for a single hackathon backend process. Keep `.data/` and database files out of source control. Multiple backend replicas require shared Postgres storage and distributed rate limiting.
+
+Install `requirements.txt`, then create a VAPID key pair with `vapid --gen`. Set `VAPID_PRIVATE_KEY` to the private PEM file path (or PEM text), `VAPID_PUBLIC_KEY` to the output of `vapid --applicationServerKey`, and `VAPID_SUBJECT` to a monitored `mailto:` address. Keep the private key server-side. Serve the frontend over HTTPS outside localhost; iOS web push requires an installed Home Screen web app on supported versions. The frontend service worker is `public/sw.js`.
+
+Nearby endpoints are documented in the frontend `docs/API_CONTRACT.md`. The feature returns disabled until the public key, private key, and VAPID subject are all configured.

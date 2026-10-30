@@ -31,6 +31,7 @@ from backend.schemas import (
     VoiceTranscriptionResponse,
 )
 from backend.voice import InvalidAudioError, VoiceUnavailableError, inspect_audio, transcribe_audio
+from backend.nearby import router as nearby_router
 
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO").upper())
@@ -88,20 +89,24 @@ app = FastAPI(
     description="Capability-first emergency hospital matching. Not a medical advice or diagnosis service.",
     lifespan=lifespan,
 )
+app.include_router(nearby_router)
 frontend_origin = os.getenv("FRONTEND_ORIGIN", "http://localhost:3000").strip()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[origin.strip() for origin in frontend_origin.split(",") if origin.strip()],
     allow_credentials=False,
     allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 
 @app.middleware("http")
 async def limit_triage_requests(request: Request, call_next):
     """Basic per-process abuse guard for the public text and audio endpoints."""
-    if request.method == "POST" and request.url.path in {"/api/triage", "/api/voice/transcribe"}:
+    if request.method == "POST" and (
+        request.url.path in {"/api/triage", "/api/voice/transcribe"}
+        or request.url.path.startswith("/api/nearby/")
+    ):
         is_voice = request.url.path == "/api/voice/transcribe"
         request_times = _voice_request_times if is_voice else _triage_request_times
         limit = VOICE_RATE_LIMIT_REQUESTS if is_voice else RATE_LIMIT_REQUESTS
@@ -270,3 +275,4 @@ async def transcribe_voice(
         ) from exc
 
     return VoiceTranscriptionResponse(**result)
+
