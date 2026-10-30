@@ -12,25 +12,6 @@ import { getUiCopy } from "./ui-copy";
 const sampleHospitals = samples as HospitalMatch["hospital"][];
 const API_URL = process.env.NEXT_PUBLIC_TRIAGE_API_URL?.replace(/\/$/, "");
 
-const capabilityLabels: Record<string, string> = {
-  emergency_24x7: "24×7 emergency",
-  icu: "ICU",
-  toxicology_poison: "Poison care",
-  anti_venom: "Anti-venom",
-  ct_scan: "CT scan",
-  blood_bank: "Blood bank",
-  trauma_center: "Trauma care",
-  orthopaedics: "Orthopaedics",
-  burns_unit: "Burns unit",
-  plastic_surgery: "Plastic surgery",
-  cardiology: "Cardiology",
-  cardiac_cath_lab: "Cardiac cath lab",
-  ventilator: "Ventilator",
-  snake_bite_management: "Snake-bite management",
-  paediatrics: "Paediatrics",
-  picu: "PICU",
-};
-
 const emergencyProfiles = [
   {
     type: "poisoning_ingestion",
@@ -96,9 +77,17 @@ function makeDemoResponse(
   text: string,
   location: Location,
   language: Language,
-  warning?: string,
+  offline = false,
 ): TriageResponse {
   const normalized = text.toLocaleLowerCase();
+  const detectedLanguage = /[\u0900-\u097F]/.test(text)
+    ? "hi"
+    : /[\u0C80-\u0CFF]/.test(text)
+      ? "kn"
+      : "en";
+  const responseLanguage = language === "auto" ? detectedLanguage : language;
+  const copy = getUiCopy(responseLanguage);
+  const capabilityLabelMap = copy.capabilityLabels as Record<string, string>;
   const profile = emergencyProfiles.find((candidate) =>
     candidate.patterns.some((pattern) => pattern.test(normalized)),
   );
@@ -153,9 +142,10 @@ function makeDemoResponse(
       distance_km: Number(distance.toFixed(1)),
       eta_min_approx: Math.max(1, Math.round((distance / 25) * 60)),
       reasons: [
-        "24×7 emergency",
+        copy.capabilityLabels.emergency_24x7,
         ...matched.map(
-          (capability) => capabilityLabels[capability] ?? capability,
+          (capability) =>
+            capabilityLabelMap[capability] ?? capability.replaceAll("_", " "),
         ),
       ].slice(0, 3),
       matched_required: ["emergency_24x7"],
@@ -166,18 +156,9 @@ function makeDemoResponse(
     };
   });
   const summary =
-    profileType === "general_unclear"
-      ? "Emergency reported; the details are unclear."
-      : "Possible " + profileType.replaceAll("_", " ") + " incident reported.";
-  const caution =
-    "Synthetic demo record only. Do not call or navigate to this sample.";
-  const detectedLanguage = /[\u0900-\u097F]/.test(text)
-    ? "hi"
-    : /[\u0C80-\u0CFF]/.test(text)
-      ? "kn"
-      : "en";
-  const responseLanguage = language === "auto" ? detectedLanguage : language;
-  const copy = getUiCopy(responseLanguage);
+    copy.demoSummaries[profileType as keyof typeof copy.demoSummaries] ??
+    copy.demoSummaries.general_unclear;
+  const caution = copy.syntheticNotice;
   return {
     emergency: {
       type: profileType,
@@ -190,15 +171,14 @@ function makeDemoResponse(
     },
     recommendation: matches[0] ?? null,
     alternatives: matches.slice(1),
-    pre_alert_text:
-      "EMERGENCY PRE-ALERT (demo only)\n" + summary + "\n" + caution,
+    pre_alert_text: copy.demoPrealert,
     emergency_numbers: { ambulance: "108", unified: "112" },
-    warnings: [caution, ...(warning ? [warning] : [])],
+    warnings: [caution, ...(offline ? [copy.requestError] : [])],
     ui_copy: {
       response_language: responseLanguage,
       emergency_banner: copy.emergencyBannerFallback,
       disclaimer: copy.demoDisclaimer,
-      capabilities_note: copy.publicDataNotice,
+      capabilities_note: copy.syntheticNotice,
       actions_unavailable: copy.navigateUnavailable,
     },
     meta: {
@@ -244,12 +224,7 @@ export async function requestTriage(
     };
   } catch {
     return {
-      data: makeDemoResponse(
-        request.text,
-        location,
-        language,
-        "The matching service could not be reached. Showing synthetic demo records.",
-      ),
+      data: makeDemoResponse(request.text, location, language, true),
       demo: true,
     };
   }

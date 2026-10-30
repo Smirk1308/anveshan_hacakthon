@@ -53,6 +53,8 @@ data/demo-hospitals.json        Synthetic unverified UI fixtures
 
 The hospital fixtures are not real facilities. Replace them only with records that teammates have verified by hand. Keep `verified: false` for fixtures; the frontend intentionally disables calls, directions, and pre-alert actions for unverified records. Do not present sample availability as live.
 
+The hero uses a local SVG poster with a restrained CSS location animation by default. To add an optional short loop, put an optimized `.webm` or `.mp4` file in `public/`, set `NEXT_PUBLIC_HERO_VIDEO_URL=/your-loop.webm` in `.env.local`, and restart Next.js. The loop is muted, starts only when reduced motion is not requested, and falls back to the poster otherwise.
+
 ## Location and privacy
 
 Browser geolocation works on `localhost` or HTTPS. The UI requests one foreground location fix, offers a manual approximate-area picker, and does not save the query or location in browser storage. A configured backend receives the emergency text and coordinates for the current triage request. If the backend has a hosted language model configured, emergency text may also be sent to that model provider for classification. Confirm retention and provider settings against the backend environment before using real patient information. The frontend stores neither values in browser storage. Phone calls and navigation appear only when the backend explicitly provides the corresponding URL and marks the hospital or its location verified.

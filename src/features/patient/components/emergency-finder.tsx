@@ -35,13 +35,11 @@ const areas = [
 ];
 const examples = [
   {
-    label: "Possible poisoning",
     text: "My friend may have swallowed poison. He is conscious.",
   },
-  { label: "Snake bite", text: "My father was bitten by a snake." },
-  { label: "Chest pain", text: "My friend has chest pain and sweating." },
+  { text: "My father was bitten by a snake." },
+  { text: "My friend has chest pain and sweating." },
   {
-    label: "Breathing difficulty",
     text: "Someone is having trouble breathing.",
   },
 ];
@@ -119,6 +117,52 @@ function Icon({ name, className = "" }: { name: string; className?: string }) {
   );
 }
 
+const heroVideoSrc = process.env.NEXT_PUBLIC_HERO_VIDEO_URL?.trim();
+
+function HeroMedia() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !heroVideoSrc) return;
+
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const syncPlayback = () => {
+      if (preference.matches) {
+        video.pause();
+      } else {
+        void video.play().catch(() => undefined);
+      }
+    };
+
+    syncPlayback();
+    preference.addEventListener("change", syncPlayback);
+    return () => preference.removeEventListener("change", syncPlayback);
+  }, []);
+
+  return (
+    <div className="hero-media" aria-hidden="true">
+      {heroVideoSrc && (
+        <video
+          ref={videoRef}
+          className="hero-video"
+          muted
+          loop
+          playsInline
+          preload="none"
+          poster="/hero-atmosphere.svg"
+          src={heroVideoSrc}
+        ></video>
+      )}
+      <div className="hero-media-shade" />
+      <div className="hero-map-mark">
+        <span className="hero-map-ring" />
+        <span className="hero-map-dot" />
+      </div>
+    </div>
+  );
+}
+
 export default function EmergencyFinder() {
   const [query, setQuery] = useState("");
   const [location, setLocation] = useState<Location>({
@@ -136,6 +180,29 @@ export default function EmergencyFinder() {
   const [copied, setCopied] = useState(false);
   const [language, setLanguage] = useState<Language>("auto");
   const manualLocationChosen = useRef(false);
+  const copy = getUiCopy(
+    response?.ui_copy.response_language ??
+      (language === "auto" ? "en" : language),
+  );
+  const backendCopy = response?.ui_copy;
+  const areaLabels: Record<string, string> = {
+    center: copy.areaCenter,
+    vijayanagar: copy.areaVijayanagar,
+    kuvempunagar: copy.areaKuvempunagar,
+    nazarbad: copy.areaNazarbad,
+    hebbal: copy.areaHebbal,
+  };
+  const exampleLabels = [
+    copy.examplePoisoning,
+    copy.exampleSnakeBite,
+    copy.exampleChestPain,
+    copy.exampleBreathing,
+  ];
+  const prealertCanCopy = Boolean(
+    response?.recommendation?.hospital.verified &&
+    response.recommendation.hospital.type !== "sample" &&
+    !response.recommendation.hospital.id.startsWith("sample_"),
+  );
 
   useEffect(() => {
     if (!navigator.geolocation) return;
@@ -157,6 +224,12 @@ export default function EmergencyFinder() {
     );
   }, []);
 
+  useEffect(() => {
+    document.documentElement.lang =
+      response?.ui_copy.response_language ??
+      (language === "auto" ? "en" : language);
+  }, [language, response]);
+
   const hasRedFlag = Boolean(response?.emergency.red_flags.length);
   const demoModeConfigured = !process.env.NEXT_PUBLIC_TRIAGE_API_URL;
 
@@ -165,9 +238,7 @@ export default function EmergencyFinder() {
     setError("");
     setCopied(false);
     if (query.trim().length < 2) {
-      setError(
-        "Briefly describe what happened so we can find a suitable hospital.",
-      );
+      setError(copy.shortInputError);
       return;
     }
     setLoading(true);
@@ -176,9 +247,7 @@ export default function EmergencyFinder() {
       setResponse(result.data);
       setIsDemo(result.demo);
     } catch {
-      setError(
-        "We could not process that request. You can still call 108 or 112 above.",
-      );
+      setError(copy.requestError);
     } finally {
       setLoading(false);
     }
@@ -203,18 +272,11 @@ export default function EmergencyFinder() {
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2200);
     } catch {
-      setError(
-        "Clipboard access is unavailable in this browser. Please try again.",
-      );
+      setError(copy.clipboardError);
     }
   }
 
   const recommendation = response?.recommendation ?? null;
-  const copy = getUiCopy(
-    response?.ui_copy.response_language ??
-      (language === "auto" ? "en" : language),
-  );
-  const backendCopy = response?.ui_copy;
   const showDataNotice = isDemo || demoModeConfigured || Boolean(response);
   const hasSyntheticResults = Boolean(
     response &&
@@ -236,7 +298,7 @@ export default function EmergencyFinder() {
               <div className="brand-caption">{copy.brandCaption}</div>
             </div>
           </div>
-          <nav className="hotline-actions" aria-label="Emergency phone numbers">
+          <nav className="hotline-actions" aria-label={copy.hotlineNav}>
             <a className="hotline-link primary" href="tel:108">
               <Icon name="phone" />
               <span>{copy.call108}</span>
@@ -252,18 +314,19 @@ export default function EmergencyFinder() {
       </header>
 
       <main className="main-wrap">
-        <section className="hero">
-          <div>
+        <section className="hero" aria-labelledby="hero-heading">
+          <div className="hero-copy-block">
             <div className="eyebrow">
               <span className="eyebrow-dot" /> {copy.heroEyebrow}
             </div>
-            <h1>
+            <h1 id="hero-heading">
               {copy.heroFirst}
               <br />
               <span>{copy.heroSecond}</span>
             </h1>
             <p className="hero-copy">{copy.heroCopy}</p>
           </div>
+          <HeroMedia />
           <div className="hero-tools">
             <label className="language-control">
               <span>{copy.languageLabel}</span>
@@ -329,7 +392,15 @@ export default function EmergencyFinder() {
                 <span className="field-help">{copy.locationHelp}</span>
               </label>
               <div className="location-row">
-                <div className="location-status">
+                <div
+                  className={
+                    "location-status" +
+                    (locationStatus === "not-shared"
+                      ? " needs-confirmation"
+                      : " confirmed")
+                  }
+                  aria-live="polite"
+                >
                   <Icon name="pin" />
                   <span className="location-text">
                     {locationStatus === "current"
@@ -352,14 +423,14 @@ export default function EmergencyFinder() {
                     )?.id ?? ""
                   }
                   onChange={(event) => selectArea(event.target.value)}
-                  aria-label="Choose approximate Mysuru area"
+                  aria-label={copy.chooseArea}
                 >
                   <option value="" disabled>
                     {copy.chooseArea}
                   </option>
                   {areas.map((area) => (
                     <option key={area.id} value={area.id}>
-                      {area.label}
+                      {areaLabels[area.id]}
                     </option>
                   ))}
                 </select>
@@ -389,14 +460,14 @@ export default function EmergencyFinder() {
               <div className="examples">
                 <p className="example-label">{copy.examplesTitle}</p>
                 <div className="chip-row">
-                  {examples.map((example) => (
+                  {examples.map((example, index) => (
                     <button
-                      key={example.label}
+                      key={example.text}
                       className="example-chip"
                       type="button"
                       onClick={() => setQuery(example.text)}
                     >
-                      {example.label}
+                      {exampleLabels[index]}
                     </button>
                   ))}
                 </div>
@@ -442,6 +513,7 @@ export default function EmergencyFinder() {
             className="panel results-panel"
             aria-labelledby="results-heading"
             aria-live="polite"
+            aria-busy={loading}
           >
             <div className="results-header">
               <div className="results-title">
@@ -482,7 +554,7 @@ export default function EmergencyFinder() {
               </div>
             ) : (
               <div className="results-content">
-                {response.warnings.map((warning) => (
+                {response.warnings.filter(Boolean).map((warning) => (
                   <div key={warning} className="match-warning">
                     {warning}
                   </div>
@@ -497,8 +569,6 @@ export default function EmergencyFinder() {
                       copy={copy}
                       uiActionsUnavailable={backendCopy?.actions_unavailable}
                       primary
-                      onCopy={copyPreAlert}
-                      copied={copied}
                     />
                     {response.alternatives.length > 0 && (
                       <>
@@ -531,6 +601,21 @@ export default function EmergencyFinder() {
                     <p>{copy.noResultHelp}</p>
                   </div>
                 )}
+                <details className="prealert-panel">
+                  <summary>{copy.prealertPreview}</summary>
+                  <pre>
+                    {response.pre_alert_text || copy.prealertUnavailable}
+                  </pre>
+                  <button
+                    className="prealert-copy-button"
+                    type="button"
+                    disabled={!prealertCanCopy}
+                    onClick={copyPreAlert}
+                  >
+                    {copied ? copy.copiedPrealert : copy.copyPrealert}
+                  </button>
+                  {!prealertCanCopy && <p>{copy.prealertCopyUnavailable}</p>}
+                </details>
                 <div className="disclaimer">
                   {backendCopy?.disclaimer ??
                     (isDemo ? copy.demoDisclaimer : copy.liveDisclaimer)}{" "}
@@ -551,15 +636,11 @@ function HospitalCard({
   copy,
   uiActionsUnavailable,
   primary = false,
-  onCopy,
-  copied = false,
 }: {
   match: HospitalMatch;
   copy: ReturnType<typeof getUiCopy>;
   uiActionsUnavailable?: string;
   primary?: boolean;
-  onCopy?: () => void;
-  copied?: boolean;
 }) {
   const hospital = match.hospital;
   const synthetic =
@@ -576,7 +657,9 @@ function HospitalCard({
     <article className={"hospital-card" + (primary ? "" : " backup")}>
       <div className="hospital-topline">
         <div>
-          <h3 className="hospital-name">{hospital.name}</h3>
+          <h3 className="hospital-name">
+            {hospital.name || copy.hospitalNameUnavailable}
+          </h3>
           <p className="hospital-address">
             {hospital.address || copy.addressUnavailable}
           </p>
@@ -598,7 +681,7 @@ function HospitalCard({
         </span>
       </div>
       <div className="reason-list">
-        {match.reasons.map((reason) => (
+        {match.reasons.filter(Boolean).map((reason) => (
           <span key={reason} className="reason-pill">
             {reason}
           </span>
@@ -665,25 +748,6 @@ function HospitalCard({
             <Icon name="route" /> {copy.navigateUnavailable}
           </span>
         )}
-        {primary &&
-          (hospital.verified && !synthetic ? (
-            <button
-              className="action-button copy"
-              type="button"
-              onClick={onCopy}
-            >
-              <Icon name="copy" />{" "}
-              {copied ? copy.copiedPrealert : copy.copyPrealert}
-            </button>
-          ) : (
-            <span
-              className="action-button copy disabled"
-              aria-disabled="true"
-              title={uiActionsUnavailable ?? copy.prealertUnavailable}
-            >
-              <Icon name="copy" /> {copy.prealertUnavailable}
-            </span>
-          ))}
       </div>
     </article>
   );
