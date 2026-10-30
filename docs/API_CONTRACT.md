@@ -57,7 +57,7 @@ The request contains `text` (1–500 characters), `lat`, `lng`, and `location_so
     "matched_required": ["emergency_24x7"],
     "matched_preferred": ["cardiology"],
     "missing_preferred": [],
-    "directions_url": null,
+    "directions_url": "https://www.google.com/maps/dir/?api=1&origin=12.295800%2C76.639400&destination=12.302000%2C76.645000&travelmode=driving",
     "call_url": null
   },
   "alternatives": [],
@@ -82,7 +82,7 @@ The request contains `text` (1–500 characters), `lat`, `lng`, and `location_so
 
 Hospital result fields are `id`, `name`, `phone`, `address`, `lat`, `lng`, `type`, `capabilities`, `departments`, `services`, `diagnostics`, nullable `source`, `source_urls`, nullable `source_kind`, `verified`, `last_verified`, nullable `research_checked_on`, `location_verified`, nullable `location_source_url`, `distance_km`, `eta_min_approx`, `reasons`, `matched_required`, `matched_preferred`, `missing_preferred`, nullable `directions_url`, and nullable `call_url`. The current backend emits `""` for unknown `phone`, `address`, and `last_verified` display values; nullable research/source fields remain `null` when unknown.
 
-The backend serializes unavailable action URLs as `null`. The frontend also tolerates omitted action URL properties and treats both cases as unavailable. It must use the URLs provided by the backend: navigation is enabled only when `verified` and `location_verified` are true and `directions_url` is present; hospital calling is enabled only when `verified` is true and `call_url` is present. Neither client should synthesize Maps or telephone URLs.
+The backend serializes unavailable action URLs as `null`. The frontend also tolerates omitted action URL properties. Directions URLs are returned whenever a hospital record has coordinates, including records whose hospital or pin verification flags are false, to keep the hackathon demo navigable. The frontend only enables the directions action after the user shares GPS or explicitly selects an area, and keeps unverified destinations visibly marked as approximate. Changing the selected location clears prior results so a stale origin cannot be used. Hospital calling remains enabled only when `verified` is true and `call_url` is present. The demo fallback uses the same Google Maps URL format with the user’s selected origin and sample destination.
 
 Hospital records from public sources remain unverified until confirmed by the hospital. `research_checked_on` is not a hospital verification date. Missing capability tags mean unknown, not unavailable.
 

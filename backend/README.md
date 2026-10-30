@@ -57,7 +57,7 @@ Run the rule-based evaluation cases with `py -m unittest discover -s tests -v`. 
 
 - `POST /api/triage` is limited per client IP using an in-memory sliding window. Defaults are 30 requests per 60 seconds; override with `TRIAGE_RATE_LIMIT_REQUESTS` and `TRIAGE_RATE_LIMIT_WINDOW_SECONDS`.
 - This limiter is per process and is a basic hackathon safeguard, not a production distributed rate limiter. Behind a reverse proxy, the socket peer may be the proxy; configure a trusted shared rate-limiting layer before public deployment. The endpoint remains unauthenticated so emergency use is not blocked by account creation.
-- Triage responses omit nullable action URLs and normalize missing phone, address, and `last_verified` display values to empty strings to match the frontend's current Zod contract. Call URLs still require hospital verification; directions still require both hospital and location verification.
+- Triage responses omit nullable action URLs and normalize missing phone, address, and `last_verified` display values to empty strings to match the frontend's current Zod contract. Call URLs still require hospital verification; directions URLs are returned for records with coordinates and the UI requires a shared or selected user origin.
 - The backend returns translated `ui_copy` for `en`, `hi`, or `kn`. The frontend must render it and add a language selector if users need to choose a language explicitly.
 
 ## Data status
@@ -69,7 +69,7 @@ The hospital records and emergency taxonomy are from the [`codex/data-gathering`
 - `emergency_department` is not equivalent to confirmed `emergency_24x7`.
 - `snake_bite_management` does not establish current antivenom stock.
 - Records with null coordinates are omitted from distance ranking.
-- Call links require a hospital-verified record; navigation also requires a confirmed location pin. Until those checks are done, the API returns contact/source details and visible public-data warnings but no call/navigation URLs.
+- Call links require a hospital-verified record. Directions links are returned for records with coordinates so the hackathon demo can open Google Maps with the user's origin and hospital destination prefilled. The frontend only enables directions after GPS is obtained or the user selects an area. Unverified destination pins remain visibly marked approximate; users should check the destination in Maps before travelling.
 - `ONLY_VERIFIED=true` currently excludes all 23 records. Use `false` only for the clearly labeled hackathon demo; do not present the research list as hospital-verified or current availability.
 
 The data source notes and schema are in `data/DATASET_README.md`, `data/hospital_record_schema.json`, and `data/capability_registry.json`. Confirm each branch, address, contact, service, and location with the hospital before changing `verified` or `location_verified` to `true`.

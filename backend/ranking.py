@@ -122,8 +122,14 @@ def _build_result(
         matched_required=matched_required,
         matched_preferred=matched_preferred,
         missing_preferred=missing_preferred,
-        # Public-source coordinates are not navigation-safe until the exact pin is checked.
-        directions_url=_directions_url(user_lat, user_lng, hospital.lat, hospital.lng) if hospital.verified and hospital.location_verified else None,
+        # Directions may use approximate public-source pins for the hackathon demo.
+        # The UI gates the link on the user's location being shared/selected and
+        # continues to label an unverified hospital location as approximate.
+        directions_url=(
+            _directions_url(user_lat, user_lng, hospital.lat, hospital.lng)
+            if hospital.lat is not None and hospital.lng is not None
+            else None
+        ),
         call_url=f"tel:{dial_string}" if hospital.verified and dial_string else None,
     )
     return result, score
