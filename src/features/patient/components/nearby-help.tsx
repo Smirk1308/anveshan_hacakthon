@@ -7,9 +7,9 @@ const API = process.env.NEXT_PUBLIC_TRIAGE_API_URL?.replace(/\/$/, "") ?? "";
 const HELPER_KEY = "sahayai.nearby.helper-token";
 const REQUEST_KEY = "sahayai.nearby.request";
 const COPY = {
-  en: { title: "Nearby community help", intro: "Opt-in alerts can reach helpers within 500 m. This does not replace 108 or 112.", helper: "I can help nearby", enable: "Turn on helper alerts", stop: "Stop sharing availability", ready: "You are available to help for up to 15 minutes. Keep this page open so your location stays current.", request: "Ask nearby people for help", consent: "I agree to share my live location and emergency category with opted-in helpers nearby for up to 10 minutes. My full description will not be sent.", send: "Send nearby alert", sent: "Alert sent. Keep 108 or 112 available; push delivery is not guaranteed.", noHelpers: "No nearby helpers received the alert yet. Call 108 or 112 if help is urgent.", accepted: "A helper accepted. Use the route below and keep emergency services available.", cancel: "Cancel request", dismissed: "Request closed.", permission: "Enable notifications and location to use nearby help.", location: "Location is unavailable. Allow GPS and try again.", configure: "Nearby alerts need HTTPS and VAPID push keys configured by the team.", failure: "Could not connect to nearby help. Please call 108 or 112 for urgent assistance.", accepting: "Accept this request", opened: "A nearby person requested help. Your exact location is shared with them only after you accept.", busy: "Working…", status: "Request status", nearby: "Nearby helper alerts", exact: "The exact pin is shared only after a helper accepts." },
-  hi: { title: "आस-पास सामुदायिक सहायता", intro: "सहमति देने वाले मददगारों को 500 मीटर के भीतर सूचना जा सकती है। यह 108 या 112 का विकल्प नहीं है।", helper: "मैं आसपास मदद कर सकता/सकती हूँ", enable: "मददगार सूचनाएँ चालू करें", stop: "उपलब्धता साझा करना बंद करें", ready: "आप 15 मिनट तक मदद के लिए उपलब्ध हैं। स्थान अपडेट रखने के लिए यह पेज खुला रखें।", request: "आसपास के लोगों से मदद माँगें", consent: "मैं अपना लाइव स्थान और आपात स्थिति की श्रेणी 10 मिनट तक आसपास के मददगारों से साझा करने की सहमति देता/देती हूँ। मेरा पूरा संदेश साझा नहीं होगा।", send: "आसपास सूचना भेजें", sent: "सूचना भेजी गई। 108 या 112 उपलब्ध रखें; सूचना पहुँचने की गारंटी नहीं है।", noHelpers: "अभी तक आसपास किसी मददगार तक सूचना नहीं पहुँची। तुरंत मदद के लिए 108 या 112 पर कॉल करें।", accepted: "एक मददगार ने अनुरोध स्वीकार किया। नीचे मार्ग देखें और आपात सेवाएँ उपलब्ध रखें।", cancel: "अनुरोध रद्द करें", dismissed: "अनुरोध बंद हो गया।", permission: "आसपास मदद के लिए सूचनाएँ और स्थान अनुमति दें।", location: "स्थान उपलब्ध नहीं है। GPS अनुमति देकर फिर प्रयास करें।", configure: "टीम को HTTPS और VAPID push keys सेट करनी होंगी।", failure: "आसपास सहायता से जुड़ नहीं सका। तुरंत मदद के लिए 108 या 112 पर कॉल करें।", accepting: "यह अनुरोध स्वीकार करें", opened: "पास के व्यक्ति ने मदद माँगी है। स्वीकार करने के बाद ही आपका सटीक स्थान उनसे साझा होगा।", busy: "प्रक्रिया जारी…", status: "अनुरोध की स्थिति", nearby: "आसपास मददगार सूचनाएँ", exact: "सटीक स्थान केवल मददगार के स्वीकार करने के बाद साझा होगा।" },
-  kn: { title: "ಹತ್ತಿರದ ಸಮುದಾಯ ಸಹಾಯ", intro: "ಒಪ್ಪಿಗೆ ನೀಡಿದ ಸಹಾಯಕರಿಗೆ 500 ಮೀಟರ್ ಒಳಗೆ ಸೂಚನೆ ಹೋಗಬಹುದು. ಇದು 108 ಅಥವಾ 112ಕ್ಕೆ ಪರ್ಯಾಯವಲ್ಲ.", helper: "ನಾನು ಹತ್ತಿರದಲ್ಲಿ ಸಹಾಯ ಮಾಡಬಹುದು", enable: "ಸಹಾಯಕ ಸೂಚನೆಗಳನ್ನು ಆನ್ ಮಾಡಿ", stop: "ಲಭ್ಯತೆಯನ್ನು ಹಂಚುವುದನ್ನು ನಿಲ್ಲಿಸಿ", ready: "ನೀವು 15 ನಿಮಿಷಗಳವರೆಗೆ ಸಹಾಯಕ್ಕೆ ಲಭ್ಯ. ಸ್ಥಳ ನವೀಕರಣಕ್ಕೆ ಈ ಪುಟವನ್ನು ತೆರೆದಿಡಿ.", request: "ಹತ್ತಿರದವರಿಂದ ಸಹಾಯ ಕೇಳಿ", consent: "ನನ್ನ ನೇರ ಸ್ಥಳ ಮತ್ತು ತುರ್ತು ವರ್ಗವನ್ನು 10 ನಿಮಿಷಗಳವರೆಗೆ ಹತ್ತಿರದ ಒಪ್ಪಿಗೆ ನೀಡಿದ ಸಹಾಯಕರೊಂದಿಗೆ ಹಂಚಲು ಒಪ್ಪುತ್ತೇನೆ. ನನ್ನ ಸಂಪೂರ್ಣ ಸಂದೇಶ ಹಂಚುವುದಿಲ್ಲ.", send: "ಹತ್ತಿರದವರಿಗೆ ಸೂಚನೆ ಕಳುಹಿಸಿ", sent: "ಸೂಚನೆ ಕಳುಹಿಸಲಾಗಿದೆ. 108 ಅಥವಾ 112 ಲಭ್ಯವಾಗಿರಲಿ; ಪುಶ್ ತಲುಪುವುದು ಖಚಿತವಲ್ಲ.", noHelpers: "ಇನ್ನೂ ಹತ್ತಿರದ ಸಹಾಯಕರಿಗೆ ಸೂಚನೆ ತಲುಪಿಲ್ಲ. ತುರ್ತು ಸಹಾಯಕ್ಕೆ 108 ಅಥವಾ 112 ಕರೆಮಾಡಿ.", accepted: "ಒಬ್ಬ ಸಹಾಯಕ ಒಪ್ಪಿಕೊಂಡಿದ್ದಾರೆ. ಕೆಳಗಿನ ಮಾರ್ಗ ಬಳಸಿ; ತುರ್ತು ಸೇವೆಗಳನ್ನು ಲಭ್ಯವಾಗಿರಿಸಿ.", cancel: "ವಿನಂತಿಯನ್ನು ರದ್ದುಮಾಡಿ", dismissed: "ವಿನಂತಿ ಮುಚ್ಚಲಾಗಿದೆ.", permission: "ಹತ್ತಿರದ ಸಹಾಯಕ್ಕೆ ಸೂಚನೆ ಮತ್ತು ಸ್ಥಳ ಅನುಮತಿ ನೀಡಿ.", location: "ಸ್ಥಳ ಲಭ್ಯವಿಲ್ಲ. GPS ಅನುಮತಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.", configure: "ತಂಡವು HTTPS ಮತ್ತು VAPID push ಕೀಗಳನ್ನು ಹೊಂದಿಸಬೇಕು.", failure: "ಹತ್ತಿರದ ಸಹಾಯ ಸಂಪರ್ಕ ವಿಫಲವಾಯಿತು. ತುರ್ತು ಸಹಾಯಕ್ಕೆ 108 ಅಥವಾ 112 ಕರೆಮಾಡಿ.", accepting: "ಈ ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸಿ", opened: "ಹತ್ತಿರದವರು ಸಹಾಯ ಕೇಳಿದ್ದಾರೆ. ನೀವು ಒಪ್ಪಿದ ನಂತರವೇ ನಿಖರ ಸ್ಥಳ ಹಂಚಲಾಗುತ್ತದೆ.", busy: "ಕಾರ್ಯನಡೆಯುತ್ತಿದೆ…", status: "ವಿನಂತಿಯ ಸ್ಥಿತಿ", nearby: "ಹತ್ತಿರದ ಸಹಾಯಕ ಸೂಚನೆಗಳು", exact: "ಸಹಾಯಕ ಒಪ್ಪಿದ ನಂತರವೇ ನಿಖರ ಸ್ಥಳ ಹಂಚಲಾಗುತ್ತದೆ." },
+  en: { title: "Nearby community help", intro: "Opt-in alerts can reach helpers within 500 m. This does not replace 108 or 112.", helper: "I can help nearby", enable: "Turn on helper alerts", stop: "Stop sharing availability", ready: "You are available to help for up to 15 minutes. Keep this page open so your location stays current.", request: "Ask nearby people for help", consent: "I agree to share my live location and emergency category with opted-in helpers nearby for up to 10 minutes. My full description will not be sent.", send: "Send nearby alert", sent: "Alert sent. Keep 108 or 112 available; push delivery is not guaranteed.", noHelpers: "No nearby helpers received the alert yet. Call 108 or 112 if help is urgent.", accepted: "A helper accepted. Use the route below and keep emergency services available.", cancel: "Cancel request", dismissed: "Request closed.", permission: "Enable notifications and location to use nearby help.", location: "Location is unavailable. Allow GPS and try again.", configure: "Nearby alerts need HTTPS and VAPID push keys configured by the team.", failure: "Could not connect to nearby help. Please call 108 or 112 for urgent assistance.", accepting: "Accept this request", opened: "A nearby person requested help. Your exact location is shared with them only after you accept.", busy: "Working…", status: "Request status", nearby: "Nearby helper alerts", exact: "The exact pin is shared only after a helper accepts.", openMap: "Open route in Maps" },
+  hi: { title: "आस-पास सामुदायिक सहायता", intro: "सहमति देने वाले मददगारों को 500 मीटर के भीतर सूचना जा सकती है। यह 108 या 112 का विकल्प नहीं है।", helper: "मैं आसपास मदद कर सकता/सकती हूँ", enable: "मददगार सूचनाएँ चालू करें", stop: "उपलब्धता साझा करना बंद करें", ready: "आप 15 मिनट तक मदद के लिए उपलब्ध हैं। स्थान अपडेट रखने के लिए यह पेज खुला रखें।", request: "आसपास के लोगों से मदद माँगें", consent: "मैं अपना लाइव स्थान और आपात स्थिति की श्रेणी 10 मिनट तक आसपास के मददगारों से साझा करने की सहमति देता/देती हूँ। मेरा पूरा संदेश साझा नहीं होगा।", send: "आसपास सूचना भेजें", sent: "सूचना भेजी गई। 108 या 112 उपलब्ध रखें; सूचना पहुँचने की गारंटी नहीं है।", noHelpers: "अभी तक आसपास किसी मददगार तक सूचना नहीं पहुँची। तुरंत मदद के लिए 108 या 112 पर कॉल करें।", accepted: "एक मददगार ने अनुरोध स्वीकार किया। नीचे मार्ग देखें और आपात सेवाएँ उपलब्ध रखें।", cancel: "अनुरोध रद्द करें", dismissed: "अनुरोध बंद हो गया।", permission: "आसपास मदद के लिए सूचनाएँ और स्थान अनुमति दें।", location: "स्थान उपलब्ध नहीं है। GPS अनुमति देकर फिर प्रयास करें।", configure: "टीम को HTTPS और VAPID push keys सेट करनी होंगी।", failure: "आसपास सहायता से जुड़ नहीं सका। तुरंत मदद के लिए 108 या 112 पर कॉल करें।", accepting: "यह अनुरोध स्वीकार करें", opened: "पास के व्यक्ति ने मदद माँगी है। स्वीकार करने के बाद ही आपका सटीक स्थान उनसे साझा होगा।", busy: "प्रक्रिया जारी…", status: "अनुरोध की स्थिति", nearby: "आसपास मददगार सूचनाएँ", exact: "सटीक स्थान केवल मददगार के स्वीकार करने के बाद साझा होगा।", openMap: "Maps में मार्ग खोलें" },
+  kn: { title: "ಹತ್ತಿರದ ಸಮುದಾಯ ಸಹಾಯ", intro: "ಒಪ್ಪಿಗೆ ನೀಡಿದ ಸಹಾಯಕರಿಗೆ 500 ಮೀಟರ್ ಒಳಗೆ ಸೂಚನೆ ಹೋಗಬಹುದು. ಇದು 108 ಅಥವಾ 112ಕ್ಕೆ ಪರ್ಯಾಯವಲ್ಲ.", helper: "ನಾನು ಹತ್ತಿರದಲ್ಲಿ ಸಹಾಯ ಮಾಡಬಹುದು", enable: "ಸಹಾಯಕ ಸೂಚನೆಗಳನ್ನು ಆನ್ ಮಾಡಿ", stop: "ಲಭ್ಯತೆಯನ್ನು ಹಂಚುವುದನ್ನು ನಿಲ್ಲಿಸಿ", ready: "ನೀವು 15 ನಿಮಿಷಗಳವರೆಗೆ ಸಹಾಯಕ್ಕೆ ಲಭ್ಯ. ಸ್ಥಳ ನವೀಕರಣಕ್ಕೆ ಈ ಪುಟವನ್ನು ತೆರೆದಿಡಿ.", request: "ಹತ್ತಿರದವರಿಂದ ಸಹಾಯ ಕೇಳಿ", consent: "ನನ್ನ ನೇರ ಸ್ಥಳ ಮತ್ತು ತುರ್ತು ವರ್ಗವನ್ನು 10 ನಿಮಿಷಗಳವರೆಗೆ ಹತ್ತಿರದ ಒಪ್ಪಿಗೆ ನೀಡಿದ ಸಹಾಯಕರೊಂದಿಗೆ ಹಂಚಲು ಒಪ್ಪುತ್ತೇನೆ. ನನ್ನ ಸಂಪೂರ್ಣ ಸಂದೇಶ ಹಂಚುವುದಿಲ್ಲ.", send: "ಹತ್ತಿರದವರಿಗೆ ಸೂಚನೆ ಕಳುಹಿಸಿ", sent: "ಸೂಚನೆ ಕಳುಹಿಸಲಾಗಿದೆ. 108 ಅಥವಾ 112 ಲಭ್ಯವಾಗಿರಲಿ; ಪುಶ್ ತಲುಪುವುದು ಖಚಿತವಲ್ಲ.", noHelpers: "ಇನ್ನೂ ಹತ್ತಿರದ ಸಹಾಯಕರಿಗೆ ಸೂಚನೆ ತಲುಪಿಲ್ಲ. ತುರ್ತು ಸಹಾಯಕ್ಕೆ 108 ಅಥವಾ 112 ಕರೆಮಾಡಿ.", accepted: "ಒಬ್ಬ ಸಹಾಯಕ ಒಪ್ಪಿಕೊಂಡಿದ್ದಾರೆ. ಕೆಳಗಿನ ಮಾರ್ಗ ಬಳಸಿ; ತುರ್ತು ಸೇವೆಗಳನ್ನು ಲಭ್ಯವಾಗಿರಿಸಿ.", cancel: "ವಿನಂತಿಯನ್ನು ರದ್ದುಮಾಡಿ", dismissed: "ವಿನಂತಿ ಮುಚ್ಚಲಾಗಿದೆ.", permission: "ಹತ್ತಿರದ ಸಹಾಯಕ್ಕೆ ಸೂಚನೆ ಮತ್ತು ಸ್ಥಳ ಅನುಮತಿ ನೀಡಿ.", location: "ಸ್ಥಳ ಲಭ್ಯವಿಲ್ಲ. GPS ಅನುಮತಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.", configure: "ತಂಡವು HTTPS ಮತ್ತು VAPID push ಕೀಗಳನ್ನು ಹೊಂದಿಸಬೇಕು.", failure: "ಹತ್ತಿರದ ಸಹಾಯ ಸಂಪರ್ಕ ವಿಫಲವಾಯಿತು. ತುರ್ತು ಸಹಾಯಕ್ಕೆ 108 ಅಥವಾ 112 ಕರೆಮಾಡಿ.", accepting: "ಈ ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸಿ", opened: "ಹತ್ತಿರದವರು ಸಹಾಯ ಕೇಳಿದ್ದಾರೆ. ನೀವು ಒಪ್ಪಿದ ನಂತರವೇ ನಿಖರ ಸ್ಥಳ ಹಂಚಲಾಗುತ್ತದೆ.", busy: "ಕಾರ್ಯನಡೆಯುತ್ತಿದೆ…", status: "ವಿನಂತಿಯ ಸ್ಥಿತಿ", nearby: "ಹತ್ತಿರದ ಸಹಾಯಕ ಸೂಚನೆಗಳು", exact: "ಸಹಾಯಕ ಒಪ್ಪಿದ ನಂತರವೇ ನಿಖರ ಸ್ಥಳ ಹಂಚಲಾಗುತ್ತದೆ.", openMap: "Maps ಮಾರ್ಗ ತೆರೆಯಿರಿ" },
 } as const;
 
 type Config = { enabled: boolean; vapid_public_key: string | null };
@@ -61,6 +61,7 @@ export default function NearbyHelp({ location, category, language }: { location:
   const [requestStatus, setRequestStatus] = useState("");
   const [alertId, setAlertId] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
+  const [directionsUrl, setDirectionsUrl] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const watchRef = useRef<number | null>(null);
@@ -85,7 +86,7 @@ export default function NearbyHelp({ location, category, language }: { location:
   }, [helperToken, available]);
 
   useEffect(() => {
-    if (!request) return;
+    if (!request || ["claimed", "cancelled", "expired"].includes(requestStatus)) return;
     let active = true;
     const refresh = async () => {
       try {
@@ -101,7 +102,7 @@ export default function NearbyHelp({ location, category, language }: { location:
     void refresh();
     const timer = window.setInterval(() => { if (Date.now() < request.expires_at * 1000) void refresh(); }, 5000);
     return () => { active = false; window.clearInterval(timer); };
-  }, [request, copy.accepted]);
+  }, [request, requestStatus, copy.accepted]);
 
   useEffect(() => () => { if (watchRef.current !== null) navigator.geolocation?.clearWatch(watchRef.current); }, []);
 
@@ -112,7 +113,8 @@ export default function NearbyHelp({ location, category, language }: { location:
       const permission = Notification.permission === "granted" ? "granted" : await Notification.requestPermission();
       if (permission !== "granted") throw new Error(copy.permission);
       const position = await getPosition();
-      const registration = await navigator.serviceWorker.register("/sw.js");
+      await navigator.serviceWorker.register("/sw.js");
+      const registration = await navigator.serviceWorker.ready;
       const subscription = await registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: decodeKey(config.vapid_public_key) });
       const registered = await api<{ helper_token: string }>("/helpers/register", undefined, subscription.toJSON());
       if (!registered.helper_token) throw new Error(copy.failure);
@@ -151,7 +153,7 @@ export default function NearbyHelp({ location, category, language }: { location:
       const accepted = await api<{ directions_url: string }>(`/requests/${alertId}/claim`, helperToken, position);
       setAvailable(false);
       setAlertMessage(copy.accepted);
-      window.open(accepted.directions_url, "_blank", "noopener,noreferrer");
+      setDirectionsUrl(accepted.directions_url);
       window.history.replaceState({}, "", window.location.pathname);
     } catch (cause) { setError(cause instanceof Error ? cause.message : copy.failure); }
     finally { setBusy(false); }
@@ -193,6 +195,7 @@ export default function NearbyHelp({ location, category, language }: { location:
       {request && <div className="match-warning" role="status" style={{ marginTop: 12 }}><strong>{copy.status}:</strong> {requestStatus || "open"}. {alertMessage}<br /><button type="button" className="prealert-copy-button" onClick={cancelRequest} disabled={busy || requestStatus === "claimed"}>{copy.cancel}</button></div>}
       {alertId && <div className="hospital-card" style={{ marginTop: 14 }}><strong>{copy.opened}</strong><div style={{ marginTop: 10 }}><button className="submit-button" type="button" disabled={busy || !helperToken} onClick={acceptAlert}>{busy ? copy.busy : copy.accepting}</button></div></div>}
       {alertMessage && !request && <p className="verified-line" role="status" style={{ marginTop: 10 }}>{alertMessage}</p>}
+      {directionsUrl && <p style={{ marginTop: 9 }}><a className="action-button" href={directionsUrl} target="_blank" rel="noreferrer">{copy.openMap}</a></p>}
       {error && <p className="error-text" role="alert">{error || copy.location}</p>}
     </section>
   );
