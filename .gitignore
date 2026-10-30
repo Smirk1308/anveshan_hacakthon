@@ -9,10 +9,13 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+
+# python virtualenv & cache
 .venv/
 __pycache__/
+*.pyc
 
-# backend runtime & storage
+# backend runtime & local storage
 .data/
 *.sqlite3
 *.sqlite3-shm
