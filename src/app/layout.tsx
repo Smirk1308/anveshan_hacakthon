@@ -3,7 +3,7 @@ import "@fontsource-variable/inter";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SahayAI — Right Hospital, First Time",
+  title: "Sanjeevani — Right Hospital, First Time",
   description:
     "Find a hospital matched to the emergency. In an emergency, call 108 first.",
 };

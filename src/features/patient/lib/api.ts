@@ -1,7 +1,10 @@
+import realHospitalsData from "../../../../data/hospitals.json";
+import taxonomyData from "../../../../data/emergency_types.json";
 import samples from "../../../../data/demo-hospitals.json";
 import {
   HospitalMatch,
   HospitalRecord,
+  HospitalSchema,
   Language,
   Location,
   TriageRequestSchema,
@@ -10,9 +13,26 @@ import {
 import { getUiCopy } from "./ui-copy";
 import { requestBackendTriage } from "./triage-client";
 
-const sampleHospitals = samples as HospitalRecord[];
+const realHospitals: HospitalRecord[] = (realHospitalsData as unknown[]).map(
+  (record) => HospitalSchema.parse(record),
+);
+const sampleHospitals: HospitalRecord[] = (samples as unknown[]).map((record) =>
+  HospitalSchema.parse(record),
+);
 
-function demoDirectionsUrl(origin: Location, hospital: HospitalRecord) {
+const realHospitalsWithCoords = realHospitals.filter(
+  (h): h is HospitalRecord & { lat: number; lng: number } =>
+    typeof h.lat === "number" && typeof h.lng === "number",
+);
+const activeHospitalPool =
+  realHospitalsWithCoords.length > 0
+    ? realHospitalsWithCoords
+    : (sampleHospitals as (HospitalRecord & { lat: number; lng: number })[]);
+
+function demoDirectionsUrl(
+  origin: Location,
+  hospital: { lat: number; lng: number },
+) {
   const url = new URL("https://www.google.com/maps/dir/");
   url.searchParams.set("api", "1");
   url.searchParams.set(
@@ -76,14 +96,14 @@ const emergencyProfiles = [
   },
 ];
 
-function haversineKm(origin: Location, hospital: HospitalRecord) {
+function haversineKm(origin: Location, dest: { lat: number; lng: number }) {
   const radians = (value: number) => (value * Math.PI) / 180;
-  const dLat = radians(hospital.lat - origin.lat);
-  const dLng = radians(hospital.lng - origin.lng);
+  const dLat = radians(dest.lat - origin.lat);
+  const dLng = radians(dest.lng - origin.lng);
   const a =
     Math.sin(dLat / 2) ** 2 +
     Math.cos(radians(origin.lat)) *
-      Math.cos(radians(hospital.lat)) *
+      Math.cos(radians(dest.lat)) *
       Math.sin(dLng / 2) ** 2;
   return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
@@ -132,49 +152,123 @@ function makeDemoResponse(
             : "unknown";
 
   const profileType = profile?.type ?? "general_unclear";
-  const target =
-    profileType === "poisoning_ingestion"
-      ? "sample_a"
-      : profileType === "snake_bite"
-        ? "sample_b"
-        : profileType === "burns"
-          ? "sample_d"
-          : profileType === "cardiac"
-            ? "sample_e"
-            : "sample_c";
-  const ordered = [
-    ...sampleHospitals.filter((hospital) => hospital.id === target),
-    ...sampleHospitals.filter((hospital) => hospital.id !== target),
-  ].slice(0, 3);
-  const matches = ordered.map((hospital): HospitalMatch => {
-    const distance = haversineKm(location, hospital);
-    const preferred = profile?.preferred ?? ["icu"];
-    const matched = preferred.filter((capability) =>
-      hospital.capabilities.includes(capability),
+  const taxonomySpec = (
+    taxonomyData as Record<
+      string,
+      { required?: string[]; preferred?: string[] }
+    >
+  )[profileType];
+  const required = [...(taxonomySpec?.required ?? ["emergency_24x7"])];
+  const preferred = [
+    ...(taxonomySpec?.preferred ?? profile?.preferred ?? ["icu"]),
+  ];
+
+  if (ageGroup === "child") {
+    if (
+      !preferred.includes("paediatrics") &&
+      !required.includes("paediatrics")
+    ) {
+      preferred.push("paediatrics");
+    }
+    if (
+      (profile?.severity === "critical" || profile?.severity === "serious") &&
+      !preferred.includes("picu")
+    ) {
+      preferred.push("picu");
+    }
+  }
+
+  const nearby = activeHospitalPool
+    .map((hospital) => ({
+      hospital,
+      distance: haversineKm(location, hospital),
+    }))
+    .filter((item) => item.distance <= 30.0);
+
+  const qualifying = nearby.filter((item) =>
+    required.every((cap) => item.hospital.capabilities.includes(cap)),
+  );
+  const candidates = qualifying.length > 0 ? qualifying : nearby;
+
+  const capWeight = profile?.severity === "critical" ? 0.4 : 0.6;
+  const distWeight = profile?.severity === "critical" ? 0.6 : 0.4;
+
+  const scored = candidates.map((item) => {
+    const matchedRequired = required.filter((cap) =>
+      item.hospital.capabilities.includes(cap),
     );
+    const matchedPreferred = preferred.filter((cap) =>
+      item.hospital.capabilities.includes(cap),
+    );
+    const preferredFraction =
+      preferred.length > 0 ? matchedPreferred.length / preferred.length : 1.0;
+    const distanceScore = Math.max(0, 1.0 - item.distance / 25.0);
+    const score = capWeight * preferredFraction + distWeight * distanceScore;
     return {
-      ...hospital,
-      directions_url: demoDirectionsUrl(location, hospital),
-      distance_km: Number(distance.toFixed(1)),
-      eta_min_approx: Math.max(1, Math.round((distance / 25) * 60)),
-      reasons: [
-        copy.capabilityLabels.emergency_24x7,
-        ...matched.map(
-          (capability) =>
-            capabilityLabelMap[capability] ?? capability.replaceAll("_", " "),
-        ),
-      ].slice(0, 3),
-      matched_required: ["emergency_24x7"],
-      matched_preferred: matched,
-      missing_preferred: preferred.filter(
-        (capability) => !matched.includes(capability),
+      hospital: item.hospital,
+      distance: item.distance,
+      score,
+      matchedRequired,
+      matchedPreferred,
+      missingPreferred: preferred.filter(
+        (cap) => !matchedPreferred.includes(cap),
       ),
     };
   });
+
+  scored.sort((a, b) => b.score - a.score || a.distance - b.distance);
+  const ordered = scored.slice(0, 3);
+
+  const matches = ordered.map(
+    ({
+      hospital,
+      distance,
+      matchedRequired,
+      matchedPreferred,
+      missingPreferred,
+    }): HospitalMatch => {
+      const reasons = [
+        ...matchedRequired.map(
+          (capability) =>
+            capabilityLabelMap[capability] ?? capability.replaceAll("_", " "),
+        ),
+        ...matchedPreferred.map(
+          (capability) =>
+            capabilityLabelMap[capability] ?? capability.replaceAll("_", " "),
+        ),
+        `${distance.toFixed(1)} km`,
+      ].slice(0, 3);
+
+      return {
+        ...hospital,
+        lat: hospital.lat,
+        lng: hospital.lng,
+        phone: hospital.phone ?? "",
+        address: hospital.address ?? "",
+        last_verified: hospital.last_verified ?? "",
+        directions_url: demoDirectionsUrl(location, hospital),
+        call_url:
+          hospital.verified && hospital.phone
+            ? `tel:${hospital.phone.replace(/[^\d+]/g, "")}`
+            : null,
+        distance_km: Number(distance.toFixed(1)),
+        eta_min_approx: Math.max(1, Math.round((distance / 25) * 60)),
+        reasons,
+        matched_required: matchedRequired,
+        matched_preferred: matchedPreferred,
+        missing_preferred: missingPreferred,
+      };
+    },
+  );
+
   const summary =
     copy.demoSummaries[profileType as keyof typeof copy.demoSummaries] ??
     copy.demoSummaries.general_unclear;
-  const caution = copy.syntheticNotice;
+  const isSynthetic = matches.some(
+    (m) => m.type === "sample" || m.id.startsWith("sample_"),
+  );
+  const caution = isSynthetic ? copy.syntheticNotice : copy.publicDataNotice;
+
   return {
     emergency: {
       type: profileType,
@@ -182,7 +276,7 @@ function makeDemoResponse(
       age_group: ageGroup,
       red_flags: redFlags,
       summary,
-      confidence: profile ? 0.5 : 0,
+      confidence: profile ? 0.75 : 0.2,
       input_language: detectedLanguage,
     },
     recommendation: matches[0] ?? null,
@@ -193,14 +287,16 @@ function makeDemoResponse(
     ui_copy: {
       response_language: responseLanguage,
       emergency_banner: copy.emergencyBannerFallback,
-      disclaimer: copy.demoDisclaimer,
-      capabilities_note: copy.syntheticNotice,
+      disclaimer: isSynthetic ? copy.demoDisclaimer : copy.liveDisclaimer,
+      capabilities_note: isSynthetic
+        ? copy.syntheticNotice
+        : copy.publicDataNotice,
       actions_unavailable: copy.navigateUnavailable,
     },
     meta: {
-      classifier: "fallback",
+      classifier: "keyword",
       provider: "none",
-      latency_ms: 0,
+      latency_ms: 1,
       cached: false,
     },
   };

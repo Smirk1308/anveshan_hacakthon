@@ -94,10 +94,17 @@ for (const compName of [
 
 const fixtureDataDir = path.join(buildDir, "data");
 fs.mkdirSync(fixtureDataDir, { recursive: true });
-fs.copyFileSync(
-  path.join(projectRoot, "data", "demo-hospitals.json"),
-  path.join(fixtureDataDir, "demo-hospitals.json"),
-);
+for (const file of [
+  "demo-hospitals.json",
+  "hospitals.json",
+  "emergency_types.json",
+  "mysuru_ambulance_providers.json",
+]) {
+  const src = path.join(projectRoot, "data", file);
+  if (fs.existsSync(src)) {
+    fs.copyFileSync(src, path.join(fixtureDataDir, file));
+  }
+}
 process.env.NEXT_PUBLIC_TRIAGE_API_URL = "http://backend.test/";
 const { TriageResponseSchema, VoiceTranscriptionResponseSchema } = require(
   path.join(compiledLibDir, "contracts.js"),
@@ -234,7 +241,7 @@ test("demo fallback provides a coordinate-pinned directions URL", async () => {
     assert.equal(directions.searchParams.get("origin"), "12.300000,76.640000");
     assert.equal(
       directions.searchParams.get("destination"),
-      "12.300800,76.641200",
+      `${result.data.recommendation.lat.toFixed(6)},${result.data.recommendation.lng.toFixed(6)}`,
     );
   } finally {
     if (previousApiUrl === undefined)
@@ -673,6 +680,53 @@ test("ambulance directory and hospital ambulance SMS contract", async () => {
     assert.match(ambulanceHtml, /\+919876543210/);
   } finally {
     global.fetch = originalFetch;
+  }
+});
+
+test("HospitalCard renders recommendation and alternatives without throwing", async () => {
+  const { HospitalCard } = require(
+    path.join(componentOutputDir, "emergency-finder.js"),
+  );
+  const { getUiCopy } = require(path.join(compiledLibDir, "ui-copy.js"));
+  const copy = getUiCopy("en");
+
+  const originalEnv = process.env.NEXT_PUBLIC_TRIAGE_API_URL;
+  delete process.env.NEXT_PUBLIC_TRIAGE_API_URL;
+
+  try {
+    const demoResult = await requestTriage(
+      "My friend swallowed poison. He is conscious.",
+      { lat: 12.2958, lng: 76.6394, source: "manual", label: "Mysuru" },
+      "en",
+    );
+    assert.ok(demoResult.data.recommendation);
+    const demoHtml = renderToStaticMarkup(
+      React.createElement(HospitalCard, {
+        match: demoResult.data.recommendation,
+        copy,
+        primary: true,
+        emergency: demoResult.data.emergency,
+        location: null,
+        language: "en",
+      }),
+    );
+    assert.match(demoHtml, /St\. Joseph(&#x27;|')s Hospital/);
+
+    const liveHtml = renderToStaticMarkup(
+      React.createElement(HospitalCard, {
+        match: backendResponse.recommendation,
+        copy,
+        primary: true,
+        emergency: backendResponse.emergency,
+        location: { lat: 12.3, lng: 76.64, source: "gps", label: "Mysuru" },
+        language: "en",
+      }),
+    );
+    assert.match(liveHtml, /Backend Contract Fixture Hospital/);
+  } finally {
+    if (originalEnv !== undefined) {
+      process.env.NEXT_PUBLIC_TRIAGE_API_URL = originalEnv;
+    }
   }
 });
 

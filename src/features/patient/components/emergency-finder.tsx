@@ -292,7 +292,7 @@ export default function EmergencyFinder() {
       (language === "auto" ? "en" : language);
   }, [language, response]);
 
-  const hasRedFlag = Boolean(response?.emergency.red_flags.length);
+  const hasRedFlag = Boolean(response?.emergency.red_flags?.length);
   const demoModeConfigured = !process.env.NEXT_PUBLIC_TRIAGE_API_URL;
 
   async function startVoiceRecording() {
@@ -488,7 +488,7 @@ export default function EmergencyFinder() {
   const showDataNotice = isDemo || demoModeConfigured || Boolean(response);
   const hasSyntheticResults = Boolean(
     response &&
-    [response.recommendation, ...response.alternatives].some(
+    [response.recommendation, ...(response.alternatives ?? [])].some(
       (item) => item?.type === "sample" || item?.id.startsWith("sample_"),
     ),
   );
@@ -497,10 +497,10 @@ export default function EmergencyFinder() {
     <div className="app-shell">
       <header className="topbar">
         <div className="topbar-inner">
-          <div className="brand" aria-label="SahayAI home">
+          <div className="brand" aria-label="Sanjeevani home">
             <div className="brand-mark">S</div>
             <div>
-              <div className="brand-name">SahayAI</div>
+              <div className="brand-name">Sanjeevani</div>
               <div className="brand-caption">{copy.brandCaption}</div>
             </div>
           </div>
@@ -558,13 +558,9 @@ export default function EmergencyFinder() {
         {showDataNotice && (
           <div className="notice" role="status">
             <strong>
-              {hasSyntheticResults || !response
-                ? copy.demoMode
-                : copy.publicDataLabel}
+              {hasSyntheticResults ? copy.demoMode : copy.publicDataLabel}
             </strong>{" "}
-            {hasSyntheticResults || !response
-              ? copy.syntheticNotice
-              : copy.publicDataNotice}
+            {hasSyntheticResults ? copy.syntheticNotice : copy.publicDataNotice}
           </div>
         )}
 
@@ -826,7 +822,7 @@ export default function EmergencyFinder() {
               </div>
               <span className="result-mode">
                 {response
-                  ? isDemo
+                  ? isDemo && hasSyntheticResults
                     ? copy.statusDemo
                     : copy.statusMatched
                   : copy.statusReady}
@@ -849,7 +845,7 @@ export default function EmergencyFinder() {
               </div>
             ) : (
               <div className="results-content">
-                {response.warnings.filter(Boolean).map((warning) => (
+                {(response.warnings ?? []).filter(Boolean).map((warning) => (
                   <div key={warning} className="match-warning">
                     {warning}
                   </div>
@@ -869,31 +865,33 @@ export default function EmergencyFinder() {
                       location={locationStatus === "current" ? location : null}
                       language={language}
                     />
-                    {response.alternatives.length > 0 && (
+                    {(response.alternatives?.length ?? 0) > 0 && (
                       <>
                         <div className="backup-heading">
                           <span>{copy.backups}</span>
                           <span>{copy.callAhead}</span>
                         </div>
                         <div className="backup-list">
-                          {response.alternatives.slice(0, 2).map((match) => (
-                            <HospitalCard
-                              key={match.id}
-                              match={match}
-                              copy={copy}
-                              uiActionsUnavailable={
-                                backendCopy?.actions_unavailable
-                              }
-                              locationAvailable={
-                                locationStatus !== "not-shared"
-                              }
-                              emergency={response.emergency}
-                              location={
-                                locationStatus === "current" ? location : null
-                              }
-                              language={language}
-                            />
-                          ))}
+                          {(response.alternatives ?? [])
+                            .slice(0, 2)
+                            .map((match) => (
+                              <HospitalCard
+                                key={match.id}
+                                match={match}
+                                copy={copy}
+                                uiActionsUnavailable={
+                                  backendCopy?.actions_unavailable
+                                }
+                                locationAvailable={
+                                  locationStatus !== "not-shared"
+                                }
+                                emergency={response.emergency}
+                                location={
+                                  locationStatus === "current" ? location : null
+                                }
+                                language={language}
+                              />
+                            ))}
                         </div>
                       </>
                     )}
@@ -1005,7 +1003,7 @@ export function HospitalCard({
         </span>
       </div>
       <div className="reason-list">
-        {match.reasons.filter(Boolean).map((reason) => (
+        {(match.reasons ?? []).filter(Boolean).map((reason) => (
           <span key={reason} className="reason-pill">
             {reason}
           </span>
@@ -1026,9 +1024,9 @@ export function HospitalCard({
             ? copy.locationVerified
             : copy.locationNotVerified}
         </p>
-        {hospital.source_urls.length > 0 ? (
+        {(hospital.source_urls?.length ?? 0) > 0 ? (
           <p className="source-links">
-            {hospital.source_urls.map((url, index) => (
+            {hospital.source_urls?.map((url, index) => (
               <a key={url} href={url} target="_blank" rel="noreferrer">
                 {copy.sourceLink} {index + 1}
               </a>

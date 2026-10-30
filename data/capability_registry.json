@@ -1,0 +1,46 @@
+{
+  "base_capabilities": [
+    "emergency_24x7",
+    "icu",
+    "picu",
+    "nicu",
+    "paediatrics",
+    "obstetrics",
+    "burns_unit",
+    "plastic_surgery",
+    "trauma_center",
+    "orthopaedics",
+    "neurosurgery",
+    "neurology",
+    "stroke_unit",
+    "cardiology",
+    "cardiac_cath_lab",
+    "ct_scan",
+    "blood_bank",
+    "ventilator",
+    "pulmonology",
+    "nephrology",
+    "urology",
+    "toxicology_poison"
+  ],
+  "extended_capabilities": [
+    "blood_storage_centre",
+    "burns_care",
+    "deaddiction_services",
+    "emergency_department",
+    "mental_health_services",
+    "oncology",
+    "paediatric_oncology",
+    "poisoning_management",
+    "rehabilitation",
+    "snake_bite_management"
+  ],
+  "notes": {
+    "snake_bite_management": "Published service scope for snake-bite case management; does NOT assert anti-snake venom is currently stocked.",
+    "poisoning_management": "Published service scope for poisoning/overdose management; does not imply toxicology lab or antidote stock.",
+    "burns_care": "Hospital states it treats burn patients; use burns_unit only when a dedicated burns unit is specifically documented.",
+    "blood_storage_centre": "A blood storage centre is not the same as a full blood bank; do not treat as blood_bank.",
+    "location_verified": "Coordinates from third-party map sources are approximate until checked against a map pin / hospital address.",
+    "emergency_department": "A hospital lists an emergency department/service, but the source reviewed does not clearly confirm 24/7 operation. Do not treat as emergency_24x7."
+  }
+}

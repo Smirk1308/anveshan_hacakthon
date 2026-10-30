@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "SahayAI — Emergency Help",
-    short_name: "SahayAI",
+    name: "Sanjeevani — Emergency Help",
+    short_name: "Sanjeevani",
     description:
       "Find emergency care and connect with opted-in nearby helpers.",
     start_url: "/",

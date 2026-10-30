@@ -1,12 +1,24 @@
 self.addEventListener("push", (event) => {
   let data = {};
-  try { data = event.data ? event.data.json() : {}; } catch { data = { title: "SahayAI nearby help", body: "Open SahayAI to view the request." }; }
-  event.waitUntil(self.registration.showNotification(data.title || "Someone nearby may need help", {
-    body: data.body || "Open SahayAI to view the request.",
-    tag: "sahayai-nearby-help",
-    data: data.data || { url: "/" },
-    requireInteraction: true,
-  }));
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch {
+    data = {
+      title: "Sanjeevani nearby help",
+      body: "Open Sanjeevani to view the request.",
+    };
+  }
+  event.waitUntil(
+    self.registration.showNotification(
+      data.title || "Someone nearby may need help",
+      {
+        body: data.body || "Open Sanjeevani to view the request.",
+        tag: "sanjeevani-nearby-help",
+        data: data.data || { url: "/" },
+        requireInteraction: true,
+      },
+    ),
+  );
 });
 
 self.addEventListener("notificationclick", (event) => {

@@ -12,7 +12,7 @@ export const uiCopy = {
     heroFirst: "Right hospital.",
     heroSecond: "First time.",
     heroCopy:
-      "Describe what happened. SahayAI helps find a nearby hospital by the care it may provide—not distance alone.",
+      "Describe what happened. Sanjeevani helps find a nearby hospital by the care it may provide—not distance alone.",
     prototypeBadge: "24-hour hackathon prototype",
     demoMode: "Demo mode:",
     publicDataLabel: "Hospital data:",
@@ -117,7 +117,7 @@ export const uiCopy = {
     liveDisclaimer:
       "Hospital information may change; confirm details directly when possible.",
     footer:
-      "SahayAI assists your decision; it does not replace 108, paramedics, or doctors.",
+      "Sanjeevani assists your decision; it does not replace 108, paramedics, or doctors.",
     badgeSynthetic: "Synthetic demo · not a real hospital",
     badgePublic: "Public-source research · not hospital-verified",
     badgeVerified: "Hospital details verified",
@@ -166,7 +166,7 @@ export const uiCopy = {
     heroFirst: "सही अस्पताल।",
     heroSecond: "पहली बार में।",
     heroCopy:
-      "बताएँ क्या हुआ। SahayAI केवल दूरी नहीं, उपलब्ध देखभाल के आधार पर पास का अस्पताल खोजने में मदद करता है।",
+      "बताएँ क्या हुआ। Sanjeevani केवल दूरी नहीं, उपलब्ध देखभाल के आधार पर पास का अस्पताल खोजने में मदद करता है।",
     prototypeBadge: "24 घंटे का हैकाथॉन प्रोटोटाइप",
     demoMode: "डेमो मोड:",
     publicDataLabel: "अस्पताल डेटा:",
@@ -266,7 +266,7 @@ export const uiCopy = {
     liveDisclaimer:
       "अस्पताल की जानकारी बदल सकती है; संभव हो तो सीधे पुष्टि करें।",
     footer:
-      "SahayAI निर्णय लेने में मदद करता है; यह 108, पैरामेडिक्स या डॉक्टरों का विकल्प नहीं है।",
+      "Sanjeevani निर्णय लेने में मदद करता है; यह 108, पैरामेडिक्स या डॉक्टरों का विकल्प नहीं है।",
     badgeSynthetic: "काल्पनिक डेमो · वास्तविक अस्पताल नहीं",
     badgePublic: "सार्वजनिक स्रोत का शोध · अस्पताल से अपुष्ट",
     badgeVerified: "अस्पताल विवरण सत्यापित",
@@ -314,7 +314,7 @@ export const uiCopy = {
     heroFirst: "ಸರಿಯಾದ ಆಸ್ಪತ್ರೆ.",
     heroSecond: "ಮೊದಲ ಪ್ರಯತ್ನದಲ್ಲೇ.",
     heroCopy:
-      "ಏನಾಯಿತು ಎಂದು ವಿವರಿಸಿ. ದೂರವಷ್ಟೇ ಅಲ್ಲ, ಲಭ್ಯ ಆರೈಕೆಯ ಆಧಾರದ ಮೇಲೆ ಹತ್ತಿರದ ಆಸ್ಪತ್ರೆ ಹುಡುಕಲು SahayAI ಸಹಾಯ ಮಾಡುತ್ತದೆ.",
+      "ಏನಾಯಿತು ಎಂದು ವಿವರಿಸಿ. ದೂರವಷ್ಟೇ ಅಲ್ಲ, ಲಭ್ಯ ಆರೈಕೆಯ ಆಧಾರದ ಮೇಲೆ ಹತ್ತಿರದ ಆಸ್ಪತ್ರೆ ಹುಡುಕಲು Sanjeevani ಸಹಾಯ ಮಾಡುತ್ತದೆ.",
     prototypeBadge: "24 ಗಂಟೆಗಳ ಹ್ಯಾಕಥಾನ್ ಮಾದರಿ",
     demoMode: "ಡೆಮೊ ಮೋಡ್:",
     publicDataLabel: "ಆಸ್ಪತ್ರೆ ಮಾಹಿತಿ:",
@@ -418,7 +418,7 @@ export const uiCopy = {
     demoDisclaimer: "ಮಾದರಿ ದಾಖಲೆಗಳು ಕಾಲ್ಪನಿಕ ಮತ್ತು ಪರಿಶೀಲಿತವಲ್ಲ.",
     liveDisclaimer: "ಆಸ್ಪತ್ರೆಯ ಮಾಹಿತಿ ಬದಲಾಗಬಹುದು; ಸಾಧ್ಯವಾದರೆ ನೇರವಾಗಿ ದೃಢಪಡಿಸಿ.",
     footer:
-      "SahayAI ನಿರ್ಧಾರಕ್ಕೆ ನೆರವಾಗುತ್ತದೆ; ಇದು 108, ಪ್ಯಾರಾಮೆಡಿಕ್ಸ್ ಅಥವಾ ವೈದ್ಯರಿಗೆ ಪರ್ಯಾಯವಲ್ಲ.",
+      "Sanjeevani ನಿರ್ಧಾರಕ್ಕೆ ನೆರವಾಗುತ್ತದೆ; ಇದು 108, ಪ್ಯಾರಾಮೆಡಿಕ್ಸ್ ಅಥವಾ ವೈದ್ಯರಿಗೆ ಪರ್ಯಾಯವಲ್ಲ.",
     badgeSynthetic: "ಕಾಲ್ಪನಿಕ ಡೆಮೊ · ನಿಜವಾದ ಆಸ್ಪತ್ರೆಯಲ್ಲ",
     badgePublic: "ಸಾರ್ವಜನಿಕ ಮೂಲದ ಸಂಶೋಧನೆ · ಆಸ್ಪತ್ರೆ ದೃಢೀಕರಿಸಿಲ್ಲ",
     badgeVerified: "ಆಸ್ಪತ್ರೆ ವಿವರಗಳು ಪರಿಶೀಲಿತ",

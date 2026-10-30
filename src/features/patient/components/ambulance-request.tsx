@@ -6,7 +6,7 @@ import type { Language, Location, TriageResponse } from "../lib/contracts";
 const COPY = {
   en: {
     title: "Request an ambulance from this hospital",
-    help: "Opens your SMS app with a draft. Review it and tap Send. If your phone does not prefill the message, copy the preview and paste it. SahayAI does not send or store it.",
+    help: "Opens your SMS app with a draft. Review it and tap Send. If your phone does not prefill the message, copy the preview and paste it. Sanjeevani does not send or store it.",
     consent:
       "I agree to share the emergency category, age group, pickup coordinates and the callback number below with this hospital by SMS.",
     callback: "Callback number (optional)",
@@ -24,7 +24,7 @@ const COPY = {
   },
   hi: {
     title: "इस अस्पताल से एम्बुलेंस माँगें",
-    help: "आपका SMS ऐप एक ड्राफ़्ट खोलेगा। जाँचकर Send दबाएँ। संदेश न भरे तो preview कॉपी करके पेस्ट करें। SahayAI संदेश नहीं भेजता या सेव नहीं करता।",
+    help: "आपका SMS ऐप एक ड्राफ़्ट खोलेगा। जाँचकर Send दबाएँ। संदेश न भरे तो preview कॉपी करके पेस्ट करें। Sanjeevani संदेश नहीं भेजता या सेव नहीं करता।",
     consent:
       "मैं आपात स्थिति की श्रेणी, आयु समूह, पिकअप स्थान और नीचे दिया callback नंबर इस अस्पताल से SMS द्वारा साझा करने की सहमति देता/देती हूँ।",
     callback: "Callback नंबर (वैकल्पिक)",
@@ -42,7 +42,7 @@ const COPY = {
   },
   kn: {
     title: "ಈ ಆಸ್ಪತ್ರೆಯಿಂದ ಆಂಬ್ಯುಲೆನ್ಸ್ ಕೇಳಿ",
-    help: "ನಿಮ್ಮ SMS ಅಪ್ಲಿಕೇಶನ್ ಕರಡು ತೆರೆಯುತ್ತದೆ. ಪರಿಶೀಲಿಸಿ Send ಒತ್ತಿ. ಸಂದೇಶ ತುಂಬದಿದ್ದರೆ ಪೂರ್ವವೀಕ್ಷಣೆಯನ್ನು ನಕಲಿಸಿ ಅಂಟಿಸಿ. SahayAI ಸಂದೇಶ ಕಳುಹಿಸುವುದಿಲ್ಲ ಅಥವಾ ಉಳಿಸುವುದಿಲ್ಲ.",
+    help: "ನಿಮ್ಮ SMS ಅಪ್ಲಿಕೇಶನ್ ಕರಡು ತೆರೆಯುತ್ತದೆ. ಪರಿಶೀಲಿಸಿ Send ಒತ್ತಿ. ಸಂದೇಶ ತುಂಬದಿದ್ದರೆ ಪೂರ್ವವೀಕ್ಷಣೆಯನ್ನು ನಕಲಿಸಿ ಅಂಟಿಸಿ. Sanjeevani ಸಂದೇಶ ಕಳುಹಿಸುವುದಿಲ್ಲ ಅಥವಾ ಉಳಿಸುವುದಿಲ್ಲ.",
     consent:
       "ತುರ್ತು ವರ್ಗ, ವಯೋಮಾನದ ಗುಂಪು, ಪಿಕಪ್ ಸ್ಥಳ ಮತ್ತು ಕೆಳಗಿನ callback ಸಂಖ್ಯೆಯನ್ನು ಈ ಆಸ್ಪತ್ರೆಯೊಂದಿಗೆ SMS ಮೂಲಕ ಹಂಚಲು ಒಪ್ಪುತ್ತೇನೆ.",
     callback: "Callback ಸಂಖ್ಯೆ (ಐಚ್ಛಿಕ)",
@@ -106,7 +106,7 @@ export default function AmbulanceRequest({
   const message =
     location && emergency
       ? [
-          "SAHAYAI AMBULANCE REQUEST",
+          "SANJEEVANI AMBULANCE REQUEST",
           `Emergency category: ${emergency.type.replaceAll("_", " ")}`,
           `Patient age group: ${emergency.age_group}`,
           `Pickup coordinates: ${location.lat.toFixed(6)}, ${location.lng.toFixed(6)}`,

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import localDirectory from "../../../../data/mysuru_ambulance_providers.json";
 
 const API = process.env.NEXT_PUBLIC_TRIAGE_API_URL?.replace(/\/$/, "") ?? "";
 
@@ -196,8 +197,10 @@ export default function PrivateAmbulanceDirectory({
   language: "auto" | "en" | "hi" | "kn";
 }) {
   const copy = TEXT[language === "hi" || language === "kn" ? language : "en"];
-  const [directory, setDirectory] = useState<Directory | null>(null);
-  const [error, setError] = useState(!API);
+  const [directory, setDirectory] = useState<Directory | null>(
+    !API ? (localDirectory as unknown as Directory) : null,
+  );
+  const [error, setError] = useState(false);
   const [query, setQuery] = useState("");
 
   useEffect(() => {

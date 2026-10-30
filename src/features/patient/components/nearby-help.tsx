@@ -59,7 +59,7 @@ const COPY = {
     configure:
       "Nearby alerts require HTTPS and VAPID push keys configured on the backend.",
     iosHint:
-      "On iPhone/iPad, add SahayAI to your Home Screen from Safari to enable Web Push.",
+      "On iPhone/iPad, add Sanjeevani to your Home Screen from Safari to enable Web Push.",
     failure:
       "Could not connect to nearby help. Please call 108 or 112 for urgent assistance.",
     accepting: "Accept this request",

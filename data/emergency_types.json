@@ -1,0 +1,76 @@
+{
+  "snake_bite": {
+    "required": ["emergency_24x7"],
+    "preferred": ["icu", "snake_bite_management", "ventilator"],
+    "note": "Do not require anti_venom because this dataset does not track medicine stock. snake_bite_management is a published case-management claim only."
+  },
+  "poisoning_ingestion": {
+    "required": ["emergency_24x7"],
+    "preferred": [
+      "icu",
+      "poisoning_management",
+      "toxicology_poison",
+      "ventilator"
+    ],
+    "note": "Includes acid ingestion. Do not infer antidote stock or generate treatment advice."
+  },
+  "burns": {
+    "required": ["emergency_24x7"],
+    "preferred": ["burns_unit", "burns_care", "icu", "plastic_surgery"]
+  },
+  "cardiac": {
+    "required": ["emergency_24x7"],
+    "preferred": ["icu", "cardiology", "cardiac_cath_lab"]
+  },
+  "stroke": {
+    "required": ["emergency_24x7", "ct_scan"],
+    "preferred": ["stroke_unit", "neurology", "icu"]
+  },
+  "trauma_accident": {
+    "required": ["emergency_24x7"],
+    "preferred": [
+      "trauma_center",
+      "ct_scan",
+      "blood_bank",
+      "icu",
+      "orthopaedics",
+      "neurosurgery"
+    ]
+  },
+  "severe_bleeding": {
+    "required": ["emergency_24x7"],
+    "preferred": ["blood_bank", "blood_storage_centre", "trauma_center", "icu"]
+  },
+  "obstetric": {
+    "required": ["emergency_24x7", "obstetrics"],
+    "preferred": ["nicu", "blood_bank", "icu"]
+  },
+  "pediatric_emergency": {
+    "required": ["emergency_24x7", "paediatrics"],
+    "preferred": ["picu", "nicu", "icu"]
+  },
+  "breathing_difficulty": {
+    "required": ["emergency_24x7"],
+    "preferred": ["icu", "ventilator", "pulmonology"]
+  },
+  "seizure": {
+    "required": ["emergency_24x7"],
+    "preferred": ["neurology", "icu", "ct_scan"]
+  },
+  "allergic_reaction": {
+    "required": ["emergency_24x7"],
+    "preferred": ["icu"]
+  },
+  "electric_shock_drowning": {
+    "required": ["emergency_24x7"],
+    "preferred": ["icu", "ventilator"]
+  },
+  "minor_injury_fracture": {
+    "required": ["emergency_24x7"],
+    "preferred": ["orthopaedics"]
+  },
+  "general_unclear": {
+    "required": ["emergency_24x7"],
+    "preferred": ["icu"]
+  }
+}

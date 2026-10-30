@@ -25,8 +25,8 @@ export const HospitalSchema = z.object({
   name: z.string(),
   phone: z.string().nullable().optional(),
   address: z.string().nullable().optional(),
-  lat: z.number(),
-  lng: z.number(),
+  lat: z.number().nullable().optional(),
+  lng: z.number().nullable().optional(),
   type: z.string().optional(),
   capabilities: z.array(z.string()).default([]),
   departments: z.array(z.string()).default([]),
@@ -45,6 +45,8 @@ export const HospitalSchema = z.object({
 });
 
 export const HospitalMatchSchema = HospitalSchema.extend({
+  lat: z.number(),
+  lng: z.number(),
   distance_km: z.number().nonnegative(),
   eta_min_approx: z.number().nonnegative(),
   reasons: z.array(z.string()),
