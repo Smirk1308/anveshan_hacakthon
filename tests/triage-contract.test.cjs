@@ -16,6 +16,9 @@ fs.mkdirSync(compiledLibDir, { recursive: true });
 
 for (const fileName of [
   "contracts.ts",
+  "voice-client.ts",
+  "nearby-contracts.ts",
+  "nearby-client.ts",
   "triage-client.ts",
   "ui-copy.ts",
   "api.ts",
@@ -58,29 +61,31 @@ const componentOutputDir = path.join(
   "components",
 );
 fs.mkdirSync(componentOutputDir, { recursive: true });
-const componentSource = fs.readFileSync(
-  path.join(
-    projectRoot,
-    "src",
-    "features",
-    "patient",
-    "components",
-    "emergency-finder.tsx",
-  ),
-  "utf8",
-);
-const componentOutput = ts.transpileModule(componentSource, {
-  compilerOptions: {
-    esModuleInterop: true,
-    jsx: ts.JsxEmit.ReactJSX,
-    module: ts.ModuleKind.CommonJS,
-    target: ts.ScriptTarget.ES2022,
-  },
-}).outputText;
-fs.writeFileSync(
-  path.join(componentOutputDir, "emergency-finder.js"),
-  componentOutput,
-);
+for (const compName of ["nearby-help.tsx", "emergency-finder.tsx"]) {
+  const componentSource = fs.readFileSync(
+    path.join(
+      projectRoot,
+      "src",
+      "features",
+      "patient",
+      "components",
+      compName,
+    ),
+    "utf8",
+  );
+  const componentOutput = ts.transpileModule(componentSource, {
+    compilerOptions: {
+      esModuleInterop: true,
+      jsx: ts.JsxEmit.ReactJSX,
+      module: ts.ModuleKind.CommonJS,
+      target: ts.ScriptTarget.ES2022,
+    },
+  }).outputText;
+  fs.writeFileSync(
+    path.join(componentOutputDir, compName.replace(/\.tsx$/, ".js")),
+    componentOutput,
+  );
+}
 
 const fixtureDataDir = path.join(buildDir, "data");
 fs.mkdirSync(fixtureDataDir, { recursive: true });
@@ -89,10 +94,25 @@ fs.copyFileSync(
   path.join(fixtureDataDir, "demo-hospitals.json"),
 );
 process.env.NEXT_PUBLIC_TRIAGE_API_URL = "http://backend.test/";
-const { TriageResponseSchema } = require(
+const { TriageResponseSchema, VoiceTranscriptionResponseSchema } = require(
   path.join(compiledLibDir, "contracts.js"),
 );
-const { requestTriage } = require(path.join(compiledLibDir, "api.js"));
+const {
+  requestTriage,
+  requestVoiceTranscription,
+  fetchNearbyConfig,
+  registerNearbyHelper,
+  updateHelperAvailability,
+  stopHelperAvailability,
+  createHelpRequest,
+  getHelpRequestStatus,
+  claimHelpRequest,
+  cancelHelpRequest,
+  NearbyConfigSchema,
+  NearbyRequestCreateResponseSchema,
+  NearbyClaimResponseSchema,
+  NearbyApiError,
+} = require(path.join(compiledLibDir, "api.js"));
 const { getUiCopy } = require(path.join(compiledLibDir, "ui-copy.js"));
 const { HospitalCard } = require(
   path.join(componentOutputDir, "emergency-finder.js"),
@@ -207,10 +227,373 @@ test("demo fallback provides a coordinate-pinned directions URL", async () => {
     assert.equal(directions.pathname, "/maps/dir/");
     assert.equal(directions.searchParams.get("api"), "1");
     assert.equal(directions.searchParams.get("origin"), "12.300000,76.640000");
-    assert.equal(directions.searchParams.get("destination"), "12.300800,76.641200");
+    assert.equal(
+      directions.searchParams.get("destination"),
+      "12.300800,76.641200",
+    );
   } finally {
-    if (previousApiUrl === undefined) delete process.env.NEXT_PUBLIC_TRIAGE_API_URL;
+    if (previousApiUrl === undefined)
+      delete process.env.NEXT_PUBLIC_TRIAGE_API_URL;
     else process.env.NEXT_PUBLIC_TRIAGE_API_URL = previousApiUrl;
+  }
+});
+
+test("voice transcription endpoint contract sends raw audio bytes and parses response", async () => {
+  let requestedUrl;
+  let requestHeaders;
+  let requestBody;
+  let requestMethod;
+
+  const mockResponse = {
+    text: "ನನ್ನ ತಂದೆಗೆ ಎದೆ ನೋವು ಇದೆ",
+    language: "kn",
+    duration_seconds: 3.2,
+  };
+
+  const sampleAudioBytes = Buffer.from([0x1a, 0x45, 0xdf, 0xa3]);
+  const originalFetch = global.fetch;
+  global.fetch = async (url, options) => {
+    requestedUrl = url;
+    requestHeaders = options.headers;
+    requestBody = options.body;
+    requestMethod = options.method;
+    return {
+      ok: true,
+      status: 200,
+      json: async () => mockResponse,
+    };
+  };
+
+  try {
+    const result = await requestVoiceTranscription(sampleAudioBytes, "kn", {
+      apiUrl: "http://backend.test",
+      mimeType: "audio/webm",
+    });
+
+    assert.equal(
+      requestedUrl,
+      "http://backend.test/api/voice/transcribe?language=kn",
+    );
+    assert.equal(requestMethod, "POST");
+    assert.equal(requestHeaders["Content-Type"], "audio/webm");
+    assert.equal(requestBody, sampleAudioBytes);
+    assert.equal(result.text, "ನನ್ನ ತಂದೆಗೆ ಎದೆ ನೋವು ಇದೆ");
+    assert.equal(result.language, "kn");
+    assert.equal(result.duration_seconds, 3.2);
+
+    const validated = VoiceTranscriptionResponseSchema.parse(result);
+    assert.equal(validated.text, "ನನ್ನ ತಂದೆಗೆ ಎದೆ ನೋವು ಇದೆ");
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
+test("nearby config contract: fetchNearbyConfig returns valid configuration and radius", async () => {
+  const mockConfig = {
+    enabled: true,
+    public_key: "BEl_example_vapid_public_key_string",
+    radius_m: 500,
+    request_ttl_seconds: 600,
+    helper_ttl_seconds: 900,
+    location_fresh_seconds: 180,
+  };
+
+  let requestedUrl;
+  const originalFetch = global.fetch;
+  global.fetch = async (url) => {
+    requestedUrl = url;
+    return {
+      ok: true,
+      status: 200,
+      json: async () => mockConfig,
+    };
+  };
+
+  try {
+    const config = await fetchNearbyConfig({ apiUrl: "http://backend.test" });
+    assert.equal(requestedUrl, "http://backend.test/api/nearby/config");
+    assert.equal(config.enabled, true);
+    assert.equal(config.public_key, "BEl_example_vapid_public_key_string");
+    assert.equal(config.radius_m, 500);
+    assert.equal(config.request_ttl_seconds, 600);
+
+    const validated = NearbyConfigSchema.parse(config);
+    assert.equal(validated.radius_m, 500);
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
+test("nearby helper registration and availability lifecycle", async () => {
+  let registerBody;
+  let availHeader;
+  let availBody;
+  let stopHeader;
+
+  const originalFetch = global.fetch;
+  global.fetch = async (url, options) => {
+    if (url.includes("/helpers/register")) {
+      registerBody = JSON.parse(options.body);
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ helper_token: "tok_helper_abc123" }),
+      };
+    }
+    if (url.includes("/helpers/availability")) {
+      availHeader = options.headers["Authorization"];
+      availBody = JSON.parse(options.body);
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ available_until: 1700000900, radius_m: 500 }),
+      };
+    }
+    if (url.includes("/helpers/stop")) {
+      stopHeader = options.headers["Authorization"];
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ status: "stopped" }),
+      };
+    }
+    throw new Error(`Unexpected url: ${url}`);
+  };
+
+  try {
+    const subscription = {
+      endpoint: "https://fcm.googleapis.com/fcm/send/test_sub",
+      keys: { p256dh: "key_p256dh", auth: "key_auth" },
+    };
+    const regResult = await registerNearbyHelper(subscription, {
+      apiUrl: "http://backend.test",
+    });
+    assert.equal(regResult.helper_token, "tok_helper_abc123");
+    assert.equal(
+      registerBody.endpoint,
+      "https://fcm.googleapis.com/fcm/send/test_sub",
+    );
+
+    const availResult = await updateHelperAvailability(
+      "tok_helper_abc123",
+      { lat: 12.2958, lng: 76.6394 },
+      { apiUrl: "http://backend.test" },
+    );
+    assert.equal(availHeader, "Bearer tok_helper_abc123");
+    assert.equal(availBody.lat, 12.2958);
+    assert.equal(availResult.available_until, 1700000900);
+
+    const stopResult = await stopHelperAvailability("tok_helper_abc123", {
+      apiUrl: "http://backend.test",
+    });
+    assert.equal(stopHeader, "Bearer tok_helper_abc123");
+    assert.equal(stopResult.status, "stopped");
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
+test("nearby request creation, queued delivery count, and status check", async () => {
+  let createdBody;
+  const originalFetch = global.fetch;
+  global.fetch = async (url, options) => {
+    if (url.includes("/api/nearby/requests") && options.method === "POST") {
+      createdBody = JSON.parse(options.body);
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          request_id: "req_xyz789",
+          requester_token: "tok_requester_secret",
+          status: "open",
+          alerts_queued: 3,
+          radius_m: 500,
+          expires_at: 1700000600,
+          message: "Keep 108 or 112 available",
+        }),
+      };
+    }
+    if (
+      url.includes("/api/nearby/requests/req_xyz789") &&
+      options.method === "GET"
+    ) {
+      assert.equal(
+        options.headers["Authorization"],
+        "Bearer tok_requester_secret",
+      );
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          request_id: "req_xyz789",
+          status: "open",
+          category: "cardiac",
+          expires_at: 1700000600,
+        }),
+      };
+    }
+    throw new Error(`Unexpected url: ${url}`);
+  };
+
+  try {
+    // Non-consent throws client-side before calling API
+    await assert.rejects(
+      async () => {
+        await createHelpRequest(
+          { lat: 12.2958, lng: 76.6394, category: "cardiac", consent: false },
+          { apiUrl: "http://backend.test" },
+        );
+      },
+      (err) => {
+        assert.ok(err instanceof NearbyApiError);
+        assert.match(
+          err.message,
+          /Consent to share location and category is required/,
+        );
+        return true;
+      },
+    );
+
+    const result = await createHelpRequest(
+      { lat: 12.2958, lng: 76.6394, category: "cardiac", consent: true },
+      { apiUrl: "http://backend.test" },
+    );
+
+    assert.equal(createdBody.lat, 12.2958);
+    assert.equal(createdBody.consent, true);
+    assert.equal(result.request_id, "req_xyz789");
+    assert.equal(result.alerts_queued, 3);
+    assert.equal(result.status, "open");
+
+    const validated = NearbyRequestCreateResponseSchema.parse(result);
+    assert.equal(validated.alerts_queued, 3);
+
+    const statusCheck = await getHelpRequestStatus(
+      "req_xyz789",
+      "tok_requester_secret",
+      {
+        apiUrl: "http://backend.test",
+      },
+    );
+    assert.equal(statusCheck.status, "open");
+    assert.equal(statusCheck.category, "cardiac");
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
+test("nearby claim and cancel contract with error states", async () => {
+  const originalFetch = global.fetch;
+  global.fetch = async (url, options) => {
+    if (url.includes("/claim")) {
+      assert.equal(options.headers["Authorization"], "Bearer tok_helper_claim");
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          request_id: "req_xyz789",
+          status: "claimed",
+          category: "cardiac",
+          requester_location: { lat: 12.296, lng: 76.64 },
+          directions_url:
+            "https://www.google.com/maps/dir/?api=1&destination=12.296000%2C76.640000&travelmode=walking",
+        }),
+      };
+    }
+    if (url.includes("/cancel")) {
+      assert.equal(options.headers["Authorization"], "Bearer tok_req_cancel");
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          request_id: "req_xyz789",
+          status: "cancelled",
+        }),
+      };
+    }
+    throw new Error(`Unexpected url: ${url}`);
+  };
+
+  try {
+    const claimRes = await claimHelpRequest(
+      "req_xyz789",
+      "tok_helper_claim",
+      { lat: 12.2959, lng: 76.6395 },
+      { apiUrl: "http://backend.test" },
+    );
+    assert.equal(claimRes.status, "claimed");
+    assert.ok(claimRes.directions_url.includes("travelmode=walking"));
+    assert.equal(claimRes.requester_location.lat, 12.296);
+
+    const validatedClaim = NearbyClaimResponseSchema.parse(claimRes);
+    assert.equal(validatedClaim.status, "claimed");
+
+    const cancelRes = await cancelHelpRequest("req_xyz789", "tok_req_cancel", {
+      apiUrl: "http://backend.test",
+    });
+    assert.equal(cancelRes.status, "cancelled");
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
+test("voice transcription error handling surfaces specific errors for 413, 415, 422, and 503", async () => {
+  const sampleAudioBytes = Buffer.from([0x01, 0x02, 0x03]);
+  const originalFetch = global.fetch;
+
+  for (const status of [413, 415, 422, 503]) {
+    global.fetch = async () => ({
+      ok: false,
+      status,
+      json: async () => ({ detail: `Error test detail for status ${status}` }),
+    });
+
+    await assert.rejects(
+      async () => {
+        await requestVoiceTranscription(sampleAudioBytes, "auto", {
+          apiUrl: "http://backend.test",
+          mimeType: "audio/webm",
+        });
+      },
+      (err) => {
+        assert.equal(err.name, "VoiceTranscriptionError");
+        assert.equal(err.status, status);
+        assert.ok(err.message.includes(`${status}`));
+        return true;
+      },
+      `Should reject with VoiceTranscriptionError status ${status}`,
+    );
+  }
+  global.fetch = originalFetch;
+});
+
+test("configured backend triage failure throws and does not fabricate demo results", async () => {
+  const originalFetch = global.fetch;
+  global.fetch = async () => ({
+    ok: false,
+    status: 500,
+    json: async () => ({ detail: "Internal Server Error" }),
+  });
+
+  try {
+    await assert.rejects(
+      async () => {
+        await requestTriage(
+          "My father has chest pain and sweating.",
+          { lat: 12.3, lng: 76.64, source: "manual", label: "Mysuru" },
+          "en",
+        );
+      },
+      (err) => {
+        assert.match(
+          err.message,
+          /The matching service is not available right now/,
+        );
+        return true;
+      },
+    );
+  } finally {
+    global.fetch = originalFetch;
   }
 });
 

@@ -3,9 +3,7 @@
     "type": "cardiac",
     "severity": "critical",
     "age_group": "adult",
-    "red_flags": [
-      "chest_pain"
-    ],
+    "red_flags": ["chest_pain"],
     "summary": "Possible cardiac emergency reported.",
     "confidence": 0.91,
     "input_language": "en"
@@ -18,19 +16,12 @@
     "lat": 12.302,
     "lng": 76.645,
     "type": "government",
-    "capabilities": [
-      "emergency_24x7",
-      "cardiology"
-    ],
-    "departments": [
-      "cardiology"
-    ],
+    "capabilities": ["emergency_24x7", "cardiology"],
+    "departments": ["cardiology"],
     "services": [],
     "diagnostics": [],
     "source": "Public information",
-    "source_urls": [
-      "https://example.org/hospital-source"
-    ],
+    "source_urls": ["https://example.org/hospital-source"],
     "source_kind": "public",
     "verified": false,
     "last_verified": "",
@@ -39,16 +30,9 @@
     "location_source_url": null,
     "distance_km": 2.4,
     "eta_min_approx": 7,
-    "reasons": [
-      "cardiology",
-      "2.4 km away"
-    ],
-    "matched_required": [
-      "emergency_24x7"
-    ],
-    "matched_preferred": [
-      "cardiology"
-    ],
+    "reasons": ["cardiology", "2.4 km away"],
+    "matched_required": ["emergency_24x7"],
+    "matched_preferred": ["cardiology"],
     "missing_preferred": [],
     "directions_url": "https://www.google.com/maps/dir/?api=1&origin=12.300000%2C76.640000&destination=12.302000%2C76.645000&travelmode=driving",
     "call_url": null
@@ -62,10 +46,7 @@
       "lat": 12.31,
       "lng": 76.65,
       "type": "private",
-      "capabilities": [
-        "emergency_24x7",
-        "icu"
-      ],
+      "capabilities": ["emergency_24x7", "icu"],
       "departments": [],
       "services": [],
       "diagnostics": [],
@@ -79,17 +60,10 @@
       "location_source_url": null,
       "distance_km": 3.1,
       "eta_min_approx": 9,
-      "reasons": [
-        "ICU",
-        "3.1 km away"
-      ],
-      "matched_required": [
-        "emergency_24x7"
-      ],
+      "reasons": ["ICU", "3.1 km away"],
+      "matched_required": ["emergency_24x7"],
       "matched_preferred": [],
-      "missing_preferred": [
-        "cardiology"
-      ],
+      "missing_preferred": ["cardiology"],
       "directions_url": "https://www.google.com/maps/dir/?api=1&origin=12.300000%2C76.640000&destination=12.310000%2C76.650000&travelmode=driving",
       "call_url": null
     },
@@ -101,13 +75,8 @@
       "lat": 12.29,
       "lng": 76.63,
       "type": "trust",
-      "capabilities": [
-        "emergency_24x7",
-        "cardiology"
-      ],
-      "departments": [
-        "cardiology"
-      ],
+      "capabilities": ["emergency_24x7", "cardiology"],
+      "departments": ["cardiology"],
       "services": [],
       "diagnostics": [],
       "source": "Public information",
@@ -120,16 +89,9 @@
       "location_source_url": null,
       "distance_km": 3.8,
       "eta_min_approx": 11,
-      "reasons": [
-        "cardiology",
-        "3.8 km away"
-      ],
-      "matched_required": [
-        "emergency_24x7"
-      ],
-      "matched_preferred": [
-        "cardiology"
-      ],
+      "reasons": ["cardiology", "3.8 km away"],
+      "matched_required": ["emergency_24x7"],
+      "matched_preferred": ["cardiology"],
       "missing_preferred": [],
       "directions_url": "https://www.google.com/maps/dir/?api=1&origin=12.300000%2C76.640000&destination=12.290000%2C76.630000&travelmode=driving",
       "call_url": null
@@ -140,9 +102,7 @@
     "ambulance": "108",
     "unified": "112"
   },
-  "warnings": [
-    "Public-source records have not been hospital-verified."
-  ],
+  "warnings": ["Public-source records have not been hospital-verified."],
   "ui_copy": {
     "response_language": "en",
     "emergency_banner": "This sounds life-threatening. Call 108 now.",

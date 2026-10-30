@@ -4,7 +4,8 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "SahayAI — Emergency Help",
     short_name: "SahayAI",
-    description: "Find emergency care and connect with opted-in nearby helpers.",
+    description:
+      "Find emergency care and connect with opted-in nearby helpers.",
     start_url: "/",
     scope: "/",
     display: "standalone",
@@ -13,4 +14,3 @@ export default function manifest(): MetadataRoute.Manifest {
     icons: [{ src: "/favicon.ico", sizes: "any", type: "image/x-icon" }],
   };
 }
-

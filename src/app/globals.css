@@ -528,6 +528,133 @@ select {
   font-size: 9px;
   line-height: 1.5;
 }
+.situation-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.voice-control-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.voice-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid #d6e2dd;
+  background: #fbfdfc;
+  color: #087f72;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+.voice-button:hover:not(:disabled) {
+  border-color: #087f72;
+  background: #eff9f4;
+}
+.voice-button:focus-visible {
+  outline: 2px solid #087f72;
+  outline-offset: 2px;
+}
+.voice-recording-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #fde8eb;
+  border: 1px solid #f8b4bc;
+}
+.voice-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #b92f3d;
+  animation: voice-pulse 1s infinite alternate;
+}
+@keyframes voice-pulse {
+  from {
+    opacity: 0.4;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+.voice-timer {
+  font-size: 11px;
+  font-weight: 700;
+  color: #b92f3d;
+  font-variant-numeric: tabular-nums;
+}
+.voice-stop-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid #b92f3d;
+  background: #b92f3d;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.voice-cancel-button {
+  padding: 2px 6px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: #72888b;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.voice-transcribing-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #eff9f4;
+  border: 1px solid #99cbbc;
+  font-size: 11px;
+  font-weight: 600;
+  color: #087f72;
+}
+.voice-hint-message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #eff9f4;
+  border: 1px solid #99cbbc;
+  font-size: 11px;
+  color: #075d54;
+}
+.voice-error-message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #fde8eb;
+  border: 1px solid #f8b4bc;
+  font-size: 11px;
+  color: #b92f3d;
+}
 .situation-input {
   width: 100%;
   min-height: 128px;

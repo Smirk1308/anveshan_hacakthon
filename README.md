@@ -32,12 +32,13 @@ Never place Gemini, Groq, or other private API keys in a `NEXT_PUBLIC_*` variabl
 ## Useful commands
 
 ```powershell
-npm run dev          # local development server
-npm run build        # production build
-npm run start        # serve a production build
-npm run typecheck    # TypeScript validation
-npm run lint         # ESLint
-npm run format:check # Prettier validation
+npm run dev           # local development server
+npm run build         # production build
+npm run start         # serve a production build
+npm run test:contract # contract verification tests
+npm run typecheck     # TypeScript validation
+npm run lint          # ESLint
+npm run format:check  # Prettier validation
 ```
 
 ## Frontend structure
@@ -58,3 +59,13 @@ The hero uses a local SVG poster with a restrained CSS location animation by def
 ## Location and privacy
 
 Browser geolocation works on `localhost` or HTTPS. The UI requests one foreground location fix, offers a manual approximate-area picker, and does not save the query or location in browser storage. A configured backend receives the emergency text and coordinates for the current triage request. If the backend has a hosted language model configured, emergency text may also be sent to that model provider for classification. Confirm retention and provider settings against the backend environment before using real patient information. The frontend stores neither values in browser storage. Phone calls and navigation appear only when the backend explicitly provides the corresponding URL and marks the hospital or its location verified.
+
+## Nearby community help and Web Push
+
+Nearby community help is an opt-in peer-volunteer feature within 500 m. It is **not** an emergency dispatch service; call 108 or 112 first.
+
+- **Requirements**: Served over HTTPS (or `localhost`), with `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, and `VAPID_SUBJECT` set in the backend environment.
+- **iOS Web Push**: Requires iOS 16.4+ and adding the app to the Home Screen from Safari (`manifest.webmanifest` and `/sw.js` are provided).
+- **Explicit Consent & GPS**: Only live GPS-backed locations can trigger a nearby request; approximate or manual locations cannot be used. Requesters must explicitly check the consent box to share coordinates and emergency category for up to 10 minutes.
+- **Privacy**: Push notifications are generic and never contain personal details, full triage text, or exact pins. Exact requester coordinates and walking directions are unlocked to a volunteer helper only after the backend confirms an atomic claim within 500 m.
+- **Helper Availability**: Volunteer availability lasts up to 15 minutes and requires a fresh location within 3 minutes; helpers should keep the tab open while available. Helpers can stop sharing availability at any time.
