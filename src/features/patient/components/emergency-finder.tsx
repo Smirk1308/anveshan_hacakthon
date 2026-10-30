@@ -3,6 +3,8 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { requestTriage } from "../lib/api";
 import NearbyHelp from "./nearby-help";
+import AmbulanceRequest from "./ambulance-request";
+import PrivateAmbulanceDirectory from "./private-ambulance-directory";
 import { getUiCopy } from "../lib/ui-copy";
 import {
   HospitalMatch,
@@ -571,6 +573,9 @@ export default function EmergencyFinder() {
                       uiActionsUnavailable={backendCopy?.actions_unavailable}
                       primary
                       locationAvailable={locationStatus !== "not-shared"}
+                              emergency={response.emergency}
+                              location={locationStatus === "current" ? location : null}
+                              language={language}
                     />
                     {response.alternatives.length > 0 && (
                       <>
@@ -588,6 +593,9 @@ export default function EmergencyFinder() {
                                 backendCopy?.actions_unavailable
                               }
                               locationAvailable={locationStatus !== "not-shared"}
+                              emergency={response.emergency}
+                              location={locationStatus === "current" ? location : null}
+                              language={language}
                             />
                           ))}
                         </div>
@@ -628,6 +636,7 @@ export default function EmergencyFinder() {
             )}
           </section>
         </div>
+      <PrivateAmbulanceDirectory language={language} />
       </main>
       <NearbyHelp location={locationStatus === "current" ? location : null} category={response?.emergency.type} language={language} />
       <footer className="footer">{copy.footer}</footer>
@@ -639,12 +648,18 @@ export function HospitalCard({
   match,
   copy,
   uiActionsUnavailable,
+  emergency,
+  location,
+  language,
   primary = false,
   locationAvailable = false,
 }: {
   match: HospitalMatch;
   copy: ReturnType<typeof getUiCopy>;
   uiActionsUnavailable?: string;
+  emergency: TriageResponse["emergency"];
+  location: Location | null;
+  language: Language;
   primary?: boolean;
   locationAvailable?: boolean;
 }) {
@@ -760,6 +775,13 @@ export function HospitalCard({
           </span>
         )}
       </div>
+      <AmbulanceRequest
+        key={hospital.id}
+        hospital={{ name: hospital.name, phone: hospital.phone, services: hospital.services }}
+        emergency={emergency}
+        location={location}
+        language={language}
+      />
     </article>
   );
 }

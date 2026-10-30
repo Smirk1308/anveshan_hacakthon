@@ -125,6 +125,14 @@ The current hackathon storage is local SQLite at `.data/nearby.sqlite3` (ignored
 
 Set `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` (private PEM file path accessible to the backend), and `VAPID_SUBJECT=mailto:...` on the backend. Generate the key pair with `vapid --gen` and obtain the browser key with `vapid --applicationServerKey`. Never commit the private key.
 
+## Ambulance options
+
+`GET /api/ambulances` returns the public-source Mysuru directory from `data/mysuru_ambulance_providers.json`: local provider candidates and booking networks. Historical-only leads and contacts marked historical are omitted. Contacts have not all been call-tested; this list does not show live availability, response times, vehicle/crew capabilities, or prices. The list is incomplete; use each card's source links and call to confirm details. The UI must not label a listing as available or confirmed.
+
+Hospital ambulance requests appear only for hospital records whose public `services` mention an ambulance. The requester must have a current GPS location and explicitly consent before seeing the generated message and SMS action. The message preview includes only emergency category, age group, pickup coordinates/map, selected destination, and optional callback number; it does not include the raw triage text. The action opens the device's SMS composer for the user to review and send. SahayAI does not transmit or persist the SMS. A direct automated SMS integration would require a separately approved provider and should not be added without hospital contact authorization.
+
+Private ambulance options use `tel:` links to public listings. They are separate from hospital recommendation and do not guarantee a dispatch, cost, or transfer. Keep 108/112 visible for urgent emergencies.
+
 ## Contract verification
 
 Run `npm run test:contract` on the frontend branch. The test passes a serialized flat backend response through the same `requestTriage` adapter used by the UI, verifies it is returned with `demo: false`, and renders the hospital card to check that backend data is shown. It also checks nullable and omitted action URLs.
