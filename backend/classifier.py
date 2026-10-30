@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import os
 import time
 from collections import OrderedDict
 
@@ -248,22 +249,24 @@ async def classify(text: str, requested_language: Language) -> tuple[Classificat
             confidence=0.0,
             input_language=detected if detected in {"en", "hi", "kn", "mixed"} else "en",
         )
-        try:
-            result, provider = await classify_with_llm(text, requested_language, detected)
-            result.input_language = detected if detected in {"en", "hi", "kn", "mixed"} else "en"
-            if result.type == EmergencyType.GENERAL_UNCLEAR:
-                result.summary = LABELS.get(response_language, LABELS["en"])[EmergencyType.GENERAL_UNCLEAR]
-            classifier = "llm"
-            keyword_flags = [flag for flag, phrases in RED_FLAGS.items() if any(_normalize(p) in _normalize(text) for p in phrases)]
-            result.red_flags = list(dict.fromkeys(result.red_flags + keyword_flags))
-            if result.red_flags:
-                result.severity = Severity.CRITICAL
-        except Exception as exc:
-            # Do not log raw user text or provider response.
-            import logging
-            logging.getLogger(__name__).warning("Classifier used rules fallback (%s)", type(exc).__name__)
-            from backend.llm import configured_provider
-            provider = configured_provider()
+        allow_text_sharing = os.getenv("LLM_ALLOW_USER_TEXT_SHARING", "false").strip().lower() == "true"
+        if allow_text_sharing:
+            try:
+                result, provider = await classify_with_llm(text, requested_language, detected)
+                result.input_language = detected if detected in {"en", "hi", "kn", "mixed"} else "en"
+                if result.type == EmergencyType.GENERAL_UNCLEAR:
+                    result.summary = LABELS.get(response_language, LABELS["en"])[EmergencyType.GENERAL_UNCLEAR]
+                classifier = "llm"
+                keyword_flags = [flag for flag, phrases in RED_FLAGS.items() if any(_normalize(p) in _normalize(text) for p in phrases)]
+                result.red_flags = list(dict.fromkeys(result.red_flags + keyword_flags))
+                if result.red_flags:
+                    result.severity = Severity.CRITICAL
+            except Exception as exc:
+                # Do not log raw user text or provider response.
+                import logging
+                logging.getLogger(__name__).warning("Classifier used rules fallback (%s)", type(exc).__name__)
+                from backend.llm import configured_provider
+                provider = configured_provider()
 
     if result.type == EmergencyType.GENERAL_UNCLEAR and classifier != "llm":
         classifier = "fallback"
