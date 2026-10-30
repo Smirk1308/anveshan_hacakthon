@@ -87,6 +87,6 @@ This opt-in feature alerts registered helpers whose recently refreshed GPS is wi
 
 The backend uses SQLite at `.data/nearby.sqlite3` by default. It is suitable for a single hackathon backend process. Keep `.data/` and database files out of source control. Multiple backend replicas require shared Postgres storage and distributed rate limiting.
 
-Install `requirements.txt`, then create a VAPID key pair with `vapid --gen`. Set `VAPID_PRIVATE_KEY` to the private PEM file path (or PEM text), `VAPID_PUBLIC_KEY` to the output of `vapid --applicationServerKey`, and `VAPID_SUBJECT` to a monitored `mailto:` address. Keep the private key server-side. Serve the frontend over HTTPS outside localhost; iOS web push requires an installed Home Screen web app on supported versions. The frontend service worker is `public/sw.js`.
+Install `requirements.txt`, then create a VAPID key pair with `vapid --gen`. Set `VAPID_PRIVATE_KEY` to the private PEM file path , `VAPID_PUBLIC_KEY` to the output of `vapid --applicationServerKey`, and `VAPID_SUBJECT` to a monitored `mailto:` address. Keep the private key server-side. Serve the frontend over HTTPS outside localhost; iOS web push requires an installed Home Screen web app on supported versions. The frontend service worker is `public/sw.js`.
 
 Nearby endpoints are documented in the frontend `docs/API_CONTRACT.md`. The feature returns disabled until the public key, private key, and VAPID subject are all configured.
