@@ -4,11 +4,15 @@ import json
 import logging
 import os
 import time
+from collections import defaultdict, deque
 from contextlib import asynccontextmanager
+from math import ceil
 from pathlib import Path
+from threading import Lock
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).resolve().parents[1] / ".env")
@@ -24,6 +28,10 @@ logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO").upper())
 logger = logging.getLogger("sahayai.api")
 HOSPITALS_PATH = Path(os.getenv("HOSPITALS_PATH", str(DATA_DIR / "hospitals.json")))
 ONLY_VERIFIED = os.getenv("ONLY_VERIFIED", "false").strip().lower() == "true"
+RATE_LIMIT_REQUESTS = max(1, int(os.getenv("TRIAGE_RATE_LIMIT_REQUESTS", "30")))
+RATE_LIMIT_WINDOW_SECONDS = max(1, int(os.getenv("TRIAGE_RATE_LIMIT_WINDOW_SECONDS", "60")))
+_triage_request_times: dict[str, deque[float]] = defaultdict(deque)
+_rate_limit_lock = Lock()
 
 
 def load_hospitals(path: Path = HOSPITALS_PATH) -> list[Hospital]:
@@ -77,6 +85,37 @@ app.add_middleware(
 )
 
 
+@app.middleware("http")
+async def limit_triage_requests(request: Request, call_next):
+    """Basic per-process abuse guard for the public triage endpoint."""
+    if request.method == "POST" and request.url.path == "/api/triage":
+        # Use the socket peer, not an untrusted forwarded header. Configure a
+        # trusted proxy/rate-limit service for deployments behind a load balancer.
+        client_key = request.client.host if request.client else "unknown"
+        now = time.monotonic()
+        cutoff = now - RATE_LIMIT_WINDOW_SECONDS
+        with _rate_limit_lock:
+            # Bound stale client state when the service sees many one-off IPs.
+            if len(_triage_request_times) > 1024:
+                for key, bucket in list(_triage_request_times.items()):
+                    while bucket and bucket[0] <= cutoff:
+                        bucket.popleft()
+                    if not bucket:
+                        _triage_request_times.pop(key, None)
+            bucket = _triage_request_times[client_key]
+            while bucket and bucket[0] <= cutoff:
+                bucket.popleft()
+            if len(bucket) >= RATE_LIMIT_REQUESTS:
+                retry_after = max(1, ceil(RATE_LIMIT_WINDOW_SECONDS - (now - bucket[0])))
+                return JSONResponse(
+                    status_code=429,
+                    content={"detail": "Too many triage requests. Try again soon. Call 108 for urgent help."},
+                    headers={"Retry-After": str(retry_after)},
+                )
+            bucket.append(now)
+    return await call_next(request)
+
+
 @app.get("/api/health")
 async def health() -> dict[str, int | str | bool]:
     hospitals = getattr(app.state, "hospitals", [])
@@ -96,7 +135,7 @@ async def get_hospitals() -> dict[str, object]:
     return {"hospitals": [hospital.model_dump() for hospital in app.state.hospitals]}
 
 
-@app.post("/api/triage", response_model=TriageResponse)
+@app.post("/api/triage", response_model=TriageResponse, response_model_exclude_none=True)
 async def triage(request: TriageRequest) -> TriageResponse:
     started = time.perf_counter()
     try:
