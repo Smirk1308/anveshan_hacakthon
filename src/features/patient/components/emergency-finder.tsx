@@ -661,7 +661,9 @@ function HospitalCard({
             {hospital.name || copy.hospitalNameUnavailable}
           </h3>
           <p className="hospital-address">
-            {hospital.address || copy.addressUnavailable}
+            {synthetic
+              ? copy.syntheticAddress
+              : hospital.address || copy.addressUnavailable}
           </p>
         </div>
         <span className="sample-badge">
@@ -710,6 +712,8 @@ function HospitalCard({
               </a>
             ))}
           </p>
+        ) : synthetic ? (
+          <p className="verified-line">{copy.syntheticSource}</p>
         ) : hospital.source ? (
           <p className="verified-line">{hospital.source}</p>
         ) : (
