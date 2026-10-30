@@ -15,8 +15,14 @@ const sampleHospitals = samples as HospitalRecord[];
 function demoDirectionsUrl(origin: Location, hospital: HospitalRecord) {
   const url = new URL("https://www.google.com/maps/dir/");
   url.searchParams.set("api", "1");
-  url.searchParams.set("origin", `${origin.lat.toFixed(6)},${origin.lng.toFixed(6)}`);
-  url.searchParams.set("destination", `${hospital.lat.toFixed(6)},${hospital.lng.toFixed(6)}`);
+  url.searchParams.set(
+    "origin",
+    `${origin.lat.toFixed(6)},${origin.lng.toFixed(6)}`,
+  );
+  url.searchParams.set(
+    "destination",
+    `${hospital.lat.toFixed(6)},${hospital.lng.toFixed(6)}`,
+  );
   url.searchParams.set("travelmode", "driving");
   return url.toString();
 }
@@ -218,12 +224,10 @@ export async function requestTriage(
       demo: true,
     };
 
-  try {
-    return await requestBackendTriage(request.text, location, language);
-  } catch {
-    return {
-      data: makeDemoResponse(request.text, location, language, true),
-      demo: true,
-    };
-  }
+  // If the backend is configured, do not swallow failures or fabricate demo results.
+  return await requestBackendTriage(request.text, location, language);
 }
+
+export { requestVoiceTranscription } from "./voice-client";
+export * from "./nearby-contracts";
+export * from "./nearby-client";

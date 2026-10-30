@@ -11,6 +11,15 @@ export const LocationSchema = z.object({
   label: z.string(),
 });
 
+export const VoiceTranscriptionResponseSchema = z.object({
+  text: z.string().min(1).max(500),
+  language: z.enum(["en", "hi", "kn"]),
+  duration_seconds: z.number().nonnegative().max(20),
+});
+export type VoiceTranscriptionResponse = z.infer<
+  typeof VoiceTranscriptionResponseSchema
+>;
+
 export const HospitalSchema = z.object({
   id: z.string(),
   name: z.string(),

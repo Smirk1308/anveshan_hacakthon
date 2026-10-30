@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { requestTriage } from "../lib/api";
+import { requestTriage, requestVoiceTranscription } from "../lib/api";
 import NearbyHelp from "./nearby-help";
 import AmbulanceRequest from "./ambulance-request";
 import PrivateAmbulanceDirectory from "./private-ambulance-directory";
@@ -113,6 +113,20 @@ function Icon({ name, className = "" }: { name: string; className?: string }) {
         <path d="M12 7v5l3 2" />
       </svg>
     );
+  if (name === "mic")
+    return (
+      <svg {...common}>
+        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+        <line x1="12" x2="12" y1="19" y2="22" />
+      </svg>
+    );
+  if (name === "stop")
+    return (
+      <svg {...common}>
+        <rect x="6" y="6" width="12" height="12" rx="2" />
+      </svg>
+    );
   return (
     <svg {...common}>
       <path d="m5 12 4 4L19 6" />
@@ -166,6 +180,26 @@ function HeroMedia() {
   );
 }
 
+function getSupportedAudioMimeType(): string {
+  if (typeof window === "undefined" || typeof MediaRecorder === "undefined") {
+    return "audio/webm";
+  }
+  const candidates = [
+    "audio/webm;codecs=opus",
+    "audio/webm",
+    "audio/ogg;codecs=opus",
+    "audio/ogg",
+    "audio/mp4",
+    "audio/wav",
+  ];
+  for (const candidate of candidates) {
+    if (MediaRecorder.isTypeSupported(candidate)) {
+      return candidate;
+    }
+  }
+  return "";
+}
+
 export default function EmergencyFinder() {
   const [query, setQuery] = useState("");
   const [location, setLocation] = useState<Location>({
@@ -182,7 +216,19 @@ export default function EmergencyFinder() {
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
   const [language, setLanguage] = useState<Language>("auto");
+  const [voiceStatus, setVoiceStatus] = useState<
+    "idle" | "recording" | "transcribing"
+  >("idle");
+  const [recordingSeconds, setRecordingSeconds] = useState(0);
+  const [voiceError, setVoiceError] = useState("");
+  const [voiceHint, setVoiceHint] = useState("");
+
+  const activeTriageId = useRef(0);
   const manualLocationChosen = useRef(false);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioStreamRef = useRef<MediaStream | null>(null);
+  const recordingTimerRef = useRef<number | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
   const copy = getUiCopy(
     response?.ui_copy.response_language ??
       (language === "auto" ? "en" : language),
@@ -208,10 +254,22 @@ export default function EmergencyFinder() {
   );
 
   useEffect(() => {
+    return () => {
+      if (recordingTimerRef.current) {
+        window.clearInterval(recordingTimerRef.current);
+      }
+      if (audioStreamRef.current) {
+        audioStreamRef.current.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(
       (position) => {
         if (manualLocationChosen.current) return;
+        activeTriageId.current++;
         setResponse(null);
         setLocation({
           lat: position.coords.latitude,
@@ -237,29 +295,174 @@ export default function EmergencyFinder() {
   const hasRedFlag = Boolean(response?.emergency.red_flags.length);
   const demoModeConfigured = !process.env.NEXT_PUBLIC_TRIAGE_API_URL;
 
+  async function startVoiceRecording() {
+    setVoiceError("");
+    setVoiceHint("");
+    if (
+      typeof window === "undefined" ||
+      !navigator.mediaDevices?.getUserMedia ||
+      typeof MediaRecorder === "undefined"
+    ) {
+      setVoiceError(copy.voiceUnavailable);
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioStreamRef.current = stream;
+      audioChunksRef.current = [];
+
+      const mimeType = getSupportedAudioMimeType();
+      const recorder = mimeType
+        ? new MediaRecorder(stream, { mimeType })
+        : new MediaRecorder(stream);
+      mediaRecorderRef.current = recorder;
+
+      recorder.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      recorder.onstop = async () => {
+        if (recordingTimerRef.current) {
+          window.clearInterval(recordingTimerRef.current);
+          recordingTimerRef.current = null;
+        }
+        if (audioStreamRef.current) {
+          audioStreamRef.current.getTracks().forEach((track) => track.stop());
+          audioStreamRef.current = null;
+        }
+
+        const chunks = audioChunksRef.current;
+        audioChunksRef.current = [];
+        if (!chunks.length) {
+          setVoiceStatus("idle");
+          return;
+        }
+
+        const recordedBlob = new Blob(chunks, {
+          type: recorder.mimeType || mimeType || "audio/webm",
+        });
+        if (recordedBlob.size === 0) {
+          setVoiceError(copy.voiceEmpty);
+          setVoiceStatus("idle");
+          return;
+        }
+
+        setVoiceStatus("transcribing");
+        try {
+          const transResult = await requestVoiceTranscription(
+            recordedBlob,
+            language,
+            {
+              mimeType: recorder.mimeType || mimeType,
+            },
+          );
+          setQuery(transResult.text);
+          if (language === "auto") {
+            setLanguage(transResult.language);
+          }
+          setVoiceHint(copy.voiceReviewHint);
+        } catch (err) {
+          const msg =
+            err instanceof Error ? err.message : copy.voiceUnavailable;
+          setVoiceError(msg);
+        } finally {
+          setVoiceStatus("idle");
+        }
+      };
+
+      recorder.start(250);
+      setVoiceStatus("recording");
+      setRecordingSeconds(0);
+
+      const startedAt = Date.now();
+      recordingTimerRef.current = window.setInterval(() => {
+        const elapsed = Math.min(
+          20,
+          Math.floor((Date.now() - startedAt) / 1000),
+        );
+        setRecordingSeconds(elapsed);
+        if (elapsed >= 20) {
+          stopVoiceRecording();
+        }
+      }, 250);
+    } catch (err) {
+      if (audioStreamRef.current) {
+        audioStreamRef.current.getTracks().forEach((track) => track.stop());
+        audioStreamRef.current = null;
+      }
+      setVoiceStatus("idle");
+      const isDenied =
+        err instanceof DOMException &&
+        (err.name === "NotAllowedError" ||
+          err.name === "PermissionDeniedError");
+      setVoiceError(isDenied ? copy.voiceMicDenied : copy.voiceUnavailable);
+    }
+  }
+
+  function stopVoiceRecording() {
+    if (
+      mediaRecorderRef.current &&
+      mediaRecorderRef.current.state === "recording"
+    ) {
+      mediaRecorderRef.current.stop();
+    }
+  }
+
+  function cancelVoiceRecording() {
+    if (recordingTimerRef.current) {
+      window.clearInterval(recordingTimerRef.current);
+      recordingTimerRef.current = null;
+    }
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.ondataavailable = null;
+      mediaRecorderRef.current.onstop = null;
+      if (mediaRecorderRef.current.state !== "inactive") {
+        mediaRecorderRef.current.stop();
+      }
+      mediaRecorderRef.current = null;
+    }
+    if (audioStreamRef.current) {
+      audioStreamRef.current.getTracks().forEach((track) => track.stop());
+      audioStreamRef.current = null;
+    }
+    audioChunksRef.current = [];
+    setVoiceStatus("idle");
+    setRecordingSeconds(0);
+  }
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
     setCopied(false);
+    setVoiceHint("");
+    setVoiceError("");
     if (query.trim().length < 2) {
       setError(copy.shortInputError);
       return;
     }
+    const currentRequestId = ++activeTriageId.current;
     setLoading(true);
     try {
       const result = await requestTriage(query, location, language);
+      if (activeTriageId.current !== currentRequestId) return;
       setResponse(result.data);
       setIsDemo(result.demo);
     } catch {
+      if (activeTriageId.current !== currentRequestId) return;
       setError(copy.requestError);
     } finally {
-      setLoading(false);
+      if (activeTriageId.current === currentRequestId) {
+        setLoading(false);
+      }
     }
   }
 
   function selectArea(areaId: string) {
     const area = areas.find((item) => item.id === areaId) ?? areas[0];
     manualLocationChosen.current = true;
+    activeTriageId.current++;
     setResponse(null);
     setLocation({
       lat: area.lat,
@@ -336,6 +539,7 @@ export default function EmergencyFinder() {
               <select
                 value={language}
                 onChange={(event) => {
+                  activeTriageId.current++;
                   setLanguage(event.target.value as Language);
                   setResponse(null);
                 }}
@@ -442,15 +646,103 @@ export default function EmergencyFinder() {
                 <p className="location-note">{copy.approxLocation}</p>
               )}
 
-              <label className="field-label" htmlFor="situation-input">
-                {copy.describeEmergency}{" "}
-                <span className="field-help">{copy.languageHint}</span>
-              </label>
+              <div className="situation-label-row">
+                <label className="field-label" htmlFor="situation-input">
+                  {copy.describeEmergency}{" "}
+                  <span className="field-help">{copy.languageHint}</span>
+                </label>
+                <div className="voice-control-group">
+                  {voiceStatus === "idle" && (
+                    <button
+                      type="button"
+                      className="voice-button"
+                      onClick={startVoiceRecording}
+                      aria-label={copy.voiceRecord}
+                      title={copy.voiceRecord}
+                    >
+                      <Icon name="mic" />
+                      <span>{copy.voiceRecord}</span>
+                    </button>
+                  )}
+                  {voiceStatus === "recording" && (
+                    <div
+                      className="voice-recording-bar"
+                      role="status"
+                      aria-live="polite"
+                    >
+                      <span className="voice-pulse-dot" aria-hidden="true" />
+                      <span
+                        className="voice-timer"
+                        role="timer"
+                        aria-label="Recording duration"
+                      >
+                        {recordingSeconds}s / 20s
+                      </span>
+                      <button
+                        type="button"
+                        className="voice-stop-button"
+                        onClick={stopVoiceRecording}
+                        aria-label={copy.voiceStop}
+                      >
+                        <Icon name="stop" />
+                        <span>{copy.voiceStop}</span>
+                      </button>
+                      <button
+                        type="button"
+                        className="voice-cancel-button"
+                        onClick={cancelVoiceRecording}
+                        aria-label={copy.voiceCancel}
+                      >
+                        {copy.voiceCancel}
+                      </button>
+                    </div>
+                  )}
+                  {voiceStatus === "transcribing" && (
+                    <div
+                      className="voice-transcribing-bar"
+                      role="status"
+                      aria-live="polite"
+                    >
+                      <span
+                        className="spinner"
+                        style={{
+                          width: 14,
+                          height: 14,
+                          borderWidth: 2,
+                          borderColor: "rgba(6,32,30,.2)",
+                          borderTopColor: "#06201e",
+                        }}
+                        aria-hidden="true"
+                      />
+                      <span>{copy.voiceTranscribing}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {voiceHint && (
+                <div
+                  className="voice-hint-message"
+                  role="status"
+                  aria-live="polite"
+                >
+                  <Icon name="check" /> {voiceHint}
+                </div>
+              )}
+              {voiceError && (
+                <div className="voice-error-message" role="alert">
+                  <Icon name="alert" /> {voiceError}
+                </div>
+              )}
+
               <textarea
                 id="situation-input"
                 className="situation-input"
                 value={query}
-                onChange={(event) => setQuery(event.target.value.slice(0, 500))}
+                onChange={(event) => {
+                  setQuery(event.target.value.slice(0, 500));
+                  setVoiceHint("");
+                }}
                 maxLength={500}
                 placeholder={copy.placeholder}
                 aria-describedby="input-hint"
@@ -592,9 +884,13 @@ export default function EmergencyFinder() {
                               uiActionsUnavailable={
                                 backendCopy?.actions_unavailable
                               }
-                              locationAvailable={locationStatus !== "not-shared"}
+                              locationAvailable={
+                                locationStatus !== "not-shared"
+                              }
                               emergency={response.emergency}
-                              location={locationStatus === "current" ? location : null}
+                              location={
+                                locationStatus === "current" ? location : null
+                              }
                               language={language}
                             />
                           ))}
@@ -638,7 +934,11 @@ export default function EmergencyFinder() {
         </div>
       <PrivateAmbulanceDirectory language={language} />
       </main>
-      <NearbyHelp location={locationStatus === "current" ? location : null} category={response?.emergency.type} language={language} />
+      <NearbyHelp
+        location={locationStatus === "current" ? location : null}
+        category={response?.emergency.type}
+        language={language}
+      />
       <footer className="footer">{copy.footer}</footer>
     </div>
   );
