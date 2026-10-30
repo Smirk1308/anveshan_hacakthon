@@ -83,6 +83,14 @@ class TriageRequest(BaseModel):
         return value
 
 
+class VoiceTranscriptionResponse(BaseModel):
+    """Transcript returned by the optional speech-to-text endpoint."""
+
+    text: str = Field(min_length=1, max_length=500)
+    language: Literal["en", "hi", "kn"]
+    duration_seconds: float = Field(ge=0, le=20)
+
+
 class Hospital(BaseModel):
     model_config = ConfigDict(extra="forbid")
 

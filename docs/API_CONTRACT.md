@@ -16,6 +16,24 @@ The request contains `text` (1–500 characters), `lat`, `lng`, and `location_so
 }
 ```
 
+## Optional voice transcription
+
+Voice input is an audio-to-text step only. It does not produce a separate triage response.
+
+Request: `POST /api/voice/transcribe?language=auto|en|hi|kn`. Send the recording as the raw request body with its audio `Content-Type` (for example, `audio/webm`); do not send multipart form data. The clip is limited to 20 seconds and 10 MiB by default.
+
+Success response:
+
+```json
+{
+  "text": "ನನ್ನ ತಂದೆಗೆ ಎದೆ ನೋವು ಇದೆ",
+  "language": "kn",
+  "duration_seconds": 3.2
+}
+```
+
+The frontend should show the transcript for review and editing, then submit the confirmed text to the existing `POST /api/triage` route with the user's location and selected language. Empty or unrecognized audio returns 422. Missing or unavailable local speech recognition returns 503 so the UI can offer typing. Unsupported media types return 415; oversized clips return 413. Audio is processed in memory and is not saved or logged. No browser API key is required.
+
 ## Response shape
 
 `recommendation` is either `null` or a flat hospital-result object. Each entry in `alternatives` has the same flat shape. Hospital fields such as `id`, `name`, `phone`, `address`, `verified`, and `location_verified` are direct properties of the result. There is no `hospital` wrapper object.

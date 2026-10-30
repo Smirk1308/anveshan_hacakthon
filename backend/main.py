@@ -4,13 +4,14 @@ import json
 import logging
 import os
 import time
+import asyncio
 from collections import defaultdict, deque
 from contextlib import asynccontextmanager
 from math import ceil
 from pathlib import Path
 from threading import Lock
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
@@ -21,7 +22,15 @@ from backend.classifier import classify, prewarm_keyword_cache
 from backend.i18n import copy_for, resolve_response_language
 from backend.prealert import build_prealert
 from backend.ranking import DATA_DIR, load_capability_registry, load_taxonomy, rank_hospitals
-from backend.schemas import EmergencyNumbers, EmergencyResult, Hospital, TriageRequest, TriageResponse
+from backend.schemas import (
+    EmergencyNumbers,
+    EmergencyResult,
+    Hospital,
+    TriageRequest,
+    TriageResponse,
+    VoiceTranscriptionResponse,
+)
+from backend.voice import InvalidAudioError, VoiceUnavailableError, inspect_audio, transcribe_audio
 
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO").upper())
@@ -30,7 +39,11 @@ HOSPITALS_PATH = Path(os.getenv("HOSPITALS_PATH", str(DATA_DIR / "hospitals.json
 ONLY_VERIFIED = os.getenv("ONLY_VERIFIED", "false").strip().lower() == "true"
 RATE_LIMIT_REQUESTS = max(1, int(os.getenv("TRIAGE_RATE_LIMIT_REQUESTS", "30")))
 RATE_LIMIT_WINDOW_SECONDS = max(1, int(os.getenv("TRIAGE_RATE_LIMIT_WINDOW_SECONDS", "60")))
+VOICE_RATE_LIMIT_REQUESTS = max(1, int(os.getenv("VOICE_RATE_LIMIT_REQUESTS", "10")))
+VOICE_RATE_LIMIT_WINDOW_SECONDS = max(1, int(os.getenv("VOICE_RATE_LIMIT_WINDOW_SECONDS", "60")))
+MAX_AUDIO_UPLOAD_BYTES = max(1024, int(os.getenv("VOICE_MAX_AUDIO_BYTES", str(10 * 1024 * 1024))))
 _triage_request_times: dict[str, deque[float]] = defaultdict(deque)
+_voice_request_times: dict[str, deque[float]] = defaultdict(deque)
 _rate_limit_lock = Lock()
 
 
@@ -87,29 +100,33 @@ app.add_middleware(
 
 @app.middleware("http")
 async def limit_triage_requests(request: Request, call_next):
-    """Basic per-process abuse guard for the public triage endpoint."""
-    if request.method == "POST" and request.url.path == "/api/triage":
+    """Basic per-process abuse guard for the public text and audio endpoints."""
+    if request.method == "POST" and request.url.path in {"/api/triage", "/api/voice/transcribe"}:
+        is_voice = request.url.path == "/api/voice/transcribe"
+        request_times = _voice_request_times if is_voice else _triage_request_times
+        limit = VOICE_RATE_LIMIT_REQUESTS if is_voice else RATE_LIMIT_REQUESTS
+        window_seconds = VOICE_RATE_LIMIT_WINDOW_SECONDS if is_voice else RATE_LIMIT_WINDOW_SECONDS
         # Use the socket peer, not an untrusted forwarded header. Configure a
         # trusted proxy/rate-limit service for deployments behind a load balancer.
-        client_key = request.client.host if request.client else "unknown"
+        client_key = f"{request.client.host if request.client else 'unknown'}:{request.url.path}"
         now = time.monotonic()
-        cutoff = now - RATE_LIMIT_WINDOW_SECONDS
+        cutoff = now - window_seconds
         with _rate_limit_lock:
             # Bound stale client state when the service sees many one-off IPs.
-            if len(_triage_request_times) > 1024:
-                for key, bucket in list(_triage_request_times.items()):
-                    while bucket and bucket[0] <= cutoff:
-                        bucket.popleft()
-                    if not bucket:
-                        _triage_request_times.pop(key, None)
-            bucket = _triage_request_times[client_key]
+            if len(request_times) > 1024:
+                for key, stale_bucket in list(request_times.items()):
+                    while stale_bucket and stale_bucket[0] <= cutoff:
+                        stale_bucket.popleft()
+                    if not stale_bucket:
+                        request_times.pop(key, None)
+            bucket = request_times[client_key]
             while bucket and bucket[0] <= cutoff:
                 bucket.popleft()
-            if len(bucket) >= RATE_LIMIT_REQUESTS:
-                retry_after = max(1, ceil(RATE_LIMIT_WINDOW_SECONDS - (now - bucket[0])))
+            if len(bucket) >= limit:
+                retry_after = max(1, ceil(window_seconds - (now - bucket[0])))
                 return JSONResponse(
                     status_code=429,
-                    content={"detail": "Too many triage requests. Try again soon. Call 108 for urgent help."},
+                    content={"detail": "Too many requests. Try again soon. Call 108 for urgent help."},
                     headers={"Retry-After": str(retry_after)},
                 )
             bucket.append(now)
@@ -198,3 +215,58 @@ async def triage(request: TriageRequest) -> TriageResponse:
             "hospitals_without_coordinates": unlocated_count,
         },
     )
+
+
+@app.post("/api/voice/transcribe", response_model=VoiceTranscriptionResponse)
+async def transcribe_voice(
+    request: Request,
+    language: str = Query(default="auto", pattern="^(auto|en|hi|kn)$"),
+) -> VoiceTranscriptionResponse:
+    """Transcribe a short raw audio request body; audio is never persisted."""
+    content_type = request.headers.get("content-type", "").split(";", 1)[0].strip().lower()
+    allowed_content_types = {
+        "audio/webm",
+        "audio/ogg",
+        "audio/wav",
+        "audio/x-wav",
+        "audio/mpeg",
+        "audio/mp4",
+        "audio/aac",
+        "audio/x-m4a",
+        "application/octet-stream",
+    }
+    if content_type not in allowed_content_types:
+        raise HTTPException(status_code=415, detail="Upload a supported audio recording.")
+
+    content_length = request.headers.get("content-length")
+    if content_length:
+        try:
+            if int(content_length) > MAX_AUDIO_UPLOAD_BYTES:
+                raise HTTPException(status_code=413, detail="Recording is too large. Try a shorter clip.")
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail="Invalid content length.") from exc
+
+    audio_chunks: list[bytes] = []
+    received_bytes = 0
+    async for chunk in request.stream():
+        received_bytes += len(chunk)
+        if received_bytes > MAX_AUDIO_UPLOAD_BYTES:
+            raise HTTPException(status_code=413, detail="Recording is too large. Try a shorter clip.")
+        audio_chunks.append(chunk)
+    audio_bytes = b"".join(audio_chunks)
+    if not audio_bytes:
+        raise HTTPException(status_code=400, detail="The recording was empty. Please record again or type your message.")
+
+    try:
+        duration_seconds = await asyncio.to_thread(inspect_audio, audio_bytes)
+        result = await asyncio.to_thread(transcribe_audio, audio_bytes, language, duration_seconds)
+    except InvalidAudioError as exc:
+        raise HTTPException(status_code=422, detail=f"{exc}. Please record again or type your message.") from exc
+    except VoiceUnavailableError as exc:
+        logger.warning("Voice transcription unavailable (%s)", type(exc).__name__)
+        raise HTTPException(
+            status_code=503,
+            detail="Voice transcription is unavailable right now. Please type your message instead.",
+        ) from exc
+
+    return VoiceTranscriptionResponse(**result)
