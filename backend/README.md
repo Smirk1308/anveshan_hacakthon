@@ -33,6 +33,9 @@ Request:
 Routes:
 
 - `GET /api/health`: liveness and dataset counts.
+
+- `GET /api/ambulances`: public Mysuru private-ambulance provider candidates and booking networks sourced from `data/mysuru_ambulance_providers.json`. Historical-only contacts and the historical-leads section are omitted. The returned public contacts are not call-tested and do not confirm live availability, vehicle type, dispatch, or cost.
+
 - `GET /api/hospitals`: loaded records for frontend/demo inspection.
 - `POST /api/triage`: language-aware classification, capability-first ranking, and pre-alert.
 - `POST /api/voice/transcribe?language=auto|en|hi|kn`: optional local transcription of a raw audio request body. It returns a transcript and detected language; submit the reviewed transcript to `/api/triage` as ordinary text.

@@ -38,6 +38,9 @@ logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO").upper())
 logger = logging.getLogger("sahayai.api")
 HOSPITALS_PATH = Path(os.getenv("HOSPITALS_PATH", str(DATA_DIR / "hospitals.json")))
 ONLY_VERIFIED = os.getenv("ONLY_VERIFIED", "false").strip().lower() == "true"
+AMBULANCE_DIRECTORY_PATH = Path(
+    os.getenv("AMBULANCE_DIRECTORY_PATH", str(DATA_DIR / "mysuru_ambulance_providers.json"))
+)
 RATE_LIMIT_REQUESTS = max(1, int(os.getenv("TRIAGE_RATE_LIMIT_REQUESTS", "30")))
 RATE_LIMIT_WINDOW_SECONDS = max(1, int(os.getenv("TRIAGE_RATE_LIMIT_WINDOW_SECONDS", "60")))
 VOICE_RATE_LIMIT_REQUESTS = max(1, int(os.getenv("VOICE_RATE_LIMIT_REQUESTS", "10")))
@@ -156,6 +159,36 @@ async def health() -> dict[str, int | str | bool]:
 @app.get("/api/hospitals")
 async def get_hospitals() -> dict[str, object]:
     return {"hospitals": [hospital.model_dump() for hospital in app.state.hospitals]}
+
+
+@app.get("/api/ambulances")
+async def get_ambulance_directory() -> dict[str, object]:
+    """Return current public-listing candidates, excluding historical contacts/leads."""
+    try:
+        with AMBULANCE_DIRECTORY_PATH.open("r", encoding="utf-8") as file:
+            directory = json.load(file)
+        providers = []
+        for provider in directory.get("providers", []):
+            current_contacts = [
+                contact for contact in provider.get("public_contacts", [])
+                if contact.get("verification") != "historical_unverified"
+                and not str(contact.get("number_type", "")).startswith("historical_")
+            ]
+            providers.append({**provider, "public_contacts": current_contacts})
+        return {
+            "dataset_name": directory.get("dataset_name"),
+            "generated_on": directory.get("generated_on"),
+            "geography": directory.get("geography"),
+            "dataset_type": directory.get("dataset_type"),
+            "summary": directory.get("summary", {}),
+            "important_caveats": directory.get("important_caveats", []),
+            "providers": providers,
+            "networks_or_aggregators": directory.get("networks_or_aggregators", []),
+            "sources": directory.get("sources", []),
+        }
+    except Exception as exc:
+        logger.error("Ambulance directory unavailable (%s)", type(exc).__name__)
+        raise HTTPException(status_code=503, detail="Private ambulance directory is unavailable.") from exc
 
 
 @app.post("/api/triage", response_model=TriageResponse, response_model_exclude_none=True)
