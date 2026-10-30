@@ -105,7 +105,7 @@ export default function AmbulanceRequest({
             type="tel"
             autoComplete="tel"
             value={callback}
-            onChange={(event) => setCallback(event.target.value.slice(0, 24))}
+            onChange={(event) => setCallback(event.target.value.replace(/[^\d+() -]/g, "").slice(0, 24))}
             placeholder="+91 …"
           />
           <label style={{ display: "flex", gap: 9, alignItems: "flex-start", margin: "12px 0", color: "#526b70", fontSize: 12, lineHeight: 1.5 }}>

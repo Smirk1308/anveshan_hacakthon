@@ -85,7 +85,7 @@ export default function PrivateAmbulanceDirectory({ language }: { language: "aut
     return () => { active = false; };
   }, []);
 
-  const sources = useMemo(() => new Map((directory?.sources ?? []).map((source) => [source.source_id, source])), [directory]);
+  const sources = useMemo(() => new Map<string, Source>((directory?.sources ?? []).map((source): [string, Source] => [source.source_id, source])), [directory]);
   const providers = useMemo(() => (directory?.providers ?? []).filter((provider) => {
     const text = `${provider.name} ${provider.address_or_service_location ?? ""}`.toLowerCase();
     return text.includes(query.trim().toLowerCase());
