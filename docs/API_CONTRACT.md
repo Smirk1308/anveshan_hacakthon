@@ -104,6 +104,27 @@ The backend serializes unavailable action URLs as `null`. The frontend also tole
 
 Hospital records from public sources remain unverified until confirmed by the hospital. `research_checked_on` is not a hospital verification date. Missing capability tags mean unknown, not unavailable.
 
+## Nearby community-help alerts
+
+Nearby help is an opt-in community feature, not emergency dispatch. The browser must be served over HTTPS (localhost is allowed during development), and each helper must explicitly enable notifications and location. The feature is available only when VAPID push keys are configured by the backend.
+
+The requester explicitly agrees before sharing live GPS and an emergency category. Free-text triage, name, phone, and exact coordinates are never included in a push payload. A push notification is generic. The helper must open the app, share a fresh location, and accept while within 500 m. Only then does the API return the requester's exact pin and a Google Maps walking route. Requests expire after 10 minutes; helper availability expires after 15 minutes and location must be refreshed within 3 minutes. Push delivery is best effort, so keep 108/112 visible.
+
+Routes:
+
+- `GET /api/nearby/config` returns feature availability, the VAPID public key, 500 m radius, and TTL values.
+- `POST /api/nearby/helpers/register` stores a browser PushSubscription and returns an opaque helper bearer token.
+- `POST /api/nearby/helpers/availability` accepts `{ "lat": number, "lng": number }` with `Authorization: Bearer <helper_token>` and starts/renews 15-minute availability.
+- `POST /api/nearby/helpers/stop` clears the helper's location and availability.
+- `POST /api/nearby/requests` accepts `{ "lat": number, "lng": number, "category": EmergencyType, "consent": true }` and returns `request_id`, a requester bearer token, expiry, and successful push count. The database stores no free-text description.
+- `GET /api/nearby/requests/{request_id}` with the requester bearer token returns status only; after claim it confirms acceptance without exposing helper identity.
+- `POST /api/nearby/requests/{request_id}/claim` accepts a helper's fresh `lat/lng`; a single atomic claim succeeds only for an available helper within 500 m. The response then includes the exact requester pin and route.
+- `POST /api/nearby/requests/{request_id}/cancel` with the requester bearer token closes an open request.
+
+The current hackathon storage is local SQLite at `.data/nearby.sqlite3` (ignored by Git). It is suitable for one backend process; multiple replicas need shared Postgres storage and a distributed rate limiter. Browser push subscriptions and opaque bearer tokens are sensitive credentials. Configure HTTPS, keep the VAPID private key server-side, and rotate the database and push credentials if exposed. iOS web push requires the site to be installed to the Home Screen on supported iOS versions; notification permission must follow a user action.
+
+Set `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` (PEM path or PEM text), and `VAPID_SUBJECT=mailto:...` on the backend. Generate the key pair with `vapid --gen` and obtain the browser key with `vapid --applicationServerKey`. Never commit the private key.
+
 ## Contract verification
 
 Run `npm run test:contract` on the frontend branch. The test passes a serialized flat backend response through the same `requestTriage` adapter used by the UI, verifies it is returned with `demo: false`, and renders the hospital card to check that backend data is shown. It also checks nullable and omitted action URLs.

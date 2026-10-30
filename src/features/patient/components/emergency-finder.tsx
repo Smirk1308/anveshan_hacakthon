@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { requestTriage } from "../lib/api";
+import NearbyHelp from "./nearby-help";
 import { getUiCopy } from "../lib/ui-copy";
 import {
   HospitalMatch,
@@ -628,6 +629,7 @@ export default function EmergencyFinder() {
           </section>
         </div>
       </main>
+      <NearbyHelp location={locationStatus === "current" ? location : null} category={response?.emergency.type} language={language} />
       <footer className="footer">{copy.footer}</footer>
     </div>
   );
