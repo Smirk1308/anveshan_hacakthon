@@ -1,9 +1,12 @@
 from __future__ import annotations
 
-import re
 import os
+import re
 import time
 from collections import OrderedDict
+from hashlib import sha256
+from hmac import new as hmac_new
+from secrets import token_bytes
 
 from backend.llm import classify_with_llm
 from backend.schemas import Classification, EmergencyType, Language, Severity
@@ -111,6 +114,13 @@ SEVERITY = {
 _cache: OrderedDict[tuple[str, str], tuple[float, Classification, str, str]] = OrderedDict()
 _CACHE_LIMIT = 256
 _CACHE_TTL_SECONDS = 30 * 60
+_CACHE_HMAC_KEY = token_bytes(32)
+
+
+def _cache_key(text: str, requested_language: Language) -> tuple[str, str]:
+    # Keep raw emergency descriptions out of the in-memory classification cache.
+    digest = hmac_new(_CACHE_HMAC_KEY, _normalize(text).encode("utf-8"), sha256).hexdigest()
+    return digest, requested_language.value
 DEMO_PHRASES = (
     "my friend drank acid, he is 19",
     "child swallowed phenyl",
@@ -220,13 +230,13 @@ def prewarm_keyword_cache() -> None:
             response_language = requested_language.value if requested_language != Language.AUTO else detected
             result = _keyword_classification(phrase, detected, response_language)
             if result is not None:
-                _cache[(_normalize(phrase), requested_language.value)] = (now, result, "keyword", "none")
+                _cache[_cache_key(phrase, requested_language)] = (now, result, "keyword", "none")
 
 
 async def classify(text: str, requested_language: Language) -> tuple[Classification, str, bool, str, str]:
     detected = detect_language(text)
     response_language = requested_language.value if requested_language != Language.AUTO else detected
-    cache_key = (_normalize(text), requested_language.value)
+    cache_key = _cache_key(text, requested_language)
     now = time.monotonic()
     cached = _cache.get(cache_key)
     if cached and now - cached[0] < _CACHE_TTL_SECONDS:
