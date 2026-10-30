@@ -199,9 +199,9 @@ export default function EmergencyFinder() {
     copy.exampleBreathing,
   ];
   const prealertCanCopy = Boolean(
-    response?.recommendation?.hospital.verified &&
-    response.recommendation.hospital.type !== "sample" &&
-    !response.recommendation.hospital.id.startsWith("sample_"),
+    response?.recommendation?.verified &&
+    response.recommendation.type !== "sample" &&
+    !response.recommendation.id.startsWith("sample_"),
   );
 
   useEffect(() => {
@@ -266,7 +266,7 @@ export default function EmergencyFinder() {
   }
 
   async function copyPreAlert() {
-    if (!response?.recommendation?.hospital.verified) return;
+    if (!response?.recommendation?.verified) return;
     try {
       await navigator.clipboard.writeText(response.pre_alert_text);
       setCopied(true);
@@ -281,9 +281,7 @@ export default function EmergencyFinder() {
   const hasSyntheticResults = Boolean(
     response &&
     [response.recommendation, ...response.alternatives].some(
-      (item) =>
-        item?.hospital.type === "sample" ||
-        item?.hospital.id.startsWith("sample_"),
+      (item) => item?.type === "sample" || item?.id.startsWith("sample_"),
     ),
   );
 
@@ -579,7 +577,7 @@ export default function EmergencyFinder() {
                         <div className="backup-list">
                           {response.alternatives.slice(0, 2).map((match) => (
                             <HospitalCard
-                              key={match.hospital.id}
+                              key={match.id}
                               match={match}
                               copy={copy}
                               uiActionsUnavailable={
@@ -631,7 +629,7 @@ export default function EmergencyFinder() {
   );
 }
 
-function HospitalCard({
+export function HospitalCard({
   match,
   copy,
   uiActionsUnavailable,
@@ -642,7 +640,7 @@ function HospitalCard({
   uiActionsUnavailable?: string;
   primary?: boolean;
 }) {
-  const hospital = match.hospital;
+  const hospital = match;
   const synthetic =
     hospital.type === "sample" || hospital.id.startsWith("sample_");
   const callHref =

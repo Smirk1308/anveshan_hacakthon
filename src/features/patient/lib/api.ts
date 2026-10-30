@@ -1,16 +1,16 @@
 import samples from "../../../../data/demo-hospitals.json";
 import {
   HospitalMatch,
+  HospitalRecord,
   Language,
   Location,
   TriageRequestSchema,
   TriageResponse,
-  TriageResponseSchema,
 } from "./contracts";
 import { getUiCopy } from "./ui-copy";
+import { requestBackendTriage } from "./triage-client";
 
-const sampleHospitals = samples as HospitalMatch["hospital"][];
-const API_URL = process.env.NEXT_PUBLIC_TRIAGE_API_URL?.replace(/\/$/, "");
+const sampleHospitals = samples as HospitalRecord[];
 
 const emergencyProfiles = [
   {
@@ -61,7 +61,7 @@ const emergencyProfiles = [
   },
 ];
 
-function haversineKm(origin: Location, hospital: HospitalMatch["hospital"]) {
+function haversineKm(origin: Location, hospital: HospitalRecord) {
   const radians = (value: number) => (value * Math.PI) / 180;
   const dLat = radians(hospital.lat - origin.lat);
   const dLng = radians(hospital.lng - origin.lng);
@@ -138,7 +138,7 @@ function makeDemoResponse(
       hospital.capabilities.includes(capability),
     );
     return {
-      hospital,
+      ...hospital,
       distance_km: Number(distance.toFixed(1)),
       eta_min_approx: Math.max(1, Math.round((distance / 25) * 60)),
       reasons: [
@@ -202,26 +202,14 @@ export async function requestTriage(
     location_source: location.source,
     language,
   });
-  if (!API_URL)
+  if (!process.env.NEXT_PUBLIC_TRIAGE_API_URL)
     return {
       data: makeDemoResponse(request.text, location, language),
       demo: true,
     };
 
   try {
-    const response = await fetch(API_URL + "/api/triage", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-      signal: AbortSignal.timeout(7000),
-      cache: "no-store",
-    });
-    if (!response.ok)
-      throw new Error("The matching service is not available right now.");
-    return {
-      data: TriageResponseSchema.parse(await response.json()),
-      demo: false,
-    };
+    return await requestBackendTriage(request.text, location, language);
   } catch {
     return {
       data: makeDemoResponse(request.text, location, language, true),

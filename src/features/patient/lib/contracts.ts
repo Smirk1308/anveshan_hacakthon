@@ -11,7 +11,7 @@ export const LocationSchema = z.object({
   label: z.string(),
 });
 
-const HospitalSchema = z.object({
+export const HospitalSchema = z.object({
   id: z.string(),
   name: z.string(),
   phone: z.string().nullable().optional(),
@@ -35,8 +35,7 @@ const HospitalSchema = z.object({
   notes: z.string().optional(),
 });
 
-const MatchSchema = z.object({
-  hospital: HospitalSchema,
+export const HospitalMatchSchema = HospitalSchema.extend({
   distance_km: z.number().nonnegative(),
   eta_min_approx: z.number().nonnegative(),
   reasons: z.array(z.string()),
@@ -65,8 +64,8 @@ export const TriageResponseSchema = z.object({
     confidence: z.number().min(0).max(1),
     input_language: z.enum(["en", "hi", "kn", "mixed"]),
   }),
-  recommendation: MatchSchema.nullable(),
-  alternatives: z.array(MatchSchema),
+  recommendation: HospitalMatchSchema.nullable(),
+  alternatives: z.array(HospitalMatchSchema),
   pre_alert_text: z.string(),
   emergency_numbers: z.object({ ambulance: z.string(), unified: z.string() }),
   warnings: z.array(z.string()),
@@ -81,7 +80,8 @@ export const TriageResponseSchema = z.object({
 
 export type Location = z.infer<typeof LocationSchema>;
 export type TriageResponse = z.infer<typeof TriageResponseSchema>;
-export type HospitalMatch = z.infer<typeof MatchSchema>;
+export type HospitalRecord = z.infer<typeof HospitalSchema>;
+export type HospitalMatch = z.infer<typeof HospitalMatchSchema>;
 
 export const TriageRequestSchema = z.object({
   text: z.string().trim().min(2).max(500),
