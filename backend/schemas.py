@@ -91,6 +91,23 @@ class VoiceTranscriptionResponse(BaseModel):
     duration_seconds: float = Field(ge=0, le=20)
 
 
+class DepartmentBed(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    department_id: str
+    department_name: str
+    total: int = Field(ge=0)
+    available: int = Field(ge=0)
+    last_updated: str | None = None
+
+
+class HospitalBedsUpdateRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    department_beds: list[DepartmentBed]
+    updated_by: str | None = None
+
+
 class Hospital(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -105,6 +122,7 @@ class Hospital(BaseModel):
     departments: list[str] = Field(default_factory=list)
     services: list[str] = Field(default_factory=list)
     diagnostics: list[str] = Field(default_factory=list)
+    department_beds: list[DepartmentBed] = Field(default_factory=list)
     last_verified: str | None = None
     research_checked_on: str | None = None
     verified_by: str | None = None
@@ -174,6 +192,7 @@ class HospitalResult(BaseModel):
     matched_required: list[str]
     matched_preferred: list[str]
     missing_preferred: list[str]
+    department_beds: list[DepartmentBed] = Field(default_factory=list)
     directions_url: str | None
     call_url: str | None
 

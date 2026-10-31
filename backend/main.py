@@ -7,6 +7,7 @@ import time
 import asyncio
 from collections import defaultdict, deque
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 from math import ceil
 from pathlib import Path
 from threading import Lock
@@ -23,9 +24,11 @@ from backend.i18n import copy_for, resolve_response_language
 from backend.prealert import build_prealert
 from backend.ranking import DATA_DIR, load_capability_registry, load_taxonomy, rank_hospitals
 from backend.schemas import (
+    DepartmentBed,
     EmergencyNumbers,
     EmergencyResult,
     Hospital,
+    HospitalBedsUpdateRequest,
     TriageRequest,
     TriageResponse,
     VoiceTranscriptionResponse,
@@ -329,4 +332,110 @@ async def transcribe_voice(
         ) from exc
 
     return VoiceTranscriptionResponse(**result)
+
+
+@app.get("/api/admin/hospitals")
+async def get_admin_hospitals(request: Request):
+    """List all hospitals with summary bed counts and department details for staff admin."""
+    hospitals: list[Hospital] = request.app.state.hospitals
+    result = []
+    for h in hospitals:
+        total_beds = sum(d.total for d in h.department_beds)
+        available_beds = sum(d.available for d in h.department_beds)
+        result.append(
+            {
+                "id": h.id,
+                "name": h.name,
+                "type": h.type,
+                "address": h.address or "",
+                "phone": h.phone or "",
+                "total_beds": total_beds,
+                "available_beds": available_beds,
+                "department_beds": [d.model_dump() for d in h.department_beds],
+            }
+        )
+    return {"hospitals": result}
+
+
+@app.get("/api/admin/hospitals/{hospital_id}/beds")
+async def get_hospital_beds(hospital_id: str, request: Request):
+    """Retrieve current department bed counts for a specific hospital."""
+    hospitals: list[Hospital] = request.app.state.hospitals
+    hospital = next((h for h in hospitals if h.id == hospital_id), None)
+    if not hospital:
+        raise HTTPException(status_code=404, detail="Hospital not found")
+    total_beds = sum(d.total for d in hospital.department_beds)
+    available_beds = sum(d.available for d in hospital.department_beds)
+    return {
+        "hospital_id": hospital.id,
+        "hospital_name": hospital.name,
+        "total_beds": total_beds,
+        "available_beds": available_beds,
+        "department_beds": [d.model_dump() for d in hospital.department_beds],
+    }
+
+
+@app.put("/api/admin/hospitals/{hospital_id}/beds")
+async def update_hospital_beds(
+    hospital_id: str,
+    payload: HospitalBedsUpdateRequest,
+    request: Request,
+):
+    """Allow hospital staff to update live bed availability for their hospital departments."""
+    hospitals: list[Hospital] = request.app.state.hospitals
+    hospital = next((h for h in hospitals if h.id == hospital_id), None)
+    if not hospital:
+        raise HTTPException(status_code=404, detail="Hospital not found")
+
+    now_iso = datetime.now(timezone.utc).isoformat()
+    updated_beds: list[DepartmentBed] = []
+    for bed in payload.department_beds:
+        if bed.available > bed.total:
+            raise HTTPException(
+                status_code=422,
+                detail=f"Available beds ({bed.available}) cannot exceed total beds ({bed.total}) for {bed.department_name}",
+            )
+        updated_beds.append(
+            DepartmentBed(
+                department_id=bed.department_id,
+                department_name=bed.department_name,
+                total=bed.total,
+                available=bed.available,
+                last_updated=now_iso,
+            )
+        )
+
+    hospital.department_beds = updated_beds
+
+    # Persist updated hospitals data to file
+    try:
+        raw_data = [h.model_dump() for h in hospitals]
+        temp_path = HOSPITALS_PATH.with_suffix(".tmp")
+        with temp_path.open("w", encoding="utf-8") as f:
+            json.dump(raw_data, f, indent=2, ensure_ascii=False)
+        temp_path.replace(HOSPITALS_PATH)
+    except Exception as exc:
+        logger.exception("Failed to persist updated hospital bed data")
+        raise HTTPException(status_code=500, detail="Failed to persist bed updates") from exc
+
+    total_beds = sum(d.total for d in hospital.department_beds)
+    available_beds = sum(d.available for d in hospital.department_beds)
+    logger.info(
+        "Updated live beds for %s (%s): %d/%d available (by %s)",
+        hospital.name,
+        hospital.id,
+        available_beds,
+        total_beds,
+        payload.updated_by or "staff",
+    )
+    return {
+        "success": True,
+        "hospital_id": hospital.id,
+        "hospital_name": hospital.name,
+        "total_beds": total_beds,
+        "available_beds": available_beds,
+        "department_beds": [d.model_dump() for d in hospital.department_beds],
+        "updated_at": now_iso,
+    }
+
 
