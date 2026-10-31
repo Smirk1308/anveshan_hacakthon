@@ -925,25 +925,33 @@ export default function EmergencyFinder() {
                     <div className="empty-art">
                       <Icon name="alert" />
                     </div>
-                    <h3>{copy.noResultTitle}</h3>
-                    <p>{copy.noResultHelp}</p>
+                    <h3>
+                      {response.emergency.type === "general_unclear"
+                        ? "Could not understand description"
+                        : copy.noResultTitle}
+                    </h3>
+                    <p>
+                      {response.emergency.type === "general_unclear"
+                        ? "We couldn't recognize an emergency situation from this phrase. Please describe what happened or what symptoms the patient has (e.g. chest pain, snake bite, severe bleeding, breathing difficulty, injury), or select a demo example above. Call 108 or 112 immediately if this is an urgent emergency."
+                        : copy.noResultHelp}
+                    </p>
                   </div>
                 )}
-                <details className="prealert-panel" open>
-                  <summary>{copy.prealertPreview}</summary>
-                  <pre>
-                    {response.pre_alert_text || copy.prealertUnavailable}
-                  </pre>
-                  <button
-                    className="prealert-copy-button"
-                    type="button"
-                    disabled={!prealertCanCopy}
-                    onClick={copyPreAlert}
-                  >
-                    {copied ? copy.copiedPrealert : copy.copyPrealert}
-                  </button>
-                  {!prealertCanCopy && <p>{copy.prealertCopyUnavailable}</p>}
-                </details>
+                {Boolean(response.pre_alert_text) && (
+                  <details className="prealert-panel" open>
+                    <summary>{copy.prealertPreview}</summary>
+                    <pre>{response.pre_alert_text}</pre>
+                    <button
+                      className="prealert-copy-button"
+                      type="button"
+                      disabled={!prealertCanCopy}
+                      onClick={copyPreAlert}
+                    >
+                      {copied ? copy.copiedPrealert : copy.copyPrealert}
+                    </button>
+                    {!prealertCanCopy && <p>{copy.prealertCopyUnavailable}</p>}
+                  </details>
+                )}
                 <div className="disclaimer">
                   {backendCopy?.disclaimer ??
                     (isDemo ? copy.demoDisclaimer : copy.liveDisclaimer)}{" "}

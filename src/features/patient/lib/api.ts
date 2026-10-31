@@ -268,6 +268,47 @@ function makeDemoResponse(
   );
   const caution = isSynthetic ? copy.syntheticNotice : copy.publicDataNotice;
 
+  const isUnrecognized = !profile && redFlags.length === 0;
+  if (isUnrecognized) {
+    return {
+      emergency: {
+        type: "general_unclear",
+        severity: "unclear",
+        age_group: ageGroup,
+        red_flags: [],
+        summary: copy.demoSummaries.general_unclear,
+        confidence: 0,
+        input_language: detectedLanguage,
+      },
+      recommendation: null,
+      alternatives: [],
+      pre_alert_text: "",
+      emergency_numbers: { ambulance: "108", unified: "112" },
+      warnings: [
+        "We could not understand this phrase as a medical emergency. Please describe the emergency symptoms or what happened (e.g., chest pain, snake bite, severe bleeding, breathing difficulty, injury), or call 108 / 112.",
+      ],
+      ui_copy: {
+        response_language: responseLanguage,
+        emergency_banner: copy.emergencyBannerFallback,
+        disclaimer: isSynthetic ? copy.demoDisclaimer : copy.liveDisclaimer,
+        capabilities_note: isSynthetic
+          ? copy.syntheticNotice
+          : copy.publicDataNotice,
+        actions_unavailable: copy.navigateUnavailable,
+      },
+      meta: {
+        classifier: "fallback",
+        provider: "none",
+        latency_ms: 0,
+        cached: false,
+        location_source: location.source,
+        response_language: responseLanguage,
+        unverified_result_count: 0,
+        hospitals_without_coordinates: 0,
+      },
+    };
+  }
+
   return {
     emergency: {
       type: profileType,
