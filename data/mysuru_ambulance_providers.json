@@ -1,0 +1,889 @@
+{
+  "dataset_name": "Mysuru Private Ambulance Provider Directory",
+  "project": "Sanjeevani",
+  "generated_on": "2026-10-31",
+  "geography": "Mysuru city and nearby localities, Karnataka, India",
+  "dataset_type": "best_effort_public_source_research_not_official_registry",
+  "summary": {
+    "local_provider_candidates": 16,
+    "network_or_aggregator_leads": 2,
+    "historical_leads_not_currently_verified": 5,
+    "complete_or_exhaustive": false
+  },
+  "important_caveats": [
+    "This is a best-effort directory compiled from public listings, not a certified complete list of every private ambulance operator in Mysuru.",
+    "A separate business listing does not prove that a provider is legally independent of hospitals or has no hospital tie-ups. Hospital affiliation is not established from the cited public sources.",
+    "Some Justdial numbers are directory call-routing numbers and may not be the operator's direct phone number.",
+    "Historical numbers from the 2015-16 Mysuru District Disaster Management Plan are old leads only and must not be treated as active contacts.",
+    "A public listing does not prove real-time ambulance availability, vehicle type, crew credentials, service radius or response time.",
+    "Do not show unverified providers as confirmed or available in a patient-facing app. Keep a manual verification and approval step before enabling dispatch."
+  ],
+  "providers": [
+    {
+      "provider_id": "mysuru_amb_001",
+      "name": "Sanjeevini Ambulance Service",
+      "provider_type": "ambulance_provider_candidate",
+      "record_status": "public_listing_candidate_not_call_tested",
+      "public_contacts": [
+        {
+          "number": "+91 99451 91619",
+          "source_id": "S5",
+          "number_type": "local_directory_contact",
+          "verification": "not_call_tested"
+        },
+        {
+          "number": "+91 98452 91182",
+          "source_id": "S5",
+          "number_type": "local_directory_contact",
+          "verification": "not_call_tested"
+        },
+        {
+          "number": "+91 94484 96666",
+          "source_id": "S4",
+          "number_type": "official_website_contact",
+          "verification": "not_call_tested"
+        },
+        {
+          "number": "+91 98801 88466",
+          "source_id": "S4",
+          "number_type": "official_website_contact",
+          "verification": "not_call_tested"
+        }
+      ],
+      "public_contact_text": "+91 99451 91619; +91 98452 91182",
+      "additional_contact_note": "Official site also publishes +91 94484 96666 and +91 98801 88466.",
+      "address_or_service_location": "Local listing: 6, 4th Cross, 2nd Main, Vijayanagara, near Mahadeswara Temple Road, Vinayaka Nagar, Mysuru 570012. Official website identifies a Mysuru branch (also Tumakuru and Shivamogga); head office is in Bengaluru.",
+      "public_listing_notes": "Strong candidate for a direct provider conversation. The official site publishes contact numbers and confirms Mysuru as a branch location. Public materials do not establish whether it has exclusive hospital affiliations.",
+      "evidence_label": "Provider listing + official site",
+      "source_ids": [
+        "S4",
+        "S5"
+      ],
+      "hospital_affiliation": {
+        "verified": false,
+        "status": "not_established_from_public_sources"
+      },
+      "dispatch_availability": {
+        "real_time_verified": false,
+        "status": "not_verified"
+      }
+    },
+    {
+      "provider_id": "mysuru_amb_002",
+      "name": "MY SANCHARI Travels and Ambulance Services",
+      "provider_type": "ambulance_provider_candidate",
+      "record_status": "public_listing_candidate_not_call_tested",
+      "public_contacts": [
+        {
+          "number": "+91 73376 68946",
+          "source_id": "S11",
+          "number_type": "local_business_listing",
+          "verification": "not_call_tested"
+        }
+      ],
+      "public_contact_text": "+91 73376 68946",
+      "additional_contact_note": "",
+      "address_or_service_location": "1823, Bannur Road, opposite Teresian College, Vidya Nagar, Mysuru 570029.",
+      "public_listing_notes": "Listed as an ambulance service with 24-hour availability on its local business profile. Public profile also describes travel services. Fleet size and ambulance type are not published in the retrieved listing.",
+      "evidence_label": "Local ambulance-service listing",
+      "source_ids": [
+        "S11"
+      ],
+      "hospital_affiliation": {
+        "verified": false,
+        "status": "not_established_from_public_sources"
+      },
+      "dispatch_availability": {
+        "real_time_verified": false,
+        "status": "not_verified"
+      }
+    },
+    {
+      "provider_id": "mysuru_amb_003",
+      "name": "Mysore Ambulance Service / Mysore Ambulance Services",
+      "provider_type": "ambulance_provider_candidate",
+      "record_status": "listed_multiple_sources_contact_conflict_or_routing_number",
+      "public_contacts": [
+        {
+          "number": "+91 99802 81414",
+          "source_id": "S10",
+          "number_type": "local_business_profile",
+          "verification": "not_call_tested"
+        },
+        {
+          "number": "09035137165",
+          "source_id": "S2",
+          "number_type": "directory_call_routing_number",
+          "verification": "not_direct_operator_line"
+        },
+        {
+          "number": "99018 64111",
+          "source_id": "S16",
+          "number_type": "historical_2015_16_number",
+          "verification": "historical_unverified"
+        }
+      ],
+      "public_contact_text": "Local business profile: +91 99802 81414. Justdial call-routing listing: 09035137165.",
+      "additional_contact_note": "An older district inventory also lists 99018 64111; treat as historical.",
+      "address_or_service_location": "04, Dewan Poorniah Choultry Complex, M.G. Road, opposite JSS Hospital Road, Agrahara / Fort Mohalla, Mysuru 570004.",
+      "public_listing_notes": "Current local directory result describes a 24-hour ambulance service. Different sources show different phone numbers; do not merge them as confirmed equivalents. Try the local profile first and retain the Justdial number as a platform route.",
+      "evidence_label": "Multiple listings; phone conflict",
+      "source_ids": [
+        "S2",
+        "S3",
+        "S10",
+        "S16"
+      ],
+      "hospital_affiliation": {
+        "verified": false,
+        "status": "not_established_from_public_sources"
+      },
+      "dispatch_availability": {
+        "real_time_verified": false,
+        "status": "not_verified"
+      }
+    },
+    {
+      "provider_id": "mysuru_amb_004",
+      "name": "Yashaswini Medical Service / Yashaswini Ambulance",
+      "provider_type": "ambulance_provider_candidate",
+      "record_status": "listed_multiple_sources_contact_conflict_or_routing_number",
+      "public_contacts": [
+        {
+          "number": "+91 96329 66666",
+          "source_id": "S1",
+          "number_type": "local_emergency_contact_listing",
+          "verification": "not_call_tested"
+        },
+        {
+          "number": "08511134591",
+          "source_id": "S2",
+          "number_type": "directory_call_routing_number",
+          "verification": "not_direct_operator_line"
+        },
+        {
+          "number": "96329 66665",
+          "source_id": "S16",
+          "number_type": "historical_2015_16_number",
+          "verification": "historical_unverified"
+        },
+        {
+          "number": "98450 83398",
+          "source_id": "S16",
+          "number_type": "historical_2015_16_number",
+          "verification": "historical_unverified"
+        }
+      ],
+      "public_contact_text": "Local emergency contact list: +91 96329 66666. Justdial call-routing display: 08511134591.",
+      "additional_contact_note": "Older district inventory lists 96329 66665 / 98450 83398.",
+      "address_or_service_location": "3rd Main, Ramanuja Road, Agrahara, Mysuru 570004 (Justdial listing).",
+      "public_listing_notes": "Listed as a 24-hour provider in Justdial. The local emergency contact page and Justdial display different numbers; keep both source-specific and verify before adding a direct-call button.",
+      "evidence_label": "Provider listing; conflicting numbers",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S16"
+      ],
+      "hospital_affiliation": {
+        "verified": false,
+        "status": "not_established_from_public_sources"
+      },
+      "dispatch_availability": {
+        "real_time_verified": false,
+        "status": "not_verified"
+      }
+    },
+    {
+      "provider_id": "mysuru_amb_005",
+      "name": "V B Ambulance & Medical Services",
+      "provider_type": "ambulance_provider_candidate",
+      "record_status": "listed_multiple_sources_contact_conflict_or_routing_number",
+      "public_contacts": [
+        {
+          "number": "08511125654",
+          "source_id": "S2",
+          "number_type": "directory_call_routing_number",
+          "verification": "not_direct_operator_line"
+        },
+        {
+          "number": "07022119769",
+          "source_id": "S3",
+          "number_type": "directory_call_routing_number",
+          "verification": "not_direct_operator_line"
+        }
+      ],
+      "public_contact_text": "Justdial displayed numbers: 08511125654 and 07022119769 (different listings).",
+      "additional_contact_note": "These may be directory call-routing numbers rather than the operator’s direct SIM number.",
+      "address_or_service_location": "Listings show KRS Main Road, Yadavagiri; another listing shows KRS Main Road, Metagalli, Mysuru 570016.",
+      "public_listing_notes": "Listed for ambulance and 24-hour ambulance services. Two locality/number combinations appear under the same business name, so treat as potential duplicate branch/listing until resolved.",
+      "evidence_label": "24-hour listing; contact via directory",
+      "source_ids": [
+        "S2",
+        "S3"
+      ],
+      "hospital_affiliation": {
+        "verified": false,
+        "status": "not_established_from_public_sources"
+      },
+      "dispatch_availability": {
+        "real_time_verified": false,
+        "status": "not_verified"
+      }
+    },
+    {
+      "provider_id": "mysuru_amb_006",
+      "name": "Annapoorna Ambulance Service",
+      "provider_type": "ambulance_provider_candidate",
+      "record_status": "public_listing_candidate_not_call_tested",
+      "public_contacts": [
+        {
+          "number": "09054746920",
+          "source_id": "S2",
+          "number_type": "directory_call_routing_number",
+          "verification": "not_direct_operator_line"
+        }
+      ],
+      "public_contact_text": "Justdial displayed number: 09054746920.",
+      "additional_contact_note": "",
+      "address_or_service_location": "KRS Road, Kumbara Koppal, Mysuru 570016, near New Jayadeva Hospital.",
+      "public_listing_notes": "Justdial marks the listing as verified and lists ambulance and 24-hour ambulance service. The displayed number may route through the directory platform.",
+      "evidence_label": "Verified directory listing",
+      "source_ids": [
+        "S2",
+        "S3"
+      ],
+      "hospital_affiliation": {
+        "verified": false,
+        "status": "not_established_from_public_sources"
+      },
+      "dispatch_availability": {
+        "real_time_verified": false,
+        "status": "not_verified"
+      }
+    },
+    {
+      "provider_id": "mysuru_amb_007",
+      "name": "Life 2 Life Ambulance Service",
+      "provider_type": "ambulance_provider_candidate",
+      "record_status": "listed_multiple_sources_contact_conflict_or_routing_number",
+      "public_contacts": [
+        {
+          "number": "+91 81520 70767",
+          "source_id": "S1",
+          "number_type": "local_emergency_contact_listing",
+          "verification": "not_call_tested"
+        },
+        {
+          "number": "08128538726",
+          "source_id": "S2",
+          "number_type": "directory_call_routing_number",
+          "verification": "not_direct_operator_line"
+        }
+      ],
+      "public_contact_text": "Star of Mysore contact list: +91 81520 70767. Justdial displayed number: 08128538726.",
+      "additional_contact_note": "",
+      "address_or_service_location": "Dakshineshwara Road, Ramakrishnanagar, Mysuru 570022.",
+      "public_listing_notes": "Justdial lists Basic Life Support ambulance services. A recent 2026 review appears on the listing. The newspaper contact number and directory call-routing number differ.",
+      "evidence_label": "BLS listed; conflicting numbers",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "hospital_affiliation": {
+        "verified": false,
+        "status": "not_established_from_public_sources"
+      },
+      "dispatch_availability": {
+        "real_time_verified": false,
+        "status": "not_verified"
+      }
+    },
+    {
+      "provider_id": "mysuru_amb_008",
+      "name": "V V Ambulance Service",
+      "provider_type": "ambulance_provider_candidate",
+      "record_status": "listed_multiple_sources_contact_conflict_or_routing_number",
+      "public_contacts": [
+        {
+          "number": "+91 98803 31313",
+          "source_id": "S1",
+          "number_type": "local_emergency_contact_listing",
+          "verification": "not_call_tested"
+        },
+        {
+          "number": "08971810700",
+          "source_id": "S2",
+          "number_type": "directory_call_routing_number",
+          "verification": "not_direct_operator_line"
+        }
+      ],
+      "public_contact_text": "Star of Mysore contact list: +91 98803 31313. Justdial displayed number: 08971810700.",
+      "additional_contact_note": "",
+      "address_or_service_location": "32/3, Manandavadi Road, Chikkaradanahalli, Jayanagar, Mysuru 570014.",
+      "public_listing_notes": "Justdial lists 24-hour ICU ambulance services. Source numbers differ; preserve them as separate source-provided contacts.",
+      "evidence_label": "ICU ambulance listing",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "hospital_affiliation": {
+        "verified": false,
+        "status": "not_established_from_public_sources"
+      },
+      "dispatch_availability": {
+        "real_time_verified": false,
+        "status": "not_verified"
+      }
+    },
+    {
+      "provider_id": "mysuru_amb_009",
+      "name": "Saint Marys Ambulance Service",
+      "provider_type": "ambulance_provider_candidate",
+      "record_status": "public_listing_candidate_not_call_tested",
+      "public_contacts": [
+        {
+          "number": "08511745680",
+          "source_id": "S2",
+          "number_type": "directory_call_routing_number",
+          "verification": "not_direct_operator_line"
+        },
+        {
+          "number": "+91 98866 69086",
+          "source_id": "S16",
+          "number_type": "historical_2015_16_number",
+          "verification": "historical_unverified"
+        },
+        {
+          "number": "+91 87224 31732",
+          "source_id": "S16",
+          "number_type": "historical_2015_16_number",
+          "verification": "historical_unverified"
+        }
+      ],
+      "public_contact_text": "Justdial displayed number: 08511745680.",
+      "additional_contact_note": "Historical district inventory lists +91 98866 69086 / +91 87224 31732; these are old leads only.",
+      "address_or_service_location": "Kalidasa Road, V.V. Mohalla, Mysuru 570002.",
+      "public_listing_notes": "Current Justdial listing shows ambulance and 24-hour ambulance services. Historical numbers are from a 2015-16 district plan and must not be treated as current without rechecking.",
+      "evidence_label": "Current listing; old direct numbers",
+      "source_ids": [
+        "S2",
+        "S3",
+        "S16"
+      ],
+      "hospital_affiliation": {
+        "verified": false,
+        "status": "not_established_from_public_sources"
+      },
+      "dispatch_availability": {
+        "real_time_verified": false,
+        "status": "not_verified"
+      }
+    },
+    {
+      "provider_id": "mysuru_amb_010",
+      "name": "Sri Chamundeshwari Ambulance Service",
+      "provider_type": "ambulance_provider_candidate",
+      "record_status": "listing_found_phone_only_historical",
+      "public_contacts": [
+        {
+          "number": "+91 99459 57942",
+          "source_id": "S16",
+          "number_type": "historical_2015_16_number",
+          "verification": "historical_unverified"
+        },
+        {
+          "number": "+91 96320 26283",
+          "source_id": "S16",
+          "number_type": "historical_2015_16_number",
+          "verification": "historical_unverified"
+        }
+      ],
+      "public_contact_text": "Historical district inventory: +91 99459 57942 / +91 96320 26283. Current Justdial listing does not expose a phone number in the captured result.",
+      "additional_contact_note": "",
+      "address_or_service_location": "Krishna Temple Road, Yaraganahalli, Mysuru 570029 (current Justdial listing; opposite Teresian College).",
+      "public_listing_notes": "A current directory listing exists, but the only phone numbers found are from the 2015-16 district inventory. Keep as a lead, not a confirmed active contact.",
+      "evidence_label": "Current listing; phone archival only",
+      "source_ids": [
+        "S2",
+        "S16"
+      ],
+      "hospital_affiliation": {
+        "verified": false,
+        "status": "not_established_from_public_sources"
+      },
+      "dispatch_availability": {
+        "real_time_verified": false,
+        "status": "not_verified"
+      }
+    },
+    {
+      "provider_id": "mysuru_amb_011",
+      "name": "Sri Thibbadevi Ambulance Service",
+      "provider_type": "ambulance_provider_candidate",
+      "record_status": "public_listing_candidate_not_call_tested",
+      "public_contacts": [
+        {
+          "number": "+91 99806 59811",
+          "source_id": "S13",
+          "number_type": "local_business_listing",
+          "verification": "not_call_tested"
+        }
+      ],
+      "public_contact_text": "Local business listing: +91 99806 59811.",
+      "additional_contact_note": "",
+      "address_or_service_location": "Kamakshi Hospital Road, Janatha Nagar / T.K. Layout, Mysuru 570009.",
+      "public_listing_notes": "Local profile describes a 24-hour ambulance service. Its location near a hospital does not itself demonstrate hospital ownership or exclusivity; affiliation is not established by the public listing.",
+      "evidence_label": "Local 24-hour business listing",
+      "source_ids": [
+        "S13"
+      ],
+      "hospital_affiliation": {
+        "verified": false,
+        "status": "not_established_from_public_sources"
+      },
+      "dispatch_availability": {
+        "real_time_verified": false,
+        "status": "not_verified"
+      }
+    },
+    {
+      "provider_id": "mysuru_amb_012",
+      "name": "Star Ambulance",
+      "provider_type": "ambulance_provider_candidate",
+      "record_status": "public_listing_candidate_not_call_tested",
+      "public_contacts": [
+        {
+          "number": "+91 91488 52881",
+          "source_id": "S12",
+          "number_type": "local_business_listing",
+          "verification": "not_call_tested"
+        }
+      ],
+      "public_contact_text": "Local listing: +91 91488 52881.",
+      "additional_contact_note": "",
+      "address_or_service_location": "Saraswathipuram, Mysuru 570009.",
+      "public_listing_notes": "Listed as a local ambulance service and shown as 24-hour on its business profile. Detailed vehicle capabilities and exact street address were not exposed in the retrieved listing.",
+      "evidence_label": "Local provider listing",
+      "source_ids": [
+        "S12",
+        "S18"
+      ],
+      "hospital_affiliation": {
+        "verified": false,
+        "status": "not_established_from_public_sources"
+      },
+      "dispatch_availability": {
+        "real_time_verified": false,
+        "status": "not_verified"
+      }
+    },
+    {
+      "provider_id": "mysuru_amb_013",
+      "name": "Green Ambulance Service",
+      "provider_type": "ambulance_provider_candidate",
+      "record_status": "regional_service_mysuru_branch_or_dispatch_unconfirmed",
+      "public_contacts": [
+        {
+          "number": "+91 81236 93276",
+          "source_id": "S8",
+          "number_type": "official_website_contact",
+          "verification": "not_call_tested"
+        }
+      ],
+      "public_contact_text": "Official website emergency number: +91 81236 93276.",
+      "additional_contact_note": "",
+      "address_or_service_location": "Mysuru directory listing: No. 2852/1, CH 57/1, 2nd Main Road, Jayanagar, Mysuru 570014. Its official website lists a Bengaluru address (Dooravani Nagar), so Mysuru dispatch/branch must be confirmed.",
+      "public_listing_notes": "Official website advertises road, train and air ambulance services and 24/7 availability. This is a useful regional-network candidate, but the website address and local directory address differ.",
+      "evidence_label": "Regional service; Mysuru location mismatch",
+      "source_ids": [
+        "S7",
+        "S8"
+      ],
+      "hospital_affiliation": {
+        "verified": false,
+        "status": "not_established_from_public_sources"
+      },
+      "dispatch_availability": {
+        "real_time_verified": false,
+        "status": "not_verified"
+      }
+    },
+    {
+      "provider_id": "mysuru_amb_014",
+      "name": "Sai Ambulance Sales and Service Mysore",
+      "provider_type": "ambulance_vehicle_vendor_candidate",
+      "record_status": "vendor_lead_fleet_operation_unconfirmed",
+      "public_contacts": [
+        {
+          "number": "+91 93426 12359",
+          "source_id": "S6",
+          "number_type": "local_directory_contact",
+          "verification": "not_call_tested"
+        }
+      ],
+      "public_contact_text": "Local directory: +91 93426 12359.",
+      "additional_contact_note": "",
+      "address_or_service_location": "Door 100, Eden Garden Layout, 5th Cross Road, 2nd Stage, Rajiv Nagar, Mysuru 570007.",
+      "public_listing_notes": "The business is listed under ambulance sales and service. The public listing does not clearly establish that it operates a patient-transport fleet, so classify as a possible vehicle/vendor lead, not a confirmed dispatch partner.",
+      "evidence_label": "Sales/service lead - fleet unconfirmed",
+      "source_ids": [
+        "S6"
+      ],
+      "hospital_affiliation": {
+        "verified": false,
+        "status": "not_established_from_public_sources"
+      },
+      "dispatch_availability": {
+        "real_time_verified": false,
+        "status": "not_verified"
+      }
+    },
+    {
+      "provider_id": "mysuru_amb_015",
+      "name": "DRS Ambulance Service",
+      "provider_type": "ambulance_provider_candidate",
+      "record_status": "listing_found_direct_phone_not_available_affiliation_unclear",
+      "public_contacts": [],
+      "public_contact_text": "No direct phone number surfaced in the accessible public listing.",
+      "additional_contact_note": "Justdial listing exposes a “Show Number” control; the number itself was not visible in the retrieved content.",
+      "address_or_service_location": "DRS Medical & Clinic, Hootagalli / Hunsur Main Road, Mysuru 570018.",
+      "public_listing_notes": "Listed as an ambulance/emergency-care provider and shown as 24-hour in business search data. Because the listing is at a clinic premises, independent ownership/association is unclear.",
+      "evidence_label": "Listing present; no public number",
+      "source_ids": [
+        "S14",
+        "S3"
+      ],
+      "hospital_affiliation": {
+        "verified": false,
+        "status": "not_established_from_public_sources"
+      },
+      "dispatch_availability": {
+        "real_time_verified": false,
+        "status": "not_verified"
+      }
+    },
+    {
+      "provider_id": "mysuru_amb_016",
+      "name": "Sri Priya Ambulance Services / Priya Ambulance",
+      "provider_type": "ambulance_provider_candidate",
+      "record_status": "possible_name_match_identity_unconfirmed",
+      "public_contacts": [
+        {
+          "number": "+91 94483 42008",
+          "source_id": "S1",
+          "number_type": "possible_name_match_contact",
+          "verification": "identity_match_unconfirmed"
+        }
+      ],
+      "public_contact_text": "Star of Mysore emergency list: +91 94483 42008 (Priya Ambulance).",
+      "additional_contact_note": "",
+      "address_or_service_location": "Justdial listing for Sri Priya Ambulance Services: Shivaji Road, Narasimharaja Mohalla, Mysuru. The name/contact match is not confirmed.",
+      "public_listing_notes": "Treat the contact as a possible match only: the newspaper uses “Priya Ambulance”, while the local directory uses “Sri Priya Ambulance Services”.",
+      "evidence_label": "Possible name match - verify identity",
+      "source_ids": [
+        "S1",
+        "S2"
+      ],
+      "hospital_affiliation": {
+        "verified": false,
+        "status": "not_established_from_public_sources"
+      },
+      "dispatch_availability": {
+        "real_time_verified": false,
+        "status": "not_verified"
+      }
+    }
+  ],
+  "networks_or_aggregators": [
+    {
+      "network_id": "mysuru_amb_network_001",
+      "name": "VMEDO Ambulance Services - Mysuru MYS002",
+      "provider_type": "ambulance_aggregator_or_coordination_network",
+      "public_contacts": [
+        {
+          "number": "+91 93431 80000",
+          "source_id": "S1",
+          "number_type": "network_contact",
+          "verification": "not_call_tested"
+        }
+      ],
+      "public_contact_text": "+91 93431 80000 (Star of Mysore contact list)",
+      "address_or_service_location": "Gowri Pharma, #16/1, 7th Cross, Veene Sheshanna Road, K.R. Mohalla, Mysuru 570001.",
+      "operating_model_note": "A city listing/booking-network option. The retrieved Mysuru directory listing shows a VMEDO branch point, while the local newspaper lists the network contact. Do not assume the local address is a fleet depot.",
+      "source_ids": [
+        "S1",
+        "S9"
+      ],
+      "owns_mysuru_fleet_verified": false
+    },
+    {
+      "network_id": "mysuru_amb_network_002",
+      "name": "Gopal Ambulance - Mysuru desk",
+      "provider_type": "ambulance_aggregator_or_coordination_network",
+      "public_contacts": [
+        {
+          "number": "+91 70445 50059",
+          "source_id": "S15",
+          "number_type": "network_contact",
+          "verification": "not_call_tested"
+        },
+        {
+          "number": "+91 98312 76492",
+          "source_id": "S15",
+          "number_type": "network_contact",
+          "verification": "not_call_tested"
+        }
+      ],
+      "public_contact_text": "+91 70445 50059 / +91 98312 76492",
+      "address_or_service_location": "Mysuru service page; specific street office address not shown on the page.",
+      "operating_model_note": "The company page says it coordinates emergency and planned transfers through vetted partner operators. This is an aggregator/network lead, not evidence of a directly owned Mysuru fleet.",
+      "source_ids": [
+        "S15"
+      ],
+      "owns_mysuru_fleet_verified": false
+    }
+  ],
+  "historical_leads": [
+    {
+      "lead_id": "mysuru_amb_historical_001",
+      "name": "JMS Kaveri Ambulance Service",
+      "provider_type": "historical_ambulance_lead",
+      "public_contacts": [
+        {
+          "number": "+91 94494 22615",
+          "source_id": "S16",
+          "number_type": "historical_2015_16_number",
+          "verification": "historical_unverified"
+        },
+        {
+          "number": "+91 99868 17230",
+          "source_id": "S16",
+          "number_type": "historical_2015_16_number",
+          "verification": "historical_unverified"
+        }
+      ],
+      "public_contact_text": "+91 94494 22615 / +91 99868 17230",
+      "current_status": "not_established",
+      "notes": "Old district plan; current Justdial listing at Teresian College, Siddarthanagar, but no phone displayed.",
+      "source_ids": [
+        "S16"
+      ]
+    },
+    {
+      "lead_id": "mysuru_amb_historical_002",
+      "name": "Sri Manjunatha Ambulance Service",
+      "provider_type": "historical_ambulance_lead",
+      "public_contacts": [
+        {
+          "number": "+91 97411 11956",
+          "source_id": "S16",
+          "number_type": "historical_2015_16_number",
+          "verification": "historical_unverified"
+        },
+        {
+          "number": "+91 99003 36443",
+          "source_id": "S16",
+          "number_type": "historical_2015_16_number",
+          "verification": "historical_unverified"
+        }
+      ],
+      "public_contact_text": "+91 97411 11956 / +91 99003 36443",
+      "current_status": "not_established",
+      "notes": "Only found in the 2015-16 district inventory; current status not established.",
+      "source_ids": [
+        "S16"
+      ]
+    },
+    {
+      "lead_id": "mysuru_amb_historical_003",
+      "name": "Sri Vinayaka Ambulance Service",
+      "provider_type": "historical_ambulance_lead",
+      "public_contacts": [
+        {
+          "number": "+91 99007 16670",
+          "source_id": "S16",
+          "number_type": "historical_2015_16_number",
+          "verification": "historical_unverified"
+        },
+        {
+          "number": "+91 97405 97709",
+          "source_id": "S16",
+          "number_type": "historical_2015_16_number",
+          "verification": "historical_unverified"
+        }
+      ],
+      "public_contact_text": "+91 99007 16670 / +91 97405 97709",
+      "current_status": "not_established",
+      "notes": "Only found in the 2015-16 district inventory; current status not established.",
+      "source_ids": [
+        "S16"
+      ]
+    },
+    {
+      "lead_id": "mysuru_amb_historical_004",
+      "name": "Ninapurneshwara Ambulance Service",
+      "provider_type": "historical_ambulance_lead",
+      "public_contacts": [
+        {
+          "number": "+91 97433 98498",
+          "source_id": "S16",
+          "number_type": "historical_2015_16_number",
+          "verification": "historical_unverified"
+        }
+      ],
+      "public_contact_text": "+91 97433 98498",
+      "current_status": "not_established",
+      "notes": "Only found in the 2015-16 district inventory; current status not established.",
+      "source_ids": [
+        "S16"
+      ]
+    },
+    {
+      "lead_id": "mysuru_amb_historical_005",
+      "name": "S S Ambulance Service",
+      "provider_type": "historical_ambulance_lead",
+      "public_contacts": [
+        {
+          "number": "+91 87224 31732",
+          "source_id": "S16",
+          "number_type": "historical_2015_16_number",
+          "verification": "historical_unverified"
+        },
+        {
+          "number": "+91 95356 38488",
+          "source_id": "S16",
+          "number_type": "historical_2015_16_number",
+          "verification": "historical_unverified"
+        }
+      ],
+      "public_contact_text": "+91 87224 31732 / +91 95356 38488",
+      "current_status": "not_established",
+      "notes": "Only found in the 2015-16 district inventory; 87224 31732 also appears as an old Saint Mary’s contact, so a duplicate/stale number is possible.",
+      "source_ids": [
+        "S16"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "S1",
+      "title": "Star of Mysore - Ambulance service contact list (VMEDO, Life2Line, Sanjeevini, Yashaswini, Priya, VV)",
+      "url": "https://starofmysore.com/ambulance-service/"
+    },
+    {
+      "source_id": "S2",
+      "title": "Justdial - Domestic ambulance services in Mysore (names, addresses and displayed contact numbers)",
+      "url": "https://www.justdial.com/Mysore/Domestic-Ambulance-Services/nct-10968311"
+    },
+    {
+      "source_id": "S3",
+      "title": "Justdial - 24-hour ambulance services in Mysore (24-hour listings and additional providers)",
+      "url": "https://www.justdial.com/Mysore/24-Hours-Ambulance-Services/nct-10000352"
+    },
+    {
+      "source_id": "S4",
+      "title": "Sanjeevini Ambulance - official contact page",
+      "url": "https://www.sanjeeviniambulance.com/contact"
+    },
+    {
+      "source_id": "S5",
+      "title": "Mysuru Directory - Sanjeevini Ambulance local listing",
+      "url": "https://www.mysuru.directory/listing/sanjeevini-ambulance-732"
+    },
+    {
+      "source_id": "S6",
+      "title": "Mysuru Directory - Sai Ambulance Sales and Service listing",
+      "url": "https://www.mysuru.directory/listing/sai-ambulance-sales-and-service-mysore-725"
+    },
+    {
+      "source_id": "S7",
+      "title": "Mysuru Directory - Green Ambulance Service listing",
+      "url": "https://www.mysuru.directory/listing/green-ambulance-service-727"
+    },
+    {
+      "source_id": "S8",
+      "title": "Green Ambulance - official website and published emergency number",
+      "url": "https://greenambulance.in/"
+    },
+    {
+      "source_id": "S9",
+      "title": "Mysuru Directory - VMEDO Mysuru listing",
+      "url": "https://www.mysuru.directory/listing/vmedo-ambulance-services-mysuru-mys002-723"
+    },
+    {
+      "source_id": "S10",
+      "title": "Mysuru Directory - Mysore Ambulance Service listing (local business search result)",
+      "url": "https://www.google.com/maps/search/?api=1&query=Mysore+Ambulance+Service+Mysuru"
+    },
+    {
+      "source_id": "S11",
+      "title": "Local business listing - MY SANCHARI Travels and Ambulance Services",
+      "url": "https://www.google.com/maps/search/?api=1&query=MY+SANCHARI+TRAVELS+AND+AMBULANCE+SERVICES+Mysuru"
+    },
+    {
+      "source_id": "S12",
+      "title": "Local business listing - Star Ambulance, Saraswathipuram",
+      "url": "https://www.google.com/maps/search/?api=1&query=Star+Ambulance+Saraswathipuram+Mysuru"
+    },
+    {
+      "source_id": "S13",
+      "title": "Local business listing - Sri Thibbadevi Ambulance Service",
+      "url": "https://www.google.com/maps/search/?api=1&query=Sri+Thibbadevi+Ambulance+Service+Mysuru"
+    },
+    {
+      "source_id": "S14",
+      "title": "Local business listing - DRS Ambulance Service, Hootagalli",
+      "url": "https://www.google.com/maps/search/?api=1&query=DRS+Ambulance+Service+Hootagalli+Mysuru"
+    },
+    {
+      "source_id": "S15",
+      "title": "Gopal Ambulance - Mysuru service page; describes coordination through partner operators",
+      "url": "https://gopalambulanceservice.com/cities/mysuru/"
+    },
+    {
+      "source_id": "S16",
+      "title": "Mysuru District Disaster Management Plan 2015-16 - historical ambulance inventory (not current verification)",
+      "url": "https://aikya.info/aikyadevelopment/aikya/demos/demo_work/ksdma/files/District%20Disaster%20Management%20Plans/Mysuru%20DDMP%202015-16.pdf"
+    },
+    {
+      "source_id": "S17",
+      "title": "District Mysuru official helpline page - government ambulance numbers",
+      "url": "https://mysore.nic.in/en/helpline/"
+    },
+    {
+      "source_id": "S18",
+      "title": "PinkBazaar directory - Star Ambulance Mysuru listing",
+      "url": "https://pinkbazaar.in/tools/business-directory/?page=6634"
+    },
+    {
+      "source_id": "S19",
+      "title": "MedifyHome - Mysore ambulance service page (platform-level numbers repeated across listings)",
+      "url": "https://medifyhome.com/ambulance-service-in-mysore/"
+    }
+  ],
+  "recommended_app_fields": [
+    "provider_id",
+    "name",
+    "provider_type",
+    "record_status",
+    "public_contacts",
+    "address_or_service_location",
+    "service_coverage",
+    "operating_hours",
+    "vehicle_categories",
+    "equipment",
+    "crew_credentials",
+    "base_fare",
+    "per_km_rate",
+    "dispatch_availability",
+    "hospital_affiliation",
+    "verification_status",
+    "last_verified_at",
+    "integration_method",
+    "source_ids"
+  ],
+  "emergency_safety_note": "For life-threatening emergencies, the app should clearly direct users to the applicable emergency service (such as 112/108) and must not delay emergency care while searching for a private provider."
+}
