@@ -7,7 +7,8 @@ COPY: dict[str, dict[str, str]] = {
     "en": {
         "emergency_banner": "This sounds life-threatening. Call 108 now.",
         "fallback_warning": "We could not understand the situation fully. Showing the nearest records whose public sources list 24x7 emergency care; this has not been confirmed by the hospitals. Call 108.",
-        "no_match_warning": "Our public-source data does not establish every required capability at a hospital. Missing tags mean unknown, not unavailable. Call 108 and confirm directly before travelling.",
+        "unrecognized_phrase": "We could not understand this phrase as a medical emergency. Please describe the emergency symptoms or what happened (for example: snake bite, chest pain, severe bleeding, breathing difficulty, injury), or call 108 / 112 for immediate emergency help.",
+        "no_match_warning": "No hospital listing all specialized capabilities needed for this emergency was found nearby. Showing the nearest hospitals with 24x7 emergency care for initial patient stabilization. Call 108.",
         "no_hospitals_warning": "No matching record with usable coordinates is available for distance ranking. Call 108 or 112 for help.",
         "approximation": "Distance and travel time are approximate. Call the hospital if you can.",
         "public_data_warning": "Public-source hospital information has not been confirmed by the hospitals and may be outdated. Confirm the branch, contact, and services directly before travelling.",
@@ -65,7 +66,8 @@ COPY: dict[str, dict[str, str]] = {
     "hi": {
         "emergency_banner": "यह जानलेवा स्थिति हो सकती है। अभी 108 पर कॉल करें।",
         "fallback_warning": "हम स्थिति को पूरी तरह समझ नहीं पाए। पास के उन रिकॉर्ड को दिखा रहे हैं जिनके सार्वजनिक स्रोत 24x7 आपातकालीन सेवा बताते हैं; अस्पतालों ने इसकी पुष्टि नहीं की है। 108 पर कॉल करें।",
-        "no_match_warning": "हमारे सार्वजनिक स्रोतों से किसी अस्पताल में सभी आवश्यक सुविधाओं की पुष्टि नहीं होती। सूची में न होना सुविधा उपलब्ध न होने का प्रमाण नहीं है। 108 पर कॉल करें और यात्रा से पहले सीधे पुष्टि करें।",
+        "unrecognized_phrase": "हम इस वाक्यांश को चिकित्सा आपात स्थिति के रूप में नहीं समझ सके। कृपया आपातकालीन लक्षण या स्थिति बताएं (जैसे: सांप का काटना, बहुत खून बहना, सीने में दर्द, सांस लेने में तकलीफ), या तत्काल सहायता के लिए 108 / 112 पर कॉल करें।",
+        "no_match_warning": "इस आपात स्थिति के लिए आवश्यक सभी विशिष्ट सुविधाओं वाला कोई अस्पताल पास में नहीं मिला। प्राथमिक उपचार और मरीज को स्थिर करने के लिए 24x7 आपातकालीन देखभाल वाले निकटतम अस्पताल दिखाए जा रहे हैं। 108 पर कॉल करें।",
         "no_hospitals_warning": "दूरी के आधार पर खोजने के लिए उपयोगी निर्देशांकों वाला मेल खाता रिकॉर्ड नहीं है। मदद के लिए 108 या 112 पर कॉल करें।",
         "approximation": "दूरी और यात्रा समय अनुमानित हैं। संभव हो तो अस्पताल को फोन करें।",
         "public_data_warning": "अस्पताल की सार्वजनिक स्रोतों से मिली जानकारी की अस्पतालों ने पुष्टि नहीं की है और यह पुरानी हो सकती है। यात्रा से पहले शाखा, संपर्क और सेवाओं की सीधे पुष्टि करें।",
@@ -123,7 +125,8 @@ COPY: dict[str, dict[str, str]] = {
     "kn": {
         "emergency_banner": "ಇದು ಜೀವಕ್ಕೆ ಅಪಾಯಕಾರಿಯಾಗಿರಬಹುದು. ಈಗಲೇ 108ಕ್ಕೆ ಕರೆಮಾಡಿ.",
         "fallback_warning": "ಪರಿಸ್ಥಿತಿಯನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಅರ್ಥಮಾಡಿಕೊಳ್ಳಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಸಾರ್ವಜನಿಕ ಮೂಲಗಳಲ್ಲಿ 24x7 ತುರ್ತು ಸೇವೆ ಇದೆ ಎಂದು ಸೂಚಿಸಿರುವ ಹತ್ತಿರದ ದಾಖಲೆಗಳನ್ನು ತೋರಿಸಲಾಗುತ್ತಿದೆ; ಆಸ್ಪತ್ರೆಗಳು ದೃಢಪಡಿಸಿಲ್ಲ. 108ಕ್ಕೆ ಕರೆಮಾಡಿ.",
-        "no_match_warning": "ಸಾರ್ವಜನಿಕ ಮೂಲದ ಮಾಹಿತಿಯಲ್ಲಿ ಅಗತ್ಯವಿರುವ ಎಲ್ಲಾ ಸೌಲಭ್ಯಗಳು ಯಾವುದಾದರೂ ಆಸ್ಪತ್ರೆಯಲ್ಲಿ ಇರುವುದನ್ನು ದೃಢಪಡಿಸಲಾಗಿಲ್ಲ. ಪಟ್ಟಿ ಇಲ್ಲದಿರುವುದು ಸೌಲಭ್ಯ ಇಲ್ಲವೆಂಬುದಕ್ಕೆ ಸಾಕ್ಷಿಯಲ್ಲ. 108ಕ್ಕೆ ಕರೆಮಾಡಿ; ಪ್ರಯಾಣಿಸುವ ಮೊದಲು ನೇರವಾಗಿ ದೃಢಪಡಿಸಿ.",
+        "unrecognized_phrase": "ಈ ವಿವರಣೆಯನ್ನು ವೈದ್ಯಕೀಯ ತುರ್ತುಸ್ಥಿತಿ ಎಂದು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ತುರ್ತು ಲಕ್ಷಣಗಳನ್ನು ವಿವರಿಸಿ (ಉದಾಹರಣೆಗೆ: ಹಾವು ಕಡಿತ, ತೀವ್ರ ರಕ್ತಸ್ರಾವ, ಎದೆ ನೋವು, ಉಸಿರಾಟದ ತೊಂದರೆ), ಅಥವಾ ತಕ್ಷಣದ ಸಹಾಯಕ್ಕಾಗಿ 108 / 112 ಗೆ ಕರೆ ಮಾಡಿ.",
+        "no_match_warning": "ಈ ತುರ್ತುಸ್ಥಿತಿಗೆ ಅಗತ್ಯವಿರುವ ಎಲ್ಲಾ ವಿಶೇಷ ಸೌಲಭ್ಯಗಳನ್ನು ಹೊಂದಿರುವ ಆಸ್ಪತ್ರೆ ಹತ್ತಿರದಲ್ಲಿ ಕಂಡುಬಂದಿಲ್ಲ. ಪ್ರಾಥಮಿಕ ಚಿಕಿತ್ಸೆ ಮತ್ತು ರೋಗಿಯನ್ನು ಸ್ಥಿರಗೊಳಿಸಲು 24x7 ತುರ್ತು ಆರೈಕೆ ಹೊಂದಿರುವ ಹತ್ತಿರದ ಆಸ್ಪತ್ರೆಗಳನ್ನು ತೋರಿಸಲಾಗುತ್ತಿದೆ. 108 ಗೆ ಕರೆ ಮಾಡಿ.",
         "no_hospitals_warning": "ದೂರ ಆಧಾರಿತ ಶ್ರೇಯಾಂಕಕ್ಕೆ ಬಳಸಬಹುದಾದ ಸ್ಥಳಾಂಕಗಳಿರುವ ಹೊಂದಾಣಿಕೆಯ ದಾಖಲೆ ಇಲ್ಲ. ಸಹಾಯಕ್ಕಾಗಿ 108 ಅಥವಾ 112ಕ್ಕೆ ಕರೆಮಾಡಿ.",
         "approximation": "ದೂರ ಮತ್ತು ಪ್ರಯಾಣದ ಸಮಯ ಅಂದಾಜು ಮಾತ್ರ. ಸಾಧ್ಯವಾದರೆ ಆಸ್ಪತ್ರೆಗೆ ಕರೆಮಾಡಿ.",
         "public_data_warning": "ಸಾರ್ವಜನಿಕ ಮೂಲದ ಆಸ್ಪತ್ರೆ ಮಾಹಿತಿಯನ್ನು ಆಸ್ಪತ್ರೆಗಳು ದೃಢಪಡಿಸಿಲ್ಲ; ಅದು ಹಳೆಯದಾಗಿರಬಹುದು. ಪ್ರಯಾಣಿಸುವ ಮೊದಲು ಶಾಖೆ, ಸಂಪರ್ಕ ಮತ್ತು ಸೇವೆಗಳನ್ನು ನೇರವಾಗಿ ದೃಢಪಡಿಸಿ.",

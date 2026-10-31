@@ -17,7 +17,7 @@ from backend.schemas import Classification, EmergencyType, Language, Severity
 KEYWORDS: dict[EmergencyType, tuple[str, ...]] = {
     EmergencyType.POISONING_INGESTION: ("poison", "poisoning", "acid", "swallowed", "drank acid", "acid piya", "acid pee liya", "phenyl", "overdose", "vish", "visha", "zeher", "tezaab", "tezab", "ज़हर", "जहर", "तेज़ाब", "तेजाब", "तेज़ाब पी लिया", "तेजाब पी लिया", "एसिड", "अम्ल", "ವಿಷ", "ಆಸಿಡ್", "ಕುಡಿದ", "ನುಂಗಿದ"),
     EmergencyType.BURNS: ("burn", "burned", "burnt", "hot oil", "fire", "जल गया", "जल गई", "जलना", "jal gaya", "jal gayi", "suttu", "ಸುಟ್ಟ", "ಸುಟ್ಟಿದೆ", "ಬಿಸಿ ಎಣ್ಣೆ"),
-    EmergencyType.SNAKE_BITE: ("snake bite", "snake bit", "snakebite", "सांप ने काटा", "साँप", "saap", "saap ne kata", "saanp ne kaata", "havu", "havu kachide", "ಹಾವು ಕಚ್ಚಿತು", "ಹಾವು ಕಚ್ಚಿದೆ", "ಸರ್ಪದ ಕಡಿತ"),
+    EmergencyType.SNAKE_BITE: ("snake bite", "snake bit", "snakebite", "bitten by a snake", "bitten by snake", "snake", "viper", "cobra", "सांप ने काटा", "साँप", "saap", "saap ne kata", "saanp ne kaata", "havu", "havu kachide", "ಹಾವು ಕಚ್ಚಿತು", "ಹಾವು ಕಚ್ಚಿದೆ", "ಸರ್ಪದ ಕಡಿತ"),
     EmergencyType.CARDIAC: ("chest pain", "heart attack", "heart pain", "chest tight", "seene mein dard", "seene me dard", "dil ka daura", "छाती में दर्द", "सीने में दर्द", "दिल का दौरा", "ಎದೆ ನೋವು", "ಹೃದಯಾಘಾತ", "ಎದೆ ಬಿಗಿತ"),
     EmergencyType.STROKE: ("face drooping", "slurred speech", "stroke", "face is drooping", "chehra tedha", "bolne mein dikkat", "चेहरा टेढ़ा", "बोलने में दिक्कत", "lakwa", "ಮುಖ ಓರೆಯಾಗಿದೆ", "ಮಾತು ತೊದಲುತ್ತಿದೆ", "ಸ್ಟ್ರೋಕ್"),
     EmergencyType.TRAUMA_ACCIDENT: ("accident", "crash", "bike accident", "road accident", "hit by car", "fell from", "गाड़ी दुर्घटना", "सड़क हादसा", "एक्सीडेंट", "अपघात", "ಅಪಘಾತ", "ಬೈಕ್ ಅಪಘಾತ", "ಕೆಳಗೆ ಬಿದ್ದ"),

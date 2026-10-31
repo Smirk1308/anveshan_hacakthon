@@ -27,6 +27,7 @@ from backend.schemas import (
     DepartmentBed,
     EmergencyNumbers,
     EmergencyResult,
+    EmergencyType,
     Hospital,
     HospitalBedsUpdateRequest,
     TriageRequest,
@@ -226,29 +227,46 @@ async def triage(request: TriageRequest) -> TriageResponse:
 
     response_language = resolve_response_language(request.language, detected_language)
     copy = copy_for(response_language)
-    recommendation, alternatives, no_full_match = rank_hospitals(
-        emergency=emergency,
-        hospitals=app.state.hospitals,
-        taxonomy=app.state.taxonomy,
-        user_lat=request.lat,
-        user_lng=request.lng,
-        language=response_language,
+
+    is_unrecognized = (
+        emergency.type == EmergencyType.GENERAL_UNCLEAR
+        and not emergency.red_flags
+        and emergency.confidence == 0.0
     )
-    warnings: list[str] = []
-    if classifier == "fallback":
-        warnings.append(copy["fallback_warning"])
-    if no_full_match:
-        warnings.append(copy["no_match_warning"] if recommendation else copy["no_hospitals_warning"])
-    if recommendation:
-        warnings.append(copy["approximation"])
-    unverified_results = [item for item in ([recommendation] if recommendation else []) + alternatives if not item.verified]
-    if unverified_results:
-        warnings.append(copy["public_data_warning"])
-    if recommendation and not recommendation.location_verified:
-        warnings.append(copy["approx_location_warning"])
-    unlocated_count = len(app.state.hospitals) - getattr(app.state, "located_count", 0)
-    if unlocated_count:
-        warnings.append(copy["locations_missing_warning"].format(count=unlocated_count))
+
+    if is_unrecognized:
+        recommendation = None
+        alternatives = []
+        no_full_match = False
+        warnings = [copy["unrecognized_phrase"]]
+        pre_alert_text = ""
+        unverified_results = []
+        unlocated_count = 0
+    else:
+        recommendation, alternatives, no_full_match = rank_hospitals(
+            emergency=emergency,
+            hospitals=app.state.hospitals,
+            taxonomy=app.state.taxonomy,
+            user_lat=request.lat,
+            user_lng=request.lng,
+            language=response_language,
+        )
+        warnings: list[str] = []
+        if classifier == "fallback":
+            warnings.append(copy["fallback_warning"])
+        if no_full_match:
+            warnings.append(copy["no_match_warning"] if recommendation else copy["no_hospitals_warning"])
+        if recommendation:
+            warnings.append(copy["approximation"])
+        unverified_results = [item for item in ([recommendation] if recommendation else []) + alternatives if not item.verified]
+        if unverified_results:
+            warnings.append(copy["public_data_warning"])
+        if recommendation and not recommendation.location_verified:
+            warnings.append(copy["approx_location_warning"])
+        unlocated_count = len(app.state.hospitals) - getattr(app.state, "located_count", 0)
+        if unlocated_count:
+            warnings.append(copy["locations_missing_warning"].format(count=unlocated_count))
+        pre_alert_text = build_prealert(request.text, emergency, recommendation, response_language)
 
     elapsed_ms = round((time.perf_counter() - started) * 1000)
     logger.info("Triage completed: classifier=%s language=%s cached=%s ms=%d", classifier, response_language, cached, elapsed_ms)
@@ -256,7 +274,7 @@ async def triage(request: TriageRequest) -> TriageResponse:
         emergency=EmergencyResult(**emergency.model_dump()),
         recommendation=recommendation,
         alternatives=alternatives,
-        pre_alert_text=build_prealert(request.text, emergency, recommendation, response_language),
+        pre_alert_text=pre_alert_text,
         emergency_numbers=EmergencyNumbers(),
         warnings=warnings,
         ui_copy={
