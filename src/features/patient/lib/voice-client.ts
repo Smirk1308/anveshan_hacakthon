@@ -31,7 +31,7 @@ export async function requestVoiceTranscription(
   const apiUrl = (
     options.apiUrl ??
     process.env.NEXT_PUBLIC_TRIAGE_API_URL ??
-    (typeof window !== "undefined" ? "" : "http://localhost:8000")
+    (typeof window !== "undefined" ? "http://127.0.0.1:8000" : "http://localhost:8000")
   ).replace(/\/$/, "");
 
   const byteLength =
@@ -66,7 +66,7 @@ export async function requestVoiceTranscription(
   const fetcher = options.fetcher ?? fetch;
   const url = `${apiUrl}/api/voice/transcribe?language=${encodeURIComponent(language)}`;
 
-  let response: Response;
+  let response!: Response;
   try {
     const timeoutSignal = AbortSignal.timeout(15000);
     const combinedSignal =
@@ -85,10 +85,43 @@ export async function requestVoiceTranscription(
     });
   } catch (error) {
     if (error instanceof VoiceTranscriptionError) throw error;
-    throw new VoiceTranscriptionError(
-      "Voice transcription service could not be reached. Please type your message instead.",
-      503,
+
+    // Retry with candidate URLs (handles Windows IPv6 localhost vs 127.0.0.1 or Next proxy)
+    const fallbackCandidates: string[] = [];
+    if (url.includes("127.0.0.1:8000")) {
+      fallbackCandidates.push(url.replace("127.0.0.1:8000", "localhost:8000"));
+    } else if (url.includes("localhost:8000")) {
+      fallbackCandidates.push(url.replace("localhost:8000", "127.0.0.1:8000"));
+    }
+    fallbackCandidates.push(
+      `/api/voice/transcribe?language=${encodeURIComponent(language)}`,
     );
+
+    let fallbackOk = false;
+    for (const altUrl of fallbackCandidates) {
+      if (altUrl === url) continue;
+      try {
+        const altSignal = AbortSignal.timeout(10000);
+        response = await fetcher(altUrl, {
+          method: "POST",
+          headers: { "Content-Type": mimeType },
+          body: audioData as BodyInit,
+          signal: altSignal,
+          cache: "no-store",
+        });
+        fallbackOk = true;
+        break;
+      } catch {
+        // try next
+      }
+    }
+
+    if (!fallbackOk) {
+      throw new VoiceTranscriptionError(
+        "Voice transcription service could not be reached. Please type your message instead.",
+        503,
+      );
+    }
   }
 
   if (!response.ok) {
