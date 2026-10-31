@@ -471,4 +471,3 @@ async def download_project_guide_pdf():
     )
 
 
-
