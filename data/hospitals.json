@@ -609,54 +609,49 @@
       "10-bed emergency department",
       "critical care services"
     ],
-    "diagnostics": [
-      "radiology",
-      "laboratory services"
-    ],
+    "diagnostics": ["radiology", "laboratory services"],
     "department_beds": [
       {
         "department_id": "emergency",
         "department_name": "Emergency & Casualty",
         "total": 15,
         "available": 4,
-        "last_updated": "2026-10-31T06:15:07.074111+00:00"
+        "last_updated": "2026-10-31T06:28:22.517114+00:00"
       },
       {
         "department_id": "icu",
         "department_name": "Trauma Intensive Care Unit",
         "total": 20,
         "available": 3,
-        "last_updated": "2026-10-31T06:15:07.074111+00:00"
+        "last_updated": "2026-10-31T06:28:22.517114+00:00"
       },
       {
         "department_id": "burns",
         "department_name": "Dedicated Burns Unit",
         "total": 10,
         "available": 2,
-        "last_updated": "2026-10-31T06:15:07.074111+00:00"
+        "last_updated": "2026-10-31T06:28:22.517114+00:00"
       },
       {
         "department_id": "trauma",
         "department_name": "Orthopaedic & Trauma Recovery",
         "total": 25,
         "available": 7,
-        "last_updated": "2026-10-31T06:15:07.074111+00:00"
+        "last_updated": "2026-10-31T06:28:22.517114+00:00"
       },
       {
         "department_id": "general",
         "department_name": "General Inpatient Beds",
         "total": 30,
         "available": 8,
-        "last_updated": "2026-10-31T06:15:07.074111+00:00"
+        "last_updated": "2026-10-31T06:28:22.517114+00:00"
       }
     ],
     "last_verified": null,
     "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://drmhospital.com/about-us/",
-    "source_urls": [
-      "https://drmhospital.com/about-us/"
-    ],
+    "source_urls": ["https://drmhospital.com/about-us/"],
     "source_kind": "official_website",
     "verified": false,
     "location_verified": false,
@@ -741,9 +736,7 @@
     "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://drmhospital.com/about-us/",
-    "source_urls": [
-      "https://drmhospital.com/about-us/"
-    ],
+    "source_urls": ["https://drmhospital.com/about-us/"],
     "source_kind": "official_website",
     "verified": false,
     "location_verified": false,
@@ -787,10 +780,7 @@
       "maternal and child healthcare",
       "specialist medical and surgical services"
     ],
-    "diagnostics": [
-      "radiology",
-      "laboratory services"
-    ],
+    "diagnostics": ["radiology", "laboratory services"],
     "department_beds": [
       {
         "department_id": "emergency",
@@ -1105,11 +1095,7 @@
       "critical-care units including MICU, SICU, CCU, RICU, PICU and NICU",
       "ambulance fleet including ICU ambulance"
     ],
-    "diagnostics": [
-      "radiology",
-      "laboratory",
-      "interventional radiology"
-    ],
+    "diagnostics": ["radiology", "laboratory", "interventional radiology"],
     "department_beds": [
       {
         "department_id": "emergency",
@@ -1151,9 +1137,7 @@
     "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://kvccollege.com/about/kvc-hospital",
-    "source_urls": [
-      "https://kvccollege.com/about/kvc-hospital"
-    ],
+    "source_urls": ["https://kvccollege.com/about/kvc-hospital"],
     "source_kind": "official_website",
     "verified": false,
     "location_verified": false,
@@ -1230,18 +1214,13 @@
     "address": "Mysuru, Karnataka (exact entrance/postal address and phone to be confirmed)",
     "phone": null,
     "type": "government",
-    "capabilities": [
-      "obstetrics",
-      "paediatrics"
-    ],
+    "capabilities": ["obstetrics", "paediatrics"],
     "departments": [
       "Maternal and Child Health",
       "Obstetrics & Gynaecology",
       "Paediatric / Child Health"
     ],
-    "services": [
-      "government maternal and child healthcare services"
-    ],
+    "services": ["government maternal and child healthcare services"],
     "diagnostics": [],
     "department_beds": [
       {
@@ -1427,9 +1406,7 @@
       "24/7 critical care and emergency services",
       "multispeciality medical and surgical services"
     ],
-    "diagnostics": [
-      "diagnostics (specific modalities to be confirmed)"
-    ],
+    "diagnostics": ["diagnostics (specific modalities to be confirmed)"],
     "department_beds": [
       {
         "department_id": "emergency",
@@ -1464,9 +1441,7 @@
     "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://avantbkghospitals.com/",
-    "source_urls": [
-      "https://avantbkghospitals.com/"
-    ],
+    "source_urls": ["https://avantbkghospitals.com/"],
     "source_kind": "official_website",
     "verified": false,
     "location_verified": false,
@@ -1515,10 +1490,7 @@
       "ventilator support",
       "ambulance service"
     ],
-    "diagnostics": [
-      "radiology",
-      "laboratory services"
-    ],
+    "diagnostics": ["radiology", "laboratory services"],
     "department_beds": [
       {
         "department_id": "emergency",
@@ -1571,12 +1543,7 @@
     "address": "#728, New Street, near Ring Road Flyover, Hinkal / Vijayanagar, Mysuru, Karnataka 570017",
     "phone": "+91-95388-83913",
     "type": "private",
-    "capabilities": [
-      "emergency_24x7",
-      "icu",
-      "nicu",
-      "obstetrics"
-    ],
+    "capabilities": ["emergency_24x7", "icu", "nicu", "obstetrics"],
     "departments": [
       "Emergency",
       "ICU",
@@ -1595,10 +1562,7 @@
       "post-operative care",
       "24/7 ambulance service"
     ],
-    "diagnostics": [
-      "radiology",
-      "laboratory services"
-    ],
+    "diagnostics": ["radiology", "laboratory services"],
     "department_beds": [
       {
         "department_id": "emergency",
@@ -1633,9 +1597,7 @@
     "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://supriyahospital.in/",
-    "source_urls": [
-      "https://supriyahospital.in/"
-    ],
+    "source_urls": ["https://supriyahospital.in/"],
     "source_kind": "official_website",
     "verified": false,
     "location_verified": false,
@@ -1675,9 +1637,7 @@
       "24/7 ambulance service",
       "24/7 NICU service"
     ],
-    "diagnostics": [
-      "pathology"
-    ],
+    "diagnostics": ["pathology"],
     "department_beds": [
       {
         "department_id": "emergency",
@@ -1786,9 +1746,7 @@
     "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://preranahospital.com/",
-    "source_urls": [
-      "https://preranahospital.com/"
-    ],
+    "source_urls": ["https://preranahospital.com/"],
     "source_kind": "official_website",
     "verified": false,
     "location_verified": false,
@@ -1884,12 +1842,8 @@
     "address": "Mysuru branch; exact street address and map pin should be confirmed from institute before use",
     "phone": "0821-2336000 (reception); 0821-2336111 (emergency OPD contact listed for Mysuru branch)",
     "type": "government",
-    "capabilities": [
-      "cardiology"
-    ],
-    "departments": [
-      "Cardiology / Cardiovascular Sciences"
-    ],
+    "capabilities": ["cardiology"],
+    "departments": ["Cardiology / Cardiovascular Sciences"],
     "services": [
       "specialist cardiovascular services",
       "Mysuru branch lists emergency OPD contact"
@@ -1929,9 +1883,7 @@
     "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://jayadevacardiology.com/contact_us.html",
-    "source_urls": [
-      "https://jayadevacardiology.com/contact_us.html"
-    ],
+    "source_urls": ["https://jayadevacardiology.com/contact_us.html"],
     "source_kind": "official_website_plus_approximate_map",
     "verified": false,
     "location_verified": false,
@@ -1969,11 +1921,7 @@
       "dialysis unit",
       "multiple operation theatres"
     ],
-    "diagnostics": [
-      "CT scan",
-      "X-ray",
-      "ultrasound / USG"
-    ],
+    "diagnostics": ["CT scan", "X-ray", "ultrasound / USG"],
     "department_beds": [
       {
         "department_id": "emergency",
@@ -2008,9 +1956,7 @@
     "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://panaceahospital.in/major-facilities.php",
-    "source_urls": [
-      "https://panaceahospital.in/major-facilities.php"
-    ],
+    "source_urls": ["https://panaceahospital.in/major-facilities.php"],
     "source_kind": "official_website_plus_public_directory",
     "verified": false,
     "location_verified": false,
@@ -2058,11 +2004,7 @@
       "ventilator facilities advertised",
       "24/7 ambulance service advertised"
     ],
-    "diagnostics": [
-      "radiology",
-      "pathology",
-      "24-hour laboratory"
-    ],
+    "diagnostics": ["radiology", "pathology", "24-hour laboratory"],
     "department_beds": [
       {
         "department_id": "emergency",
