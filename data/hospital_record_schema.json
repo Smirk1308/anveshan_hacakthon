@@ -90,6 +90,20 @@
     },
     "notes": {
       "type": "string"
+    },
+    "department_beds": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["department_id", "department_name", "total", "available"],
+        "properties": {
+          "department_id": { "type": "string" },
+          "department_name": { "type": "string" },
+          "total": { "type": "integer", "minimum": 0 },
+          "available": { "type": "integer", "minimum": 0 },
+          "last_updated": { "type": ["string", "null"] }
+        }
+      }
     }
   },
   "additionalProperties": true

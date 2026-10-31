@@ -122,6 +122,7 @@ def _build_result(
         matched_required=matched_required,
         matched_preferred=matched_preferred,
         missing_preferred=missing_preferred,
+        department_beds=hospital.department_beds,
         # Directions may use approximate public-source pins for the hackathon demo.
         # The UI gates the link on the user's location being shared/selected and
         # continues to label an unverified hospital location as approximate.

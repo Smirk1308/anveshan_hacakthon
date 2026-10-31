@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { requestTriage, requestVoiceTranscription } from "../lib/api";
 import NearbyHelp from "./nearby-help";
 import AmbulanceRequest from "./ambulance-request";
@@ -119,6 +120,12 @@ function Icon({ name, className = "" }: { name: string; className?: string }) {
         <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
         <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
         <line x1="12" x2="12" y1="19" y2="22" />
+      </svg>
+    );
+  if (name === "bed")
+    return (
+      <svg {...common}>
+        <path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9" />
       </svg>
     );
   if (name === "stop")
@@ -524,6 +531,14 @@ export default function EmergencyFinder() {
               <span>{copy.call112}</span>
               <span className="hotline-number">{copy.emergency}</span>
             </a>
+            <Link
+              href="/admin"
+              className="staff-portal-pill"
+              title="Hospital Staff Live Bed Portal"
+            >
+              <Icon name="bed" />
+              <span>Staff Bed Admin</span>
+            </Link>
           </nav>
         </div>
       </header>
@@ -1014,6 +1029,26 @@ export function HospitalCard({
           <Icon name="clock" /> {copy.eta}: {match.eta_min_approx} min
         </span>
       </div>
+      {hospital.department_beds && hospital.department_beds.length > 0 && (
+        <div className="live-beds-container">
+          <div className="live-beds-badge-title">
+            <span className="live-pulse-dot" aria-hidden="true" />
+            <span>Live Bed Availability:</span>
+          </div>
+          <div className="live-beds-chips-row">
+            {hospital.department_beds.map((d) => (
+              <span
+                key={d.department_id}
+                className={`live-bed-chip ${d.available > 0 ? "has-beds" : "is-full"}`}
+                title={`Last updated: ${d.last_updated ? new Date(d.last_updated).toLocaleTimeString() : "Recent"}`}
+              >
+                {d.department_name.split("(")[0].trim()}:{" "}
+                <strong>{d.available}</strong>/{d.total} free
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
       <div className="reason-list">
         {(match.reasons ?? []).filter(Boolean).map((reason) => (
           <span key={reason} className="reason-pill">

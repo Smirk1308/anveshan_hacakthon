@@ -20,6 +20,15 @@ export type VoiceTranscriptionResponse = z.infer<
   typeof VoiceTranscriptionResponseSchema
 >;
 
+export const DepartmentBedCountSchema = z.object({
+  department_id: z.string(),
+  department_name: z.string(),
+  total: z.number().int().nonnegative(),
+  available: z.number().int().nonnegative(),
+  last_updated: z.string().nullable().optional(),
+});
+export type DepartmentBedCount = z.infer<typeof DepartmentBedCountSchema>;
+
 export const HospitalSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -32,6 +41,7 @@ export const HospitalSchema = z.object({
   departments: z.array(z.string()).default([]),
   services: z.array(z.string()).default([]),
   diagnostics: z.array(z.string()).default([]),
+  department_beds: z.array(DepartmentBedCountSchema).optional().default([]),
   source: z.string().nullable().optional(),
   source_urls: z.array(z.string()).default([]),
   source_kind: z.string().nullable().optional(),
