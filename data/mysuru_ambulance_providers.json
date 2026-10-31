@@ -55,10 +55,7 @@
       "address_or_service_location": "Local listing: 6, 4th Cross, 2nd Main, Vijayanagara, near Mahadeswara Temple Road, Vinayaka Nagar, Mysuru 570012. Official website identifies a Mysuru branch (also Tumakuru and Shivamogga); head office is in Bengaluru.",
       "public_listing_notes": "Strong candidate for a direct provider conversation. The official site publishes contact numbers and confirms Mysuru as a branch location. Public materials do not establish whether it has exclusive hospital affiliations.",
       "evidence_label": "Provider listing + official site",
-      "source_ids": [
-        "S4",
-        "S5"
-      ],
+      "source_ids": ["S4", "S5"],
       "hospital_affiliation": {
         "verified": false,
         "status": "not_established_from_public_sources"
@@ -86,9 +83,7 @@
       "address_or_service_location": "1823, Bannur Road, opposite Teresian College, Vidya Nagar, Mysuru 570029.",
       "public_listing_notes": "Listed as an ambulance service with 24-hour availability on its local business profile. Public profile also describes travel services. Fleet size and ambulance type are not published in the retrieved listing.",
       "evidence_label": "Local ambulance-service listing",
-      "source_ids": [
-        "S11"
-      ],
+      "source_ids": ["S11"],
       "hospital_affiliation": {
         "verified": false,
         "status": "not_established_from_public_sources"
@@ -128,12 +123,7 @@
       "address_or_service_location": "04, Dewan Poorniah Choultry Complex, M.G. Road, opposite JSS Hospital Road, Agrahara / Fort Mohalla, Mysuru 570004.",
       "public_listing_notes": "Current local directory result describes a 24-hour ambulance service. Different sources show different phone numbers; do not merge them as confirmed equivalents. Try the local profile first and retain the Justdial number as a platform route.",
       "evidence_label": "Multiple listings; phone conflict",
-      "source_ids": [
-        "S2",
-        "S3",
-        "S10",
-        "S16"
-      ],
+      "source_ids": ["S2", "S3", "S10", "S16"],
       "hospital_affiliation": {
         "verified": false,
         "status": "not_established_from_public_sources"
@@ -179,12 +169,7 @@
       "address_or_service_location": "3rd Main, Ramanuja Road, Agrahara, Mysuru 570004 (Justdial listing).",
       "public_listing_notes": "Listed as a 24-hour provider in Justdial. The local emergency contact page and Justdial display different numbers; keep both source-specific and verify before adding a direct-call button.",
       "evidence_label": "Provider listing; conflicting numbers",
-      "source_ids": [
-        "S1",
-        "S2",
-        "S3",
-        "S16"
-      ],
+      "source_ids": ["S1", "S2", "S3", "S16"],
       "hospital_affiliation": {
         "verified": false,
         "status": "not_established_from_public_sources"
@@ -218,10 +203,7 @@
       "address_or_service_location": "Listings show KRS Main Road, Yadavagiri; another listing shows KRS Main Road, Metagalli, Mysuru 570016.",
       "public_listing_notes": "Listed for ambulance and 24-hour ambulance services. Two locality/number combinations appear under the same business name, so treat as potential duplicate branch/listing until resolved.",
       "evidence_label": "24-hour listing; contact via directory",
-      "source_ids": [
-        "S2",
-        "S3"
-      ],
+      "source_ids": ["S2", "S3"],
       "hospital_affiliation": {
         "verified": false,
         "status": "not_established_from_public_sources"
@@ -249,10 +231,7 @@
       "address_or_service_location": "KRS Road, Kumbara Koppal, Mysuru 570016, near New Jayadeva Hospital.",
       "public_listing_notes": "Justdial marks the listing as verified and lists ambulance and 24-hour ambulance service. The displayed number may route through the directory platform.",
       "evidence_label": "Verified directory listing",
-      "source_ids": [
-        "S2",
-        "S3"
-      ],
+      "source_ids": ["S2", "S3"],
       "hospital_affiliation": {
         "verified": false,
         "status": "not_established_from_public_sources"
@@ -286,11 +265,7 @@
       "address_or_service_location": "Dakshineshwara Road, Ramakrishnanagar, Mysuru 570022.",
       "public_listing_notes": "Justdial lists Basic Life Support ambulance services. A recent 2026 review appears on the listing. The newspaper contact number and directory call-routing number differ.",
       "evidence_label": "BLS listed; conflicting numbers",
-      "source_ids": [
-        "S1",
-        "S2",
-        "S3"
-      ],
+      "source_ids": ["S1", "S2", "S3"],
       "hospital_affiliation": {
         "verified": false,
         "status": "not_established_from_public_sources"
@@ -324,11 +299,7 @@
       "address_or_service_location": "32/3, Manandavadi Road, Chikkaradanahalli, Jayanagar, Mysuru 570014.",
       "public_listing_notes": "Justdial lists 24-hour ICU ambulance services. Source numbers differ; preserve them as separate source-provided contacts.",
       "evidence_label": "ICU ambulance listing",
-      "source_ids": [
-        "S1",
-        "S2",
-        "S3"
-      ],
+      "source_ids": ["S1", "S2", "S3"],
       "hospital_affiliation": {
         "verified": false,
         "status": "not_established_from_public_sources"
@@ -368,11 +339,7 @@
       "address_or_service_location": "Kalidasa Road, V.V. Mohalla, Mysuru 570002.",
       "public_listing_notes": "Current Justdial listing shows ambulance and 24-hour ambulance services. Historical numbers are from a 2015-16 district plan and must not be treated as current without rechecking.",
       "evidence_label": "Current listing; old direct numbers",
-      "source_ids": [
-        "S2",
-        "S3",
-        "S16"
-      ],
+      "source_ids": ["S2", "S3", "S16"],
       "hospital_affiliation": {
         "verified": false,
         "status": "not_established_from_public_sources"
@@ -406,10 +373,7 @@
       "address_or_service_location": "Krishna Temple Road, Yaraganahalli, Mysuru 570029 (current Justdial listing; opposite Teresian College).",
       "public_listing_notes": "A current directory listing exists, but the only phone numbers found are from the 2015-16 district inventory. Keep as a lead, not a confirmed active contact.",
       "evidence_label": "Current listing; phone archival only",
-      "source_ids": [
-        "S2",
-        "S16"
-      ],
+      "source_ids": ["S2", "S16"],
       "hospital_affiliation": {
         "verified": false,
         "status": "not_established_from_public_sources"
@@ -437,9 +401,7 @@
       "address_or_service_location": "Kamakshi Hospital Road, Janatha Nagar / T.K. Layout, Mysuru 570009.",
       "public_listing_notes": "Local profile describes a 24-hour ambulance service. Its location near a hospital does not itself demonstrate hospital ownership or exclusivity; affiliation is not established by the public listing.",
       "evidence_label": "Local 24-hour business listing",
-      "source_ids": [
-        "S13"
-      ],
+      "source_ids": ["S13"],
       "hospital_affiliation": {
         "verified": false,
         "status": "not_established_from_public_sources"
@@ -467,10 +429,7 @@
       "address_or_service_location": "Saraswathipuram, Mysuru 570009.",
       "public_listing_notes": "Listed as a local ambulance service and shown as 24-hour on its business profile. Detailed vehicle capabilities and exact street address were not exposed in the retrieved listing.",
       "evidence_label": "Local provider listing",
-      "source_ids": [
-        "S12",
-        "S18"
-      ],
+      "source_ids": ["S12", "S18"],
       "hospital_affiliation": {
         "verified": false,
         "status": "not_established_from_public_sources"
@@ -498,10 +457,7 @@
       "address_or_service_location": "Mysuru directory listing: No. 2852/1, CH 57/1, 2nd Main Road, Jayanagar, Mysuru 570014. Its official website lists a Bengaluru address (Dooravani Nagar), so Mysuru dispatch/branch must be confirmed.",
       "public_listing_notes": "Official website advertises road, train and air ambulance services and 24/7 availability. This is a useful regional-network candidate, but the website address and local directory address differ.",
       "evidence_label": "Regional service; Mysuru location mismatch",
-      "source_ids": [
-        "S7",
-        "S8"
-      ],
+      "source_ids": ["S7", "S8"],
       "hospital_affiliation": {
         "verified": false,
         "status": "not_established_from_public_sources"
@@ -529,9 +485,7 @@
       "address_or_service_location": "Door 100, Eden Garden Layout, 5th Cross Road, 2nd Stage, Rajiv Nagar, Mysuru 570007.",
       "public_listing_notes": "The business is listed under ambulance sales and service. The public listing does not clearly establish that it operates a patient-transport fleet, so classify as a possible vehicle/vendor lead, not a confirmed dispatch partner.",
       "evidence_label": "Sales/service lead - fleet unconfirmed",
-      "source_ids": [
-        "S6"
-      ],
+      "source_ids": ["S6"],
       "hospital_affiliation": {
         "verified": false,
         "status": "not_established_from_public_sources"
@@ -552,10 +506,7 @@
       "address_or_service_location": "DRS Medical & Clinic, Hootagalli / Hunsur Main Road, Mysuru 570018.",
       "public_listing_notes": "Listed as an ambulance/emergency-care provider and shown as 24-hour in business search data. Because the listing is at a clinic premises, independent ownership/association is unclear.",
       "evidence_label": "Listing present; no public number",
-      "source_ids": [
-        "S14",
-        "S3"
-      ],
+      "source_ids": ["S14", "S3"],
       "hospital_affiliation": {
         "verified": false,
         "status": "not_established_from_public_sources"
@@ -583,10 +534,7 @@
       "address_or_service_location": "Justdial listing for Sri Priya Ambulance Services: Shivaji Road, Narasimharaja Mohalla, Mysuru. The name/contact match is not confirmed.",
       "public_listing_notes": "Treat the contact as a possible match only: the newspaper uses “Priya Ambulance”, while the local directory uses “Sri Priya Ambulance Services”.",
       "evidence_label": "Possible name match - verify identity",
-      "source_ids": [
-        "S1",
-        "S2"
-      ],
+      "source_ids": ["S1", "S2"],
       "hospital_affiliation": {
         "verified": false,
         "status": "not_established_from_public_sources"
@@ -613,10 +561,7 @@
       "public_contact_text": "+91 93431 80000 (Star of Mysore contact list)",
       "address_or_service_location": "Gowri Pharma, #16/1, 7th Cross, Veene Sheshanna Road, K.R. Mohalla, Mysuru 570001.",
       "operating_model_note": "A city listing/booking-network option. The retrieved Mysuru directory listing shows a VMEDO branch point, while the local newspaper lists the network contact. Do not assume the local address is a fleet depot.",
-      "source_ids": [
-        "S1",
-        "S9"
-      ],
+      "source_ids": ["S1", "S9"],
       "owns_mysuru_fleet_verified": false
     },
     {
@@ -640,9 +585,7 @@
       "public_contact_text": "+91 70445 50059 / +91 98312 76492",
       "address_or_service_location": "Mysuru service page; specific street office address not shown on the page.",
       "operating_model_note": "The company page says it coordinates emergency and planned transfers through vetted partner operators. This is an aggregator/network lead, not evidence of a directly owned Mysuru fleet.",
-      "source_ids": [
-        "S15"
-      ],
+      "source_ids": ["S15"],
       "owns_mysuru_fleet_verified": false
     }
   ],
@@ -668,9 +611,7 @@
       "public_contact_text": "+91 94494 22615 / +91 99868 17230",
       "current_status": "not_established",
       "notes": "Old district plan; current Justdial listing at Teresian College, Siddarthanagar, but no phone displayed.",
-      "source_ids": [
-        "S16"
-      ]
+      "source_ids": ["S16"]
     },
     {
       "lead_id": "mysuru_amb_historical_002",
@@ -693,9 +634,7 @@
       "public_contact_text": "+91 97411 11956 / +91 99003 36443",
       "current_status": "not_established",
       "notes": "Only found in the 2015-16 district inventory; current status not established.",
-      "source_ids": [
-        "S16"
-      ]
+      "source_ids": ["S16"]
     },
     {
       "lead_id": "mysuru_amb_historical_003",
@@ -718,9 +657,7 @@
       "public_contact_text": "+91 99007 16670 / +91 97405 97709",
       "current_status": "not_established",
       "notes": "Only found in the 2015-16 district inventory; current status not established.",
-      "source_ids": [
-        "S16"
-      ]
+      "source_ids": ["S16"]
     },
     {
       "lead_id": "mysuru_amb_historical_004",
@@ -737,9 +674,7 @@
       "public_contact_text": "+91 97433 98498",
       "current_status": "not_established",
       "notes": "Only found in the 2015-16 district inventory; current status not established.",
-      "source_ids": [
-        "S16"
-      ]
+      "source_ids": ["S16"]
     },
     {
       "lead_id": "mysuru_amb_historical_005",
@@ -762,9 +697,7 @@
       "public_contact_text": "+91 87224 31732 / +91 95356 38488",
       "current_status": "not_established",
       "notes": "Only found in the 2015-16 district inventory; 87224 31732 also appears as an old Saint Mary’s contact, so a duplicate/stale number is possible.",
-      "source_ids": [
-        "S16"
-      ]
+      "source_ids": ["S16"]
     }
   ],
   "sources": [

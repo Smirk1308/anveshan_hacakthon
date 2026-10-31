@@ -7,6 +7,25 @@
     "address": "Bannimantap, Mysuru, Karnataka 570015",
     "phone": "0821-2331066 (hospital line; emergency line shown on official site)",
     "type": "trust",
+    "capabilities": [
+      "emergency_24x7",
+      "icu",
+      "nicu",
+      "paediatrics",
+      "obstetrics",
+      "plastic_surgery",
+      "orthopaedics",
+      "neurology",
+      "neurosurgery",
+      "nephrology",
+      "ct_scan",
+      "blood_bank",
+      "snake_bite_management",
+      "poisoning_management",
+      "toxicology_poison",
+      "ventilator",
+      "trauma_center"
+    ],
     "departments": [
       "Emergency & Trauma",
       "Intensive Care Unit",
@@ -47,26 +66,52 @@
       "pathology",
       "digital X-ray"
     ],
-    "capabilities": [
-      "emergency_24x7",
-      "icu",
-      "nicu",
-      "paediatrics",
-      "obstetrics",
-      "plastic_surgery",
-      "orthopaedics",
-      "neurology",
-      "neurosurgery",
-      "nephrology",
-      "ct_scan",
-      "blood_bank",
-      "snake_bite_management",
-      "poisoning_management",
-      "toxicology_poison",
-      "ventilator",
-      "trauma_center"
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Emergency & Casualty",
+        "total": 25,
+        "available": 6,
+        "last_updated": "2026-10-31T05:27:51.138288+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Intensive Care Unit (ICU)",
+        "total": 30,
+        "available": 5,
+        "last_updated": "2026-10-31T05:27:51.138288+00:00"
+      },
+      {
+        "department_id": "nicu",
+        "department_name": "Neonatal ICU (NICU)",
+        "total": 12,
+        "available": 3,
+        "last_updated": "2026-10-31T05:27:51.138288+00:00"
+      },
+      {
+        "department_id": "paediatrics",
+        "department_name": "Paediatrics Ward",
+        "total": 35,
+        "available": 9,
+        "last_updated": "2026-10-31T05:27:51.138288+00:00"
+      },
+      {
+        "department_id": "trauma",
+        "department_name": "Trauma & Orthopaedics",
+        "total": 20,
+        "available": 4,
+        "last_updated": "2026-10-31T05:27:51.138288+00:00"
+      },
+      {
+        "department_id": "general",
+        "department_name": "General Inpatient Ward",
+        "total": 120,
+        "available": 28,
+        "last_updated": "2026-10-31T05:27:51.138288+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://www.sjhmysuru.com/",
     "source_urls": [
@@ -76,7 +121,6 @@
       "https://www.sjhmysuru.com/departments/icu"
     ],
     "source_kind": "official_website",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": "https://www.google.com/maps/search/?api=1&query=St.%20Joseph%27s%20Hospital%2C%20Bannimantap%2C%20Mysuru%2C%20Karnataka%20570015%2C%20Mysuru",
@@ -90,6 +134,29 @@
     "address": "M.G. Road, Ramachandra Agrahara, Mysuru, Karnataka 570004",
     "phone": "0821-2335000; 0821-2335500; 24/7 helpline 0821-2335555",
     "type": "trust",
+    "capabilities": [
+      "emergency_24x7",
+      "icu",
+      "picu",
+      "nicu",
+      "paediatrics",
+      "obstetrics",
+      "burns_unit",
+      "burns_care",
+      "trauma_center",
+      "orthopaedics",
+      "neurology",
+      "neurosurgery",
+      "plastic_surgery",
+      "cardiology",
+      "cardiac_cath_lab",
+      "stroke_unit",
+      "ct_scan",
+      "blood_bank",
+      "ventilator",
+      "nephrology",
+      "urology"
+    ],
     "departments": [
       "Emergency Medicine",
       "Critical Care Medicine",
@@ -125,30 +192,66 @@
       "radiology and imaging",
       "laboratory services"
     ],
-    "capabilities": [
-      "emergency_24x7",
-      "icu",
-      "picu",
-      "nicu",
-      "paediatrics",
-      "obstetrics",
-      "burns_unit",
-      "burns_care",
-      "trauma_center",
-      "orthopaedics",
-      "neurology",
-      "neurosurgery",
-      "plastic_surgery",
-      "cardiology",
-      "cardiac_cath_lab",
-      "stroke_unit",
-      "ct_scan",
-      "blood_bank",
-      "ventilator",
-      "nephrology",
-      "urology"
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Emergency & Trauma Resuscitation",
+        "total": 50,
+        "available": 18,
+        "last_updated": "2026-10-31T05:37:34.077746+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Multi-Disciplinary ICU",
+        "total": 80,
+        "available": 16,
+        "last_updated": "2026-10-31T05:37:34.077746+00:00"
+      },
+      {
+        "department_id": "cardiac_icu",
+        "department_name": "Cardiac ICU / CCU",
+        "total": 30,
+        "available": 7,
+        "last_updated": "2026-10-31T05:37:34.077746+00:00"
+      },
+      {
+        "department_id": "picu",
+        "department_name": "Pediatric ICU (PICU)",
+        "total": 20,
+        "available": 5,
+        "last_updated": "2026-10-31T05:37:34.077746+00:00"
+      },
+      {
+        "department_id": "nicu",
+        "department_name": "Neonatal ICU (NICU)",
+        "total": 25,
+        "available": 6,
+        "last_updated": "2026-10-31T05:37:34.077746+00:00"
+      },
+      {
+        "department_id": "burns",
+        "department_name": "Burns ICU & Unit",
+        "total": 15,
+        "available": 3,
+        "last_updated": "2026-10-31T05:37:34.077746+00:00"
+      },
+      {
+        "department_id": "stroke",
+        "department_name": "Stroke & Neuro Care",
+        "total": 25,
+        "available": 4,
+        "last_updated": "2026-10-31T05:37:34.077746+00:00"
+      },
+      {
+        "department_id": "general",
+        "department_name": "General Inpatient Care",
+        "total": 450,
+        "available": 92,
+        "last_updated": "2026-10-31T05:37:34.077746+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://jsshospital.in/",
     "source_urls": [
@@ -158,7 +261,6 @@
       "https://jsshospital.in/specialities/emergency-medicine/"
     ],
     "source_kind": "official_website",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": "https://www.google.com/maps/search/?api=1&query=JSS%20Hospital%2C%20M.G.%20Road%2C%20Ramachandra%20Agrahara%2C%20Mysuru%2C%20Karnataka%20570004%2C%20Mysuru",
@@ -172,6 +274,21 @@
     "address": "Adichuchanagiri Road, Kuvempunagar, Mysuru, Karnataka 570023",
     "phone": "0821-2568888 (public hospital directory; verify before production)",
     "type": "private",
+    "capabilities": [
+      "cardiology",
+      "ct_scan",
+      "emergency_department",
+      "icu",
+      "nephrology",
+      "neurology",
+      "paediatrics",
+      "plastic_surgery",
+      "poisoning_management",
+      "pulmonology",
+      "toxicology_poison",
+      "trauma_center",
+      "ventilator"
+    ],
     "departments": [
       "Emergency Medicine",
       "Critical Care",
@@ -200,22 +317,52 @@
       "radiology and imaging",
       "laboratory services"
     ],
-    "capabilities": [
-      "cardiology",
-      "ct_scan",
-      "emergency_department",
-      "icu",
-      "nephrology",
-      "neurology",
-      "paediatrics",
-      "plastic_surgery",
-      "poisoning_management",
-      "pulmonology",
-      "toxicology_poison",
-      "trauma_center",
-      "ventilator"
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Emergency Medicine Department",
+        "total": 20,
+        "available": 5,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Medical & Surgical ICU",
+        "total": 40,
+        "available": 7,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "cardiac_icu",
+        "department_name": "Cardiac Care Unit (CCU)",
+        "total": 20,
+        "available": 4,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "pulmonology",
+        "department_name": "Pulmonology & Respiratory Care",
+        "total": 15,
+        "available": 3,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "trauma",
+        "department_name": "Trauma & Emergency Surgery",
+        "total": 15,
+        "available": 3,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "general",
+        "department_name": "General & Speciality Rooms",
+        "total": 150,
+        "available": 34,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://www.apollohospitals.com/hospitals/apollo-bgs-hospitals-mysore",
     "source_urls": [
@@ -223,7 +370,6 @@
       "https://www.mysoremysuru.com/hospitals-and-emergency/"
     ],
     "source_kind": "official_website_plus_public_directory",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": "https://www.google.com/maps/search/?api=1&query=Apollo%20BGS%20Hospitals%2C%20Mysore%2C%20Adichuchanagiri%20Road%2C%20Kuvempunagar%2C%20Mysuru%2C%20Karnataka%20570023%2C%20Mysuru",
@@ -237,6 +383,17 @@
     "address": "CAH/1, 3rd Phase, Devanur 2nd Stage, R.S. Naidu Nagar, Mysuru, Karnataka 570019",
     "phone": "1800-309-0309 (emergency); 080-6926-6140 (appointments; verify routing)",
     "type": "private",
+    "capabilities": [
+      "cardiac_cath_lab",
+      "cardiology",
+      "ct_scan",
+      "emergency_24x7",
+      "icu",
+      "nephrology",
+      "neurology",
+      "obstetrics",
+      "orthopaedics"
+    ],
     "departments": [
       "Emergency Medicine",
       "Cardiology",
@@ -271,18 +428,45 @@
       "Holter monitoring",
       "cath lab"
     ],
-    "capabilities": [
-      "cardiac_cath_lab",
-      "cardiology",
-      "ct_scan",
-      "emergency_24x7",
-      "icu",
-      "nephrology",
-      "neurology",
-      "obstetrics",
-      "orthopaedics"
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Emergency Casualty Unit",
+        "total": 12,
+        "available": 3,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Intensive Care Unit (ICU)",
+        "total": 42,
+        "available": 9,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "cardiac_icu",
+        "department_name": "Coronary Care Unit (CCU)",
+        "total": 24,
+        "available": 6,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "nephrology",
+        "department_name": "Nephrology & Dialysis Inpatient",
+        "total": 18,
+        "available": 4,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "general",
+        "department_name": "General Inpatient Ward",
+        "total": 160,
+        "available": 41,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://www.narayanahealth.org/mysore/emergency-medicine",
     "source_urls": [
@@ -291,7 +475,6 @@
       "https://www.narayanahealth.org/contact-us"
     ],
     "source_kind": "official_website",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": null,
@@ -305,6 +488,20 @@
     "address": "Bannimantap A Layout, Bangalore-Mysore Ring Road Junction, Mysuru, Karnataka 570015 (confirm current entrance/address)",
     "phone": "0821-3989896 / 0821-6600000 (public local directory; verify)",
     "type": "private",
+    "capabilities": [
+      "cardiology",
+      "ct_scan",
+      "emergency_department",
+      "icu",
+      "nephrology",
+      "neurology",
+      "orthopaedics",
+      "paediatrics",
+      "poisoning_management",
+      "toxicology_poison",
+      "trauma_center",
+      "ventilator"
+    ],
     "departments": [
       "Emergency Medicine",
       "Critical Care / ICU",
@@ -328,21 +525,45 @@
       "radiology and imaging",
       "MRI (confirm campus service)"
     ],
-    "capabilities": [
-      "cardiology",
-      "ct_scan",
-      "emergency_department",
-      "icu",
-      "nephrology",
-      "neurology",
-      "orthopaedics",
-      "paediatrics",
-      "poisoning_management",
-      "toxicology_poison",
-      "trauma_center",
-      "ventilator"
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Emergency Department",
+        "total": 18,
+        "available": 5,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Intensive Care Unit (ICU)",
+        "total": 35,
+        "available": 8,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "trauma",
+        "department_name": "Trauma & Orthopaedic Surgery",
+        "total": 25,
+        "available": 6,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "paediatrics",
+        "department_name": "Paediatric Ward",
+        "total": 20,
+        "available": 5,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "general",
+        "department_name": "General & Private Rooms",
+        "total": 140,
+        "available": 36,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://www.manipalhospitals.com/mysore/specialities/accident-and-emergency-care/",
     "source_urls": [
@@ -351,7 +572,6 @@
       "https://www.manipalhospitals.com/mysore/specialities/icu-and-critical-care/severe-infections-shock-polytrauma-severe-poisoning/"
     ],
     "source_kind": "official_website_plus_public_directory",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": "https://www.google.com/maps/search/?api=1&query=Manipal%20Hospital%20Mysuru%20%28formerly%20Columbia%20Asia%29%2C%20Bannimantap%20A%20Layout%2C%20Bangalore-Mysore%20Ring%20Road%20Junction%2C%20Mysuru%2C%20Karnataka%20570015%20%28confirm%20current%20entrance/address%29%2C%20Mysuru",
@@ -365,6 +585,14 @@
     "address": "Temple Road, Vontikoppal, Mysuru, Karnataka 570002",
     "phone": "+91-81054-24247",
     "type": "private",
+    "capabilities": [
+      "emergency_24x7",
+      "icu",
+      "trauma_center",
+      "burns_unit",
+      "burns_care",
+      "orthopaedics"
+    ],
     "departments": [
       "Accident & Emergency",
       "Trauma Care",
@@ -381,26 +609,50 @@
       "10-bed emergency department",
       "critical care services"
     ],
-    "diagnostics": [
-      "radiology",
-      "laboratory services"
-    ],
-    "capabilities": [
-      "emergency_24x7",
-      "icu",
-      "trauma_center",
-      "burns_unit",
-      "burns_care",
-      "orthopaedics"
+    "diagnostics": ["radiology", "laboratory services"],
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Emergency & Casualty",
+        "total": 15,
+        "available": 4,
+        "last_updated": "2026-10-31T06:28:22.517114+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Trauma Intensive Care Unit",
+        "total": 20,
+        "available": 3,
+        "last_updated": "2026-10-31T06:28:22.517114+00:00"
+      },
+      {
+        "department_id": "burns",
+        "department_name": "Dedicated Burns Unit",
+        "total": 10,
+        "available": 2,
+        "last_updated": "2026-10-31T06:28:22.517114+00:00"
+      },
+      {
+        "department_id": "trauma",
+        "department_name": "Orthopaedic & Trauma Recovery",
+        "total": 25,
+        "available": 7,
+        "last_updated": "2026-10-31T06:28:22.517114+00:00"
+      },
+      {
+        "department_id": "general",
+        "department_name": "General Inpatient Beds",
+        "total": 30,
+        "available": 8,
+        "last_updated": "2026-10-31T06:28:22.517114+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://drmhospital.com/about-us/",
-    "source_urls": [
-      "https://drmhospital.com/about-us/"
-    ],
+    "source_urls": ["https://drmhospital.com/about-us/"],
     "source_kind": "official_website",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": "https://www.google.com/maps/search/?api=1&query=DRM%20Accident%20%26%20Trauma%20Centre%2C%20Temple%20Road%2C%20Vontikoppal%2C%20Mysuru%2C%20Karnataka%20570002%2C%20Mysuru",
@@ -414,6 +666,13 @@
     "address": "Yadavagiri, Mysuru, Karnataka (street address/map pin to be confirmed)",
     "phone": "+91-81054-24247 (group contact; verify local emergency line)",
     "type": "private",
+    "capabilities": [
+      "icu",
+      "cardiology",
+      "cardiac_cath_lab",
+      "nephrology",
+      "blood_storage_centre"
+    ],
     "departments": [
       "Cardiology / Cardiac Sciences",
       "Critical Care / ICU",
@@ -436,21 +695,49 @@
       "radiology",
       "laboratory services"
     ],
-    "capabilities": [
-      "icu",
-      "cardiology",
-      "cardiac_cath_lab",
-      "nephrology",
-      "blood_storage_centre"
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Emergency Triage",
+        "total": 15,
+        "available": 5,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Super Speciality ICU",
+        "total": 30,
+        "available": 6,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "cardiac_icu",
+        "department_name": "Cardiac ICU / Post-Cath Recovery",
+        "total": 20,
+        "available": 4,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "nephrology",
+        "department_name": "Nephrology & Renal Transplant",
+        "total": 25,
+        "available": 7,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "general",
+        "department_name": "General Inpatient Ward",
+        "total": 60,
+        "available": 18,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://drmhospital.com/about-us/",
-    "source_urls": [
-      "https://drmhospital.com/about-us/"
-    ],
+    "source_urls": ["https://drmhospital.com/about-us/"],
     "source_kind": "official_website",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": null,
@@ -464,6 +751,16 @@
     "address": "P.B. No. 38, Sawday Road, Mandi Mohalla, Mysuru, Karnataka 570001",
     "phone": "+91-821-400-7000 (public hospital listing; verify)",
     "type": "trust",
+    "capabilities": [
+      "paediatrics",
+      "obstetrics",
+      "orthopaedics",
+      "neurology",
+      "neurosurgery",
+      "plastic_surgery",
+      "cardiology",
+      "nephrology"
+    ],
     "departments": [
       "General Medicine",
       "General Surgery",
@@ -483,21 +780,46 @@
       "maternal and child healthcare",
       "specialist medical and surgical services"
     ],
-    "diagnostics": [
-      "radiology",
-      "laboratory services"
-    ],
-    "capabilities": [
-      "paediatrics",
-      "obstetrics",
-      "orthopaedics",
-      "neurology",
-      "neurosurgery",
-      "plastic_surgery",
-      "cardiology",
-      "nephrology"
+    "diagnostics": ["radiology", "laboratory services"],
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Emergency Casualty",
+        "total": 15,
+        "available": 4,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Intensive Care Unit",
+        "total": 20,
+        "available": 4,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "maternity",
+        "department_name": "Obstetrics & Maternity",
+        "total": 35,
+        "available": 8,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "paediatrics",
+        "department_name": "Paediatrics Ward",
+        "total": 30,
+        "available": 7,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "general",
+        "department_name": "General Wards",
+        "total": 180,
+        "available": 45,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://csihmh.org/doctors/",
     "source_urls": [
@@ -506,7 +828,6 @@
       "https://csihmh.org/specialities/"
     ],
     "source_kind": "official_website_plus_public_directory",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": "https://www.google.com/maps/search/?api=1&query=CSI%20Holdsworth%20Memorial%20%28Mission%29%20Hospital%2C%20P.B.%20No.%2038%2C%20Sawday%20Road%2C%20Mandi%20Mohalla%2C%20Mysuru%2C%20Karnataka%20570001%2C%20Mysuru",
@@ -520,6 +841,21 @@
     "address": "Siddartha Layout, near Teresian College, Mysuru, Karnataka 570011",
     "phone": "0821-2472424; +91-98446-98446 (public contact; verify)",
     "type": "private",
+    "capabilities": [
+      "blood_bank",
+      "cardiac_cath_lab",
+      "cardiology",
+      "ct_scan",
+      "emergency_24x7",
+      "icu",
+      "neurology",
+      "neurosurgery",
+      "obstetrics",
+      "orthopaedics",
+      "paediatrics",
+      "plastic_surgery",
+      "pulmonology"
+    ],
     "departments": [
       "Cardiology",
       "Neurology",
@@ -555,22 +891,45 @@
       "X-ray",
       "24x7 radiology and laboratory services"
     ],
-    "capabilities": [
-      "blood_bank",
-      "cardiac_cath_lab",
-      "cardiology",
-      "ct_scan",
-      "emergency_24x7",
-      "icu",
-      "neurology",
-      "neurosurgery",
-      "obstetrics",
-      "orthopaedics",
-      "paediatrics",
-      "plastic_surgery",
-      "pulmonology"
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Emergency Casualty",
+        "total": 20,
+        "available": 5,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Intensive Care Unit (Level 3)",
+        "total": 40,
+        "available": 10,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "cardiac_icu",
+        "department_name": "Cardiac Care Unit (CCU)",
+        "total": 25,
+        "available": 6,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "neuro",
+        "department_name": "Neurology & Neurosurgery Ward",
+        "total": 30,
+        "available": 7,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "general",
+        "department_name": "General Multispeciality Wards",
+        "total": 120,
+        "available": 32,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://cauveryhospital.org/blood-bank/",
     "source_urls": [
@@ -579,7 +938,6 @@
       "https://www.cauveryhospital.org/images/Nursing.pdf"
     ],
     "source_kind": "official_website_plus_hospital_institutional_material",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": "https://www.google.com/maps/search/?api=1&query=Cauvery%20Heart%20%26%20Multi%20Speciality%20Hospital%2C%20Siddartha%20Layout%2C%20near%20Teresian%20College%2C%20Mysuru%2C%20Karnataka%20570011%2C%20Mysuru",
@@ -593,6 +951,21 @@
     "address": "No. 1004/963, next to Doctor's Layout, Ring Road, Alanahalli, Mysuru, Karnataka 570028",
     "phone": "0821-2476600; +91-96204-47044",
     "type": "private",
+    "capabilities": [
+      "emergency_24x7",
+      "icu",
+      "nicu",
+      "paediatrics",
+      "obstetrics",
+      "orthopaedics",
+      "cardiology",
+      "nephrology",
+      "neurology",
+      "neurosurgery",
+      "plastic_surgery",
+      "pulmonology",
+      "ct_scan"
+    ],
     "departments": [
       "Trauma & Emergency",
       "Medical ICU",
@@ -625,22 +998,45 @@
       "radiology",
       "laboratory services"
     ],
-    "capabilities": [
-      "emergency_24x7",
-      "icu",
-      "nicu",
-      "paediatrics",
-      "obstetrics",
-      "orthopaedics",
-      "cardiology",
-      "nephrology",
-      "neurology",
-      "neurosurgery",
-      "plastic_surgery",
-      "pulmonology",
-      "ct_scan"
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Emergency Department",
+        "total": 12,
+        "available": 3,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Intensive Care Unit",
+        "total": 22,
+        "available": 5,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "nicu",
+        "department_name": "Neonatal ICU (NICU)",
+        "total": 10,
+        "available": 3,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "maternity",
+        "department_name": "Maternity & Gynaecology",
+        "total": 25,
+        "available": 6,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "general",
+        "department_name": "General Inpatient",
+        "total": 60,
+        "available": 16,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://nirmalahospitalmysore.com/",
     "source_urls": [
@@ -648,7 +1044,6 @@
       "https://nirmalahospitalmysore.com/contact-us/"
     ],
     "source_kind": "official_website",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": "https://www.google.com/maps/search/?api=1&query=Nirmala%20Multispeciality%20Hospital%2C%20No.%201004/963%2C%20next%20to%20Doctor%27s%20Layout%2C%20Ring%20Road%2C%20Alanahalli%2C%20Mysuru%2C%20Karnataka%20570028%2C%20Mysuru",
@@ -662,6 +1057,19 @@
     "address": "3rd Stage, near Aditya Circle, Dattagalli, Kanakadasa Nagar, Mysuru, Karnataka 570022",
     "phone": "+91-99524-86124; +91-88914-65699",
     "type": "private",
+    "capabilities": [
+      "icu",
+      "picu",
+      "nicu",
+      "orthopaedics",
+      "nephrology",
+      "neurology",
+      "neurosurgery",
+      "pulmonology",
+      "urology",
+      "plastic_surgery",
+      "oncology"
+    ],
     "departments": [
       "Orthopaedics & Spine",
       "Gastroenterology",
@@ -687,32 +1095,50 @@
       "critical-care units including MICU, SICU, CCU, RICU, PICU and NICU",
       "ambulance fleet including ICU ambulance"
     ],
-    "diagnostics": [
-      "radiology",
-      "laboratory",
-      "interventional radiology"
-    ],
-    "capabilities": [
-      "icu",
-      "picu",
-      "nicu",
-      "orthopaedics",
-      "nephrology",
-      "neurology",
-      "neurosurgery",
-      "pulmonology",
-      "urology",
-      "plastic_surgery",
-      "oncology"
+    "diagnostics": ["radiology", "laboratory", "interventional radiology"],
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Emergency Care Triage",
+        "total": 15,
+        "available": 4,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Medical & Surgical ICU",
+        "total": 35,
+        "available": 7,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "picu_nicu",
+        "department_name": "PICU & NICU Units",
+        "total": 16,
+        "available": 4,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "oncology",
+        "department_name": "Oncology & Surgical Ward",
+        "total": 40,
+        "available": 9,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "general",
+        "department_name": "General Inpatient Ward",
+        "total": 70,
+        "available": 19,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://kvccollege.com/about/kvc-hospital",
-    "source_urls": [
-      "https://kvccollege.com/about/kvc-hospital"
-    ],
+    "source_urls": ["https://kvccollege.com/about/kvc-hospital"],
     "source_kind": "official_website",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": null,
@@ -726,6 +1152,7 @@
     "address": "Irwin Road / Sayyaji Rao Road, Mysuru, Karnataka (confirm official postal address)",
     "phone": null,
     "type": "government",
+    "capabilities": [],
     "departments": [
       "Government teaching and tertiary referral hospital",
       "Multiple medical and surgical departments (department-level list should be confirmed from MMC&RI)"
@@ -735,8 +1162,38 @@
       "Snake-bite case management and anti-snake venom stocks were reported by hospital superintendent in a November 2025 news report; re-confirm directly before coding this capability"
     ],
     "diagnostics": [],
-    "capabilities": [],
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Government Casualty & Emergency",
+        "total": 40,
+        "available": 9,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Intensive Care Unit (ICU)",
+        "total": 50,
+        "available": 7,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "trauma",
+        "department_name": "Trauma & Orthopaedic Surgery",
+        "total": 90,
+        "available": 15,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "general",
+        "department_name": "Government General Inpatient Wards",
+        "total": 500,
+        "available": 82,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      }
+    ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://mysore.nic.in/public-utilities/hospitals/",
     "source_urls": [
@@ -744,7 +1201,6 @@
       "https://aikya.info/aikyadevelopment/aikya/demos/demo_work/ksdma/files/District%20Disaster%20Management%20Plans/Mysuru%20DDMP%202015-16.pdf"
     ],
     "source_kind": "government_directory_plus_historical_report",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": "https://www.google.com/maps/search/?api=1&query=K.R.%20Hospital%20%28Krishnarajendra%20Hospital%29%2C%20Irwin%20Road%20/%20Sayyaji%20Rao%20Road%2C%20Mysuru%2C%20Karnataka%20%28confirm%20official%20postal%20address%29%2C%20Mysuru",
@@ -758,20 +1214,53 @@
     "address": "Mysuru, Karnataka (exact entrance/postal address and phone to be confirmed)",
     "phone": null,
     "type": "government",
+    "capabilities": ["obstetrics", "paediatrics"],
     "departments": [
       "Maternal and Child Health",
       "Obstetrics & Gynaecology",
       "Paediatric / Child Health"
     ],
-    "services": [
-      "government maternal and child healthcare services"
-    ],
+    "services": ["government maternal and child healthcare services"],
     "diagnostics": [],
-    "capabilities": [
-      "obstetrics",
-      "paediatrics"
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Paediatric & Obstetric Emergency",
+        "total": 25,
+        "available": 7,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "nicu",
+        "department_name": "Neonatal Intensive Care (NICU)",
+        "total": 30,
+        "available": 6,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "picu",
+        "department_name": "Pediatric Intensive Care (PICU)",
+        "total": 18,
+        "available": 4,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "obstetrics",
+        "department_name": "Maternity, Labour & Postnatal",
+        "total": 120,
+        "available": 27,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "paediatrics",
+        "department_name": "General Paediatric Inpatient",
+        "total": 150,
+        "available": 39,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://hfwcom.karnataka.gov.in/storage/pdf-files/AnnualreportJanuaryendEng2024-25.pdf",
     "source_urls": [
@@ -779,7 +1268,6 @@
       "https://mysore.nic.in/public-utilities/hospitals/"
     ],
     "source_kind": "government_source",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": "https://www.google.com/maps/search/?api=1&query=Cheluvamba%20Hospital%2C%20Mysuru%2C%20Karnataka%20%28exact%20entrance/postal%20address%20and%20phone%20to%20be%20confirmed%29%2C%20Mysuru",
@@ -793,6 +1281,15 @@
     "address": "P/2, Dakshineshwara Road, E & F Block, Ramakrishnanagar, Mysuru, Karnataka 570022",
     "phone": "+91-97395-55908",
     "type": "private",
+    "capabilities": [
+      "emergency_24x7",
+      "cardiology",
+      "neurology",
+      "obstetrics",
+      "paediatrics",
+      "plastic_surgery",
+      "pulmonology"
+    ],
     "departments": [
       "Accident & Emergency",
       "Cardiology",
@@ -815,16 +1312,45 @@
       "hospital laboratory",
       "diagnostics (details to be confirmed)"
     ],
-    "capabilities": [
-      "emergency_24x7",
-      "cardiology",
-      "neurology",
-      "obstetrics",
-      "paediatrics",
-      "plastic_surgery",
-      "pulmonology"
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Emergency & Casualty",
+        "total": 16,
+        "available": 4,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Intensive Care Unit",
+        "total": 28,
+        "available": 6,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "cardiac_icu",
+        "department_name": "Cardiac Care Unit",
+        "total": 18,
+        "available": 5,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "neuro",
+        "department_name": "Neurology & Pulmonology Ward",
+        "total": 30,
+        "available": 8,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "general",
+        "department_name": "General Inpatient Ward",
+        "total": 90,
+        "available": 26,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://www.suyoghospital.com/",
     "source_urls": [
@@ -832,7 +1358,6 @@
       "https://www.suyoghospital.com/contact-us/"
     ],
     "source_kind": "official_website_plus_public_directory",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": "https://www.google.com/maps/search/?api=1&query=Suyog%20Hospital%2C%20P/2%2C%20Dakshineshwara%20Road%2C%20E%20%26%20F%20Block%2C%20Ramakrishnanagar%2C%20Mysuru%2C%20Karnataka%20570022%2C%20Mysuru",
@@ -846,6 +1371,19 @@
     "address": "Ring Road, near Bogadi Circle, Mysuru, Karnataka 570026",
     "phone": "0821-2520000; +91-90084-17272",
     "type": "private",
+    "capabilities": [
+      "emergency_24x7",
+      "cardiology",
+      "orthopaedics",
+      "neurology",
+      "neurosurgery",
+      "obstetrics",
+      "paediatrics",
+      "plastic_surgery",
+      "pulmonology",
+      "nephrology",
+      "oncology"
+    ],
     "departments": [
       "Accident & Emergency",
       "Anaesthesiology & Critical Care",
@@ -868,30 +1406,43 @@
       "24/7 critical care and emergency services",
       "multispeciality medical and surgical services"
     ],
-    "diagnostics": [
-      "diagnostics (specific modalities to be confirmed)"
-    ],
-    "capabilities": [
-      "emergency_24x7",
-      "cardiology",
-      "orthopaedics",
-      "neurology",
-      "neurosurgery",
-      "obstetrics",
-      "paediatrics",
-      "plastic_surgery",
-      "pulmonology",
-      "nephrology",
-      "oncology"
+    "diagnostics": ["diagnostics (specific modalities to be confirmed)"],
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "24/7 Casualty & Emergency",
+        "total": 14,
+        "available": 4,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Critical Care & ICU",
+        "total": 25,
+        "available": 6,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "surgical",
+        "department_name": "Surgical & Oncology Speciality",
+        "total": 40,
+        "available": 10,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "general",
+        "department_name": "General Inpatient Ward",
+        "total": 80,
+        "available": 21,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://avantbkghospitals.com/",
-    "source_urls": [
-      "https://avantbkghospitals.com/"
-    ],
+    "source_urls": ["https://avantbkghospitals.com/"],
     "source_kind": "official_website",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": null,
@@ -905,6 +1456,17 @@
     "address": "25/1A, Irwin Road, Lashkar Mohalla, Mysuru, Karnataka 570001",
     "phone": "0821-2445954; +91-99860-11601",
     "type": "private",
+    "capabilities": [
+      "emergency_24x7",
+      "icu",
+      "nicu",
+      "ventilator",
+      "paediatrics",
+      "obstetrics",
+      "cardiology",
+      "orthopaedics",
+      "trauma_center"
+    ],
     "departments": [
       "Emergency & Trauma",
       "ICU / ICCU",
@@ -928,22 +1490,39 @@
       "ventilator support",
       "ambulance service"
     ],
-    "diagnostics": [
-      "radiology",
-      "laboratory services"
-    ],
-    "capabilities": [
-      "emergency_24x7",
-      "icu",
-      "nicu",
-      "ventilator",
-      "paediatrics",
-      "obstetrics",
-      "cardiology",
-      "orthopaedics",
-      "trauma_center"
+    "diagnostics": ["radiology", "laboratory services"],
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Emergency & Trauma",
+        "total": 12,
+        "available": 3,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Intensive Care Unit",
+        "total": 18,
+        "available": 4,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "nicu",
+        "department_name": "Neonatal ICU (NICU)",
+        "total": 8,
+        "available": 2,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "general",
+        "department_name": "General & Maternity Ward",
+        "total": 50,
+        "available": 15,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://chitrashospital.com/",
     "source_urls": [
@@ -951,7 +1530,6 @@
       "https://chitrashospital.com/contact-us/"
     ],
     "source_kind": "official_website_plus_public_directory",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": "https://www.google.com/maps/search/?api=1&query=Chitra%27s%20Hospital%2C%2025/1A%2C%20Irwin%20Road%2C%20Lashkar%20Mohalla%2C%20Mysuru%2C%20Karnataka%20570001%2C%20Mysuru",
@@ -965,6 +1543,7 @@
     "address": "#728, New Street, near Ring Road Flyover, Hinkal / Vijayanagar, Mysuru, Karnataka 570017",
     "phone": "+91-95388-83913",
     "type": "private",
+    "capabilities": ["emergency_24x7", "icu", "nicu", "obstetrics"],
     "departments": [
       "Emergency",
       "ICU",
@@ -983,24 +1562,43 @@
       "post-operative care",
       "24/7 ambulance service"
     ],
-    "diagnostics": [
-      "radiology",
-      "laboratory services"
-    ],
-    "capabilities": [
-      "emergency_24x7",
-      "icu",
-      "nicu",
-      "obstetrics"
+    "diagnostics": ["radiology", "laboratory services"],
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Casualty & Emergency",
+        "total": 10,
+        "available": 3,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Intensive Care Unit",
+        "total": 16,
+        "available": 4,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "nicu",
+        "department_name": "Neonatal ICU",
+        "total": 8,
+        "available": 2,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "maternity",
+        "department_name": "Maternity & Inpatient",
+        "total": 45,
+        "available": 13,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://supriyahospital.in/",
-    "source_urls": [
-      "https://supriyahospital.in/"
-    ],
+    "source_urls": ["https://supriyahospital.in/"],
     "source_kind": "official_website",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": "https://www.google.com/maps/search/?api=1&query=Supriya%20Hospital%2C%20%23728%2C%20New%20Street%2C%20near%20Ring%20Road%20Flyover%2C%20Hinkal%20/%20Vijayanagar%2C%20Mysuru%2C%20Karnataka%20570017%2C%20Mysuru",
@@ -1014,6 +1612,15 @@
     "address": "64 & 64/1, 3rd Cross, Kalidasa Road, Jayalakshmipuram, Mysuru, Karnataka 570012",
     "phone": "0821-6626666; 0821-4000782; +91-88844-54441",
     "type": "private",
+    "capabilities": [
+      "emergency_24x7",
+      "nicu",
+      "orthopaedics",
+      "obstetrics",
+      "neurology",
+      "neurosurgery",
+      "urology"
+    ],
     "departments": [
       "Neurosurgery",
       "Orthopaedics",
@@ -1030,19 +1637,46 @@
       "24/7 ambulance service",
       "24/7 NICU service"
     ],
-    "diagnostics": [
-      "pathology"
-    ],
-    "capabilities": [
-      "emergency_24x7",
-      "nicu",
-      "orthopaedics",
-      "obstetrics",
-      "neurology",
-      "neurosurgery",
-      "urology"
+    "diagnostics": ["pathology"],
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Emergency Care Unit",
+        "total": 12,
+        "available": 3,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Critical Care Unit",
+        "total": 18,
+        "available": 4,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "nicu",
+        "department_name": "Neonatal ICU",
+        "total": 8,
+        "available": 2,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "ortho",
+        "department_name": "Orthopaedic & Surgical Ward",
+        "total": 30,
+        "available": 8,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "general",
+        "department_name": "General Ward",
+        "total": 55,
+        "available": 17,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://www.brindavanhospital.in/",
     "source_urls": [
@@ -1051,7 +1685,6 @@
       "https://brindavanhospital.in/our-departments/"
     ],
     "source_kind": "official_website",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": "https://www.google.com/maps/search/?api=1&query=Brindavan%20Hospital%2C%2064%20%26%2064/1%2C%203rd%20Cross%2C%20Kalidasa%20Road%2C%20Jayalakshmipuram%2C%20Mysuru%2C%20Karnataka%20570012%2C%20Mysuru",
@@ -1065,6 +1698,12 @@
     "address": "#452, Paduvana Road, A & B Complex, Kuvempunagara North, Mysuru, Karnataka 570009",
     "phone": "0821-4246000; 0821-4006000; +91-72042-70871",
     "type": "private",
+    "capabilities": [
+      "mental_health_services",
+      "deaddiction_services",
+      "rehabilitation",
+      "emergency_24x7"
+    ],
     "departments": [
       "Psychiatry",
       "Psychology",
@@ -1080,20 +1719,35 @@
       "gynaecology and infertility services"
     ],
     "diagnostics": [],
-    "capabilities": [
-      "mental_health_services",
-      "deaddiction_services",
-      "rehabilitation",
-      "emergency_24x7"
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Psychiatric Emergency & Crisis Unit",
+        "total": 10,
+        "available": 3,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "hdu",
+        "department_name": "High-Dependency Care Unit",
+        "total": 12,
+        "available": 4,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "inpatient",
+        "department_name": "Mental Health & Deaddiction Ward",
+        "total": 45,
+        "available": 14,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://preranahospital.com/",
-    "source_urls": [
-      "https://preranahospital.com/"
-    ],
+    "source_urls": ["https://preranahospital.com/"],
     "source_kind": "official_website",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": "https://www.google.com/maps/search/?api=1&query=Prerana%20Hospital%2C%20%23452%2C%20Paduvana%20Road%2C%20A%20%26%20B%20Complex%2C%20Kuvempunagara%20North%2C%20Mysuru%2C%20Karnataka%20570009%2C%20Mysuru",
@@ -1107,6 +1761,12 @@
     "address": "#438, Outer Ring Road, Hebbal, Mysuru, Karnataka 570016",
     "phone": "0821-2300600; 0821-2300606; +91-90121-12190",
     "type": "private",
+    "capabilities": [
+      "oncology",
+      "paediatric_oncology",
+      "icu",
+      "blood_storage_centre"
+    ],
     "departments": [
       "Medical Oncology",
       "Surgical Oncology",
@@ -1130,13 +1790,38 @@
       "oncology laboratory and pathology services",
       "onco-radiology (specific modalities to be confirmed)"
     ],
-    "capabilities": [
-      "oncology",
-      "paediatric_oncology",
-      "icu",
-      "blood_storage_centre"
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Oncology Emergency Triage",
+        "total": 8,
+        "available": 2,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Oncology Intensive Care Unit",
+        "total": 16,
+        "available": 4,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "paed_onco",
+        "department_name": "Paediatric Oncology Ward",
+        "total": 18,
+        "available": 5,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "chemo_surg",
+        "department_name": "Chemotherapy & Surgical Inpatient",
+        "total": 60,
+        "available": 17,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://www.bharathcancerhospital.com/",
     "source_urls": [
@@ -1144,7 +1829,6 @@
       "https://www.bharathcancerhospital.com/contact/"
     ],
     "source_kind": "official_website_plus_public_directory",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": "https://www.google.com/maps/search/?api=1&query=Bharath%20Hospital%20%26%20Institute%20of%20Oncology%2C%20%23438%2C%20Outer%20Ring%20Road%2C%20Hebbal%2C%20Mysuru%2C%20Karnataka%20570016%2C%20Mysuru",
@@ -1158,25 +1842,49 @@
     "address": "Mysuru branch; exact street address and map pin should be confirmed from institute before use",
     "phone": "0821-2336000 (reception); 0821-2336111 (emergency OPD contact listed for Mysuru branch)",
     "type": "government",
-    "departments": [
-      "Cardiology / Cardiovascular Sciences"
-    ],
+    "capabilities": ["cardiology"],
+    "departments": ["Cardiology / Cardiovascular Sciences"],
     "services": [
       "specialist cardiovascular services",
       "Mysuru branch lists emergency OPD contact"
     ],
     "diagnostics": [],
-    "capabilities": [
-      "cardiology"
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Cardiac Emergency & Triage",
+        "total": 30,
+        "available": 8,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "ccu",
+        "department_name": "Coronary Care Unit (CCU)",
+        "total": 45,
+        "available": 9,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Cardiothoracic Surgical ICU",
+        "total": 30,
+        "available": 6,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "cardiac_ward",
+        "department_name": "Cardiovascular Inpatient Wards",
+        "total": 250,
+        "available": 54,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://jayadevacardiology.com/contact_us.html",
-    "source_urls": [
-      "https://jayadevacardiology.com/contact_us.html"
-    ],
+    "source_urls": ["https://jayadevacardiology.com/contact_us.html"],
     "source_kind": "official_website_plus_approximate_map",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": null,
@@ -1190,6 +1898,13 @@
     "address": "1075/B, Akkamahadevi Road, Killa Mohalla / J.P. Nagar area, Mysuru, Karnataka 570008 (confirm current campus address)",
     "phone": null,
     "type": "private",
+    "capabilities": [
+      "blood_bank",
+      "ct_scan",
+      "emergency_department",
+      "icu",
+      "nicu"
+    ],
     "departments": [
       "Multispeciality Care",
       "Critical Care / ICU",
@@ -1206,26 +1921,43 @@
       "dialysis unit",
       "multiple operation theatres"
     ],
-    "diagnostics": [
-      "CT scan",
-      "X-ray",
-      "ultrasound / USG"
-    ],
-    "capabilities": [
-      "blood_bank",
-      "ct_scan",
-      "emergency_department",
-      "icu",
-      "nicu"
+    "diagnostics": ["CT scan", "X-ray", "ultrasound / USG"],
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Emergency Casualty Unit",
+        "total": 12,
+        "available": 3,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Intensive Care Unit",
+        "total": 20,
+        "available": 5,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "nicu",
+        "department_name": "Neonatal ICU",
+        "total": 12,
+        "available": 3,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "general",
+        "department_name": "General Inpatient Beds",
+        "total": 75,
+        "available": 23,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://panaceahospital.in/major-facilities.php",
-    "source_urls": [
-      "https://panaceahospital.in/major-facilities.php"
-    ],
+    "source_urls": ["https://panaceahospital.in/major-facilities.php"],
     "source_kind": "official_website_plus_public_directory",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": "https://www.google.com/maps/search/?api=1&query=Panacea%20Hospital%2C%20Mysuru%2C%201075/B%2C%20Akkamahadevi%20Road%2C%20Killa%20Mohalla%20/%20J.P.%20Nagar%20area%2C%20Mysuru%2C%20Karnataka%20570008%20%28confirm%20current%20campus%20address%29%2C%20Mysuru",
@@ -1239,6 +1971,20 @@
     "address": "Multiple Mysuru branches publicly listed: Kuvempunagar and J.P. Nagar. Use branch-specific address before routing.",
     "phone": "Kuvempunagar: 0821-2545981 / 0821-2545982; J.P. Nagar contacts should be verified separately",
     "type": "private",
+    "capabilities": [
+      "emergency_24x7",
+      "icu",
+      "nicu",
+      "ventilator",
+      "paediatrics",
+      "obstetrics",
+      "neurology",
+      "neurosurgery",
+      "orthopaedics",
+      "cardiology",
+      "plastic_surgery",
+      "trauma_center"
+    ],
     "departments": [
       "Emergency & Trauma",
       "ICU",
@@ -1258,26 +2004,46 @@
       "ventilator facilities advertised",
       "24/7 ambulance service advertised"
     ],
-    "diagnostics": [
-      "radiology",
-      "pathology",
-      "24-hour laboratory"
-    ],
-    "capabilities": [
-      "emergency_24x7",
-      "icu",
-      "nicu",
-      "ventilator",
-      "paediatrics",
-      "obstetrics",
-      "neurology",
-      "neurosurgery",
-      "orthopaedics",
-      "cardiology",
-      "plastic_surgery",
-      "trauma_center"
+    "diagnostics": ["radiology", "pathology", "24-hour laboratory"],
+    "department_beds": [
+      {
+        "department_id": "emergency",
+        "department_name": "Emergency & Casualty",
+        "total": 16,
+        "available": 4,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "icu",
+        "department_name": "Intensive Care Unit",
+        "total": 26,
+        "available": 6,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "nicu",
+        "department_name": "Neonatal ICU (NICU)",
+        "total": 10,
+        "available": 3,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "ortho_trauma",
+        "department_name": "Trauma & Orthopaedic Ward",
+        "total": 30,
+        "available": 8,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      },
+      {
+        "department_id": "general",
+        "department_name": "General Medical & Surgical",
+        "total": 95,
+        "available": 27,
+        "last_updated": "2026-10-31T05:27:51.139288+00:00"
+      }
     ],
     "last_verified": null,
+    "research_checked_on": "2026-10-30",
     "verified_by": null,
     "source": "https://kamakshihospital.org/",
     "source_urls": [
@@ -1285,7 +2051,6 @@
       "https://kamakshihospital.org/contact-us/"
     ],
     "source_kind": "official_website",
-    "research_checked_on": "2026-10-30",
     "verified": false,
     "location_verified": false,
     "location_source_url": null,
