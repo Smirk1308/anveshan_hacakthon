@@ -31,15 +31,8 @@ export async function requestVoiceTranscription(
   const apiUrl = (
     options.apiUrl ??
     process.env.NEXT_PUBLIC_TRIAGE_API_URL ??
-    ""
+    (typeof window !== "undefined" ? "" : "http://localhost:8000")
   ).replace(/\/$/, "");
-
-  if (!apiUrl) {
-    throw new VoiceTranscriptionError(
-      "The voice transcription service is not configured. Please type your message instead.",
-      503,
-    );
-  }
 
   const byteLength =
     audioData instanceof Blob

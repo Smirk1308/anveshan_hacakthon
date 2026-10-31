@@ -207,6 +207,19 @@ function getSupportedAudioMimeType(): string {
   return "";
 }
 
+interface BrowserSpeechRecognition {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onresult: (ev: {
+    results: ArrayLike<ArrayLike<{ transcript: string }> & { isFinal?: boolean }>;
+  }) => void;
+  onerror: () => void;
+  start: () => void;
+  stop: () => void;
+  abort: () => void;
+}
+
 export default function EmergencyFinder() {
   const [query, setQuery] = useState("");
   const [location, setLocation] = useState<Location>({
@@ -236,6 +249,8 @@ export default function EmergencyFinder() {
   const audioStreamRef = useRef<MediaStream | null>(null);
   const recordingTimerRef = useRef<number | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const speechRecognitionRef = useRef<BrowserSpeechRecognition | null>(null);
+  const liveTranscriptRef = useRef<string>("");
   const copy = getUiCopy(
     response?.ui_copy.response_language ??
       (language === "auto" ? "en" : language),
@@ -301,12 +316,61 @@ export default function EmergencyFinder() {
   async function startVoiceRecording() {
     setVoiceError("");
     setVoiceHint("");
+    liveTranscriptRef.current = "";
+
+    // Start browser SpeechRecognition if supported (gives instant live streaming text)
+    if (typeof window !== "undefined") {
+      const win = window as unknown as Record<string, unknown>;
+      const SpeechRecognitionConstructor = (win.SpeechRecognition ||
+        win.webkitSpeechRecognition) as
+        | (new () => BrowserSpeechRecognition)
+        | undefined;
+      if (SpeechRecognitionConstructor) {
+        try {
+          const rec = new SpeechRecognitionConstructor();
+          rec.continuous = true;
+          rec.interimResults = true;
+          rec.lang =
+            language === "hi"
+              ? "hi-IN"
+              : language === "kn"
+                ? "kn-IN"
+                : "en-IN";
+          rec.onresult = (ev) => {
+            let interim = "";
+            let final = "";
+            for (let i = 0; i < ev.results.length; i++) {
+              if (ev.results[i].isFinal) {
+                final += ev.results[i][0].transcript;
+              } else {
+                interim += ev.results[i][0].transcript;
+              }
+            }
+            const text = (final || interim).trim();
+            if (text) {
+              liveTranscriptRef.current = text;
+              setQuery(text);
+            }
+          };
+          rec.onerror = () => {
+            // SpeechRecognition error will fall back to server audio transcription
+          };
+          rec.start();
+          speechRecognitionRef.current = rec;
+        } catch {
+          // ignore error
+        }
+      }
+    }
+
     if (
       typeof window === "undefined" ||
       !navigator.mediaDevices?.getUserMedia ||
       typeof MediaRecorder === "undefined"
     ) {
-      setVoiceError(copy.voiceUnavailable);
+      if (!liveTranscriptRef.current) {
+        setVoiceError(copy.voiceUnavailable);
+      }
       return;
     }
     try {
@@ -334,6 +398,17 @@ export default function EmergencyFinder() {
         if (audioStreamRef.current) {
           audioStreamRef.current.getTracks().forEach((track) => track.stop());
           audioStreamRef.current = null;
+        }
+
+        // If browser SpeechRecognition already captured live spoken words, finalize instantly!
+        if (
+          liveTranscriptRef.current &&
+          liveTranscriptRef.current.trim().length > 0
+        ) {
+          setQuery(liveTranscriptRef.current.trim());
+          setVoiceHint(copy.voiceReviewHint);
+          setVoiceStatus("idle");
+          return;
         }
 
         const chunks = audioChunksRef.current;
@@ -367,6 +442,7 @@ export default function EmergencyFinder() {
           }
           setVoiceHint(copy.voiceReviewHint);
         } catch (err) {
+          console.error("Voice transcription error:", err);
           const msg =
             err instanceof Error ? err.message : copy.voiceUnavailable;
           setVoiceError(msg);
@@ -405,15 +481,39 @@ export default function EmergencyFinder() {
   }
 
   function stopVoiceRecording() {
+    if (speechRecognitionRef.current) {
+      try {
+        speechRecognitionRef.current.stop();
+      } catch {
+        // ignore
+      }
+      speechRecognitionRef.current = null;
+    }
     if (
       mediaRecorderRef.current &&
       mediaRecorderRef.current.state === "recording"
     ) {
+      if (typeof mediaRecorderRef.current.requestData === "function") {
+        try {
+          mediaRecorderRef.current.requestData();
+        } catch {
+          // ignore
+        }
+      }
       mediaRecorderRef.current.stop();
     }
   }
 
   function cancelVoiceRecording() {
+    if (speechRecognitionRef.current) {
+      try {
+        speechRecognitionRef.current.abort();
+      } catch {
+        // ignore
+      }
+      speechRecognitionRef.current = null;
+    }
+    liveTranscriptRef.current = "";
     if (recordingTimerRef.current) {
       window.clearInterval(recordingTimerRef.current);
       recordingTimerRef.current = null;
