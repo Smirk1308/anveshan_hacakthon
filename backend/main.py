@@ -14,7 +14,7 @@ from threading import Lock
 
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).resolve().parents[1] / ".env")
@@ -455,5 +455,19 @@ async def update_hospital_beds(
         "department_beds": [d.model_dump() for d in hospital.department_beds],
         "updated_at": now_iso,
     }
+
+
+@app.get("/SANJEEVANI_PROJECT_GUIDE.pdf")
+@app.get("/api/download-guide-pdf")
+async def download_project_guide_pdf():
+    """Serve the complete project guide, architecture, and defense document as a downloadable PDF."""
+    pdf_path = Path(__file__).resolve().parents[1] / "SANJEEVANI_PROJECT_GUIDE.pdf"
+    if not pdf_path.exists():
+        raise HTTPException(status_code=404, detail="PDF guide not found")
+    return FileResponse(
+        str(pdf_path),
+        media_type="application/pdf",
+        filename="SANJEEVANI_PROJECT_GUIDE.pdf",
+    )
 
 
