@@ -9,7 +9,19 @@ from threading import Lock
 
 logger = logging.getLogger("sahayai.voice")
 
-MODEL_NAME = os.getenv("VOICE_MODEL", "small").strip() or "small"
+try:
+    import av
+    # PyAV 14+ removed 'metadata_errors' keyword argument.
+    # faster-whisper calls av.open(..., metadata_errors="ignore").
+    _orig_av_open = av.open
+    def _safe_av_open(*args, **kwargs):
+        kwargs.pop("metadata_errors", None)
+        return _orig_av_open(*args, **kwargs)
+    av.open = _safe_av_open
+except ImportError:
+    pass
+
+MODEL_NAME = os.getenv("VOICE_MODEL", "tiny").strip() or "tiny"
 VOICE_DEVICE = os.getenv("VOICE_DEVICE", "auto").strip().lower()
 MAX_AUDIO_SECONDS = 20.0
 _model = None
